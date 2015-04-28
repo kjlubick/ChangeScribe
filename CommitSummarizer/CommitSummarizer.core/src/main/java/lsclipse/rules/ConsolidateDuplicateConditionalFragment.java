@@ -16,69 +16,71 @@ import tyRuBa.tdbc.TyrubaException;
 
 public class ConsolidateDuplicateConditionalFragment implements Rule {
 
-	private String name_;
+    private String name_;
 
-	public ConsolidateDuplicateConditionalFragment() {
-		name_ = "consolidate_duplicate_cond_fragments";
-	}
+    public ConsolidateDuplicateConditionalFragment() {
+        name_ = "consolidate_duplicate_cond_fragments";
+    }
 
-	@Override
-	public String checkAdherence(ResultSet rs) throws TyrubaException {
-		String old_elsePart = rs.getString("?old_elsePart");
-		String new_elsePart = rs.getString("?new_elsePart");
-		String old_ifPart = rs.getString("?old_ifPart");
-		String new_ifPart = rs.getString("?new_ifPart");
-		String body = rs.getString("?mbody");
-		
-		if(old_elsePart.equals("")) return null;
-		if (similar_fragments(old_elsePart, new_elsePart, body)
-				&& similar_fragments(old_ifPart, new_ifPart, body)) {
-			String writeTo = getName() + "(\"" + rs.getString("?mFullName")
-					+ "\")";
-			return writeTo;
-		}
-		return null;
-	}
+    @Override
+    public String checkAdherence(ResultSet rs) throws TyrubaException {
+        String old_elsePart = rs.getString("?old_elsePart");
+        String new_elsePart = rs.getString("?new_elsePart");
+        String old_ifPart = rs.getString("?old_ifPart");
+        String new_ifPart = rs.getString("?new_ifPart");
+        String body = rs.getString("?mbody");
 
-	private String getQueryString() {
-		return "deleted_conditional("
-				+ "?cond, ?old_ifPart, ?old_elsePart, ?mFullName), "
-				+ "added_conditional("
-				+ "?cond, ?new_ifPart, ?new_elsePart, ?mFullName), "
-				+ "after_methodbody(" + "?mFullName, ?mbody)";
-	}
+        if (old_elsePart.equals(""))
+            return null;
+        if (similar_fragments(old_elsePart, new_elsePart, body)
+                && similar_fragments(old_ifPart, new_ifPart, body)) {
+            String writeTo = getName() + "(\"" + rs.getString("?mFullName")
+                    + "\")";
+            return writeTo;
+        }
+        return null;
+    }
 
-	public boolean similar_fragments(String old, String news, String body) {
-		String lcs = LCS.getLCS(old, news);
-		
-		int index = old.indexOf(lcs);
-		
-		if(index == -1) return false;
+    private String getQueryString() {
+        return "deleted_conditional("
+                + "?cond, ?old_ifPart, ?old_elsePart, ?mFullName), "
+                + "added_conditional("
+                + "?cond, ?new_ifPart, ?new_elsePart, ?mFullName), "
+                + "after_methodbody(" + "?mFullName, ?mbody)";
+    }
 
-		String prefix = old.substring(0, index);
-		String suffix = old.substring(index + lcs.length());
+    public boolean similar_fragments(String old, String news, String body) {
+        String lcs = LCS.getLCS(old, news);
 
-		if (body.contains(prefix) && body.contains(suffix))
-			return true;
-		else
-			return false;
-	}
+        int index = old.indexOf(lcs);
 
-	@Override
-	public String getName() {
-		return name_;
-	}
+        if (index == -1)
+            return false;
 
-	@Override
-	public RefactoringQuery getRefactoringQuery() {
-		RefactoringQuery repl = new RefactoringQuery(getName(),
-				getQueryString());
-		return repl;
-	}
+        String prefix = old.substring(0, index);
+        String suffix = old.substring(index + lcs.length());
 
-	@Override
-	public String getRefactoringString() {
-		return getName() + "(?mFullName)";
-	}
+        if (body.contains(prefix) && body.contains(suffix))
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public String getName() {
+        return name_;
+    }
+
+    @Override
+    public RefactoringQuery getRefactoringQuery() {
+        RefactoringQuery repl = new RefactoringQuery(getName(),
+                getQueryString());
+        return repl;
+    }
+
+    @Override
+    public String getRefactoringString() {
+        return getName() + "(?mFullName)";
+    }
 
 }

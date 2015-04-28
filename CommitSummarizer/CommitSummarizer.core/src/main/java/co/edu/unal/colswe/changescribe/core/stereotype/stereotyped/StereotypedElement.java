@@ -9,25 +9,25 @@ import org.eclipse.jdt.core.dom.Javadoc;
 import co.edu.unal.colswe.changescribe.core.stereotype.taxonomy.CodeStereotype;
 
 public interface StereotypedElement {
-	BodyDeclaration getElement();
+    BodyDeclaration getElement();
 
-	List<CodeStereotype> getStereotypes();
+    List<CodeStereotype> getStereotypes();
 
-	List<StereotypedElement> getStereoSubElements();
+    List<StereotypedElement> getStereoSubElements();
 
-	void findStereotypes();
+    void findStereotypes();
 
-	String getReport();
+    String getReport();
 
-	Javadoc getJavadoc();
+    Javadoc getJavadoc();
 
-	ChildPropertyDescriptor getJavadocDescriptor();
+    ChildPropertyDescriptor getJavadocDescriptor();
 
-	String getName();
+    String getName();
 
-	String getQualifiedName();
-	
-	String getFullyQualifiedName();
+    String getQualifiedName();
 
-	String getKey();
+    String getFullyQualifiedName();
+
+    String getKey();
 }

@@ -3,160 +3,159 @@ package tyRuBa.modes;
 import java.util.Map;
 
 /**
- * A GrowableType is a type that is allowed to "grow". I.e. like a typevariable
- * who's range is determined by a BoundaryType from which it can change to one
- * of its supertypes.
+ * A GrowableType is a type that is allowed to "grow". I.e. like a typevariable who's range is determined by a BoundaryType from which it can change to one of its supertypes.
  */
 public class GrowableType extends Type {
-	
-	private BoundaryType lowerBound;
-	private BoundaryType upperBound;
 
-	public GrowableType(BoundaryType lowerBound) {
-		this.lowerBound = lowerBound;
-		this.upperBound = lowerBound;
-	}
-	
-	private GrowableType(BoundaryType lowerBound, BoundaryType upperBound) {
-		this.lowerBound = lowerBound;
-		this.upperBound = upperBound;
-	}
-	
-	@Override
+    private BoundaryType lowerBound;
+
+    private BoundaryType upperBound;
+
+    public GrowableType(BoundaryType lowerBound) {
+        this.lowerBound = lowerBound;
+        this.upperBound = lowerBound;
+    }
+
+    private GrowableType(BoundaryType lowerBound, BoundaryType upperBound) {
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
+
+    @Override
     public int hashCode() {
-		return lowerBound.hashCode() + 13 * (upperBound.hashCode());
-	}
-	
-	@Override
+        return lowerBound.hashCode() + 13 * (upperBound.hashCode());
+    }
+
+    @Override
     public boolean equals(Object other) {
-		if (! (other instanceof GrowableType)) {
-			return false;
-		} else {
-			GrowableType sother = (GrowableType) other;
-			return lowerBound.equals(sother.lowerBound)
-				&& upperBound.equals(sother.upperBound);
-		}
-	}
-	
-	@Override
+        if (!(other instanceof GrowableType)) {
+            return false;
+        } else {
+            GrowableType sother = (GrowableType) other;
+            return lowerBound.equals(sother.lowerBound)
+                    && upperBound.equals(sother.upperBound);
+        }
+    }
+
+    @Override
     public String toString() {
-		return upperBound.toString();
-	}
+        return upperBound.toString();
+    }
 
-	@Override
+    @Override
     public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
-		if (other instanceof TVar) {
-			other.checkEqualTypes(this, grow);
-		} else if (this.equals(other)) {
-			return;
-		} else if (other instanceof GrowableType) {
-			GrowableType sother = (GrowableType) other;
-			lowerBound = (BoundaryType) lowerBound.union(sother.lowerBound);
-			upperBound = lowerBound;
-			sother.lowerBound = lowerBound;
-			sother.upperBound = lowerBound;
-		} else {
-			check(other instanceof BoundaryType, this, other);
-			BoundaryType b_other = (BoundaryType) other;
-			BoundaryType new_lowerBound = (BoundaryType) this.lowerBound.union(b_other);
-			if (grow) {
-				lowerBound = new_lowerBound;
-				upperBound = lowerBound;
-			}
-		}
-	}
+        if (other instanceof TVar) {
+            other.checkEqualTypes(this, grow);
+        } else if (this.equals(other)) {
+            return;
+        } else if (other instanceof GrowableType) {
+            GrowableType sother = (GrowableType) other;
+            lowerBound = (BoundaryType) lowerBound.union(sother.lowerBound);
+            upperBound = lowerBound;
+            sother.lowerBound = lowerBound;
+            sother.upperBound = lowerBound;
+        } else {
+            check(other instanceof BoundaryType, this, other);
+            BoundaryType b_other = (BoundaryType) other;
+            BoundaryType new_lowerBound = (BoundaryType) this.lowerBound.union(b_other);
+            if (grow) {
+                lowerBound = new_lowerBound;
+                upperBound = lowerBound;
+            }
+        }
+    }
 
-	@Override
+    @Override
     public boolean isSubTypeOf(Type other, Map renamings) {
-		return lowerBound.isSubTypeOf(other, renamings);
-	}
+        return lowerBound.isSubTypeOf(other, renamings);
+    }
 
-	@Override
+    @Override
     public Type intersect(Type other) throws TypeModeError {
-		if (other instanceof GrowableType) {
-			GrowableType sother = (GrowableType) other;
-			BoundaryType max =
-				(BoundaryType)upperBound.union(sother.upperBound);
-			BoundaryType min =
-				(BoundaryType)lowerBound.intersect(sother.lowerBound);
-			if (max.equals(min)) {
-				return min;
-			} else {
-				return new GrowableType(min, max);
-			}
-		} else if (other instanceof BoundaryType) {
-		    BoundaryType cother = (BoundaryType) other;
-		    BoundaryType result = (BoundaryType)lowerBound.intersect(other);
-			if (cother.isStrict()) {
-				check(cother.isSuperTypeOf(upperBound), this, other);
-				return result;
-			} else {
-				if (! result.isSuperTypeOf(upperBound)) {
-					return new GrowableType(result, upperBound);
-				} else {
-					return result;
-				}
-			}
-		} else {
-			return lowerBound.intersect(other);
-		}
-	}
-	
-//	Type lowerBound(Type other) throws TypeModeError {
-//		return lowerBound.lowerBound(other);
-//	}
+        if (other instanceof GrowableType) {
+            GrowableType sother = (GrowableType) other;
+            BoundaryType max =
+                    (BoundaryType) upperBound.union(sother.upperBound);
+            BoundaryType min =
+                    (BoundaryType) lowerBound.intersect(sother.lowerBound);
+            if (max.equals(min)) {
+                return min;
+            } else {
+                return new GrowableType(min, max);
+            }
+        } else if (other instanceof BoundaryType) {
+            BoundaryType cother = (BoundaryType) other;
+            BoundaryType result = (BoundaryType) lowerBound.intersect(other);
+            if (cother.isStrict()) {
+                check(cother.isSuperTypeOf(upperBound), this, other);
+                return result;
+            } else {
+                if (!result.isSuperTypeOf(upperBound)) {
+                    return new GrowableType(result, upperBound);
+                } else {
+                    return result;
+                }
+            }
+        } else {
+            return lowerBound.intersect(other);
+        }
+    }
 
-	@Override
+    // Type lowerBound(Type other) throws TypeModeError {
+    // return lowerBound.lowerBound(other);
+    // }
+
+    @Override
     public boolean isFreeFor(TVar var) {
-		return upperBound.isFreeFor(var);
-	}
+        return upperBound.isFreeFor(var);
+    }
 
-	@Override
+    @Override
     public Type clone(Map tfact) {
-		return new GrowableType((BoundaryType)lowerBound.clone(tfact),
-			(BoundaryType)upperBound.clone(tfact));
-	}
+        return new GrowableType((BoundaryType) lowerBound.clone(tfact),
+                (BoundaryType) upperBound.clone(tfact));
+    }
 
-	@Override
+    @Override
     public Type union(Type other) throws TypeModeError {
-		if (other instanceof TVar) 
-			return other.union(this);
-		else if (other instanceof BoundaryType) {
-			BoundaryType b_other = (BoundaryType)other;
-			return new GrowableType((BoundaryType)lowerBound.union(b_other),
-					                 (BoundaryType)upperBound.union(b_other));
-		}
-		else {
-			check(other instanceof GrowableType,this,other);
-			BoundaryType otherLower = ((GrowableType)other).lowerBound;
-			BoundaryType otherUpper = ((GrowableType)other).upperBound;
-			return new GrowableType(
-					(BoundaryType)lowerBound.union(otherLower),
-					(BoundaryType)upperBound.union(otherUpper));
-		}
-	}
+        if (other instanceof TVar)
+            return other.union(this);
+        else if (other instanceof BoundaryType) {
+            BoundaryType b_other = (BoundaryType) other;
+            return new GrowableType((BoundaryType) lowerBound.union(b_other),
+                    (BoundaryType) upperBound.union(b_other));
+        }
+        else {
+            check(other instanceof GrowableType, this, other);
+            BoundaryType otherLower = ((GrowableType) other).lowerBound;
+            BoundaryType otherUpper = ((GrowableType) other).upperBound;
+            return new GrowableType(
+                    (BoundaryType) lowerBound.union(otherLower),
+                    (BoundaryType) upperBound.union(otherUpper));
+        }
+    }
 
-	@Override
+    @Override
     public Type copyStrictPart() {
-		throw new Error("This should not be called!");
-	}
+        throw new Error("This should not be called!");
+    }
 
-	@Override
+    @Override
     public boolean hasOverlapWith(Type other) {
-		return lowerBound.hasOverlapWith(other);
-	}
+        return lowerBound.hasOverlapWith(other);
+    }
 
-	@Override
+    @Override
     public Type getParamType(String currName, Type repAs) {
-		if (repAs instanceof TVar) {
-			if (currName.equals(((TVar)repAs).getName())) {
-				return this;
-			} else {
-				return null;
-			}
-		} else {
-			return lowerBound.getParamType(currName, repAs);
-		}
-	}
+        if (repAs instanceof TVar) {
+            if (currName.equals(((TVar) repAs).getName())) {
+                return this;
+            } else {
+                return null;
+            }
+        } else {
+            return lowerBound.getParamType(currName, repAs);
+        }
+    }
 
 }

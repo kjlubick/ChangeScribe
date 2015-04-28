@@ -1,33 +1,34 @@
 package co.edu.unal.colswe.changescribe.core.textgenerator.pos;
 
 public class TaggedTerm {
-	private String term;
-	private String tag;
+    private String term;
 
-	public TaggedTerm(final String term, final String tag) {
-		super();
-		this.term = term;
-		this.tag = tag;
-	}
+    private String tag;
 
-	public String getTag() {
-		return this.tag;
-	}
+    public TaggedTerm(final String term, final String tag) {
+        super();
+        this.term = term;
+        this.tag = tag;
+    }
 
-	public void setTag(final String tag) {
-		this.tag = tag;
-	}
+    public String getTag() {
+        return this.tag;
+    }
 
-	public String getTerm() {
-		return this.term;
-	}
+    public void setTag(final String tag) {
+        this.tag = tag;
+    }
 
-	public void setTerm(final String term) {
-		this.term = term;
-	}
+    public String getTerm() {
+        return this.term;
+    }
 
-	@Override
+    public void setTerm(final String term) {
+        this.term = term;
+    }
+
+    @Override
     public String toString() {
-		return String.valueOf(this.term) + ":" + this.tag;
-	}
+        return String.valueOf(this.term) + ":" + this.tag;
+    }
 }

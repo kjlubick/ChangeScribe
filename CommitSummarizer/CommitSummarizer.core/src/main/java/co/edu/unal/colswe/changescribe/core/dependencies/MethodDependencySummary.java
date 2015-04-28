@@ -15,73 +15,74 @@ import org.eclipse.swt.widgets.Display;
 import co.edu.unal.colswe.changescribe.core.ast.ProjectInformation;
 
 public class MethodDependencySummary extends DependencySummary {
-	private String name;
-	private boolean isConstructor;
-	
-	public MethodDependencySummary(String name) {
-		setName(name); 
-		this.setDependencies(new ArrayList<SearchMatch>());
-		setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
-		
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
-            public void run() {
-				setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
-			}
-		});
-	}
+    private String name;
 
-	@Override
-	public void find() {
-		SearchEngine engine = new SearchEngine();
+    private boolean isConstructor;
+
+    public MethodDependencySummary(String name) {
+        setName(name);
+        this.setDependencies(new ArrayList<SearchMatch>());
+        setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
+
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
+            }
+        });
+    }
+
+    @Override
+    public void find() {
+        SearchEngine engine = new SearchEngine();
         IJavaSearchScope workspaceScope = null;
-        
-        if(getProject() != null) {
-        	workspaceScope = SearchEngine.createJavaSearchScope(createSearchScope());
+
+        if (getProject() != null) {
+            workspaceScope = SearchEngine.createJavaSearchScope(createSearchScope());
         } else {
-        	workspaceScope = SearchEngine.createWorkspaceScope();
+            workspaceScope = SearchEngine.createWorkspaceScope();
         }
         int constructor = IJavaSearchConstants.METHOD;
-        if(isConstructor()) {
-        	constructor = IJavaSearchConstants.CONSTRUCTOR;
+        if (isConstructor()) {
+            constructor = IJavaSearchConstants.CONSTRUCTOR;
         }
-        
-        if(null != getName() && !getName().isEmpty()) {
-	        SearchPattern pattern = SearchPattern.createPattern(
-	                		getName(),
-	                		constructor,
-	                        IJavaSearchConstants.REFERENCES,
-	                        SearchPattern.R_EXACT_MATCH);
-	        SearchParticipant[] participant = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
-	        try {
-				engine.search(pattern, participant, workspaceScope, createSearchRequestor(), new NullProgressMonitor());
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+        if (null != getName() && !getName().isEmpty()) {
+            SearchPattern pattern = SearchPattern.createPattern(
+                    getName(),
+                    constructor,
+                    IJavaSearchConstants.REFERENCES,
+                    SearchPattern.R_EXACT_MATCH);
+            SearchParticipant[] participant = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
+            try {
+                engine.search(pattern, participant, workspaceScope, createSearchRequestor(), new NullProgressMonitor());
+            } catch (CoreException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
-	}
+    }
 
-	@Override
-	public void generateSummary() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void generateSummary() {
+        // TODO Auto-generated method stub
 
-	public String getName() {
-		return name;
-	}
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public boolean isConstructor() {
-		return isConstructor;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setConstructor(boolean isConstructor) {
-		this.isConstructor = isConstructor;
-	}
+    public boolean isConstructor() {
+        return isConstructor;
+    }
+
+    public void setConstructor(boolean isConstructor) {
+        this.isConstructor = isConstructor;
+    }
 
 }

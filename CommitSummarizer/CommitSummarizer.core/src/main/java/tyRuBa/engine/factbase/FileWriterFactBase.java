@@ -19,6 +19,7 @@ import tyRuBa.modes.PredicateMode;
 
 /**
  * Wrapper around another FactBase that records what is inserted to a file.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -35,9 +36,13 @@ public class FileWriterFactBase extends FactBase {
 
     /**
      * Creates a new FileWriterFactBase.
-     * @param pid predicate that this FactBase is for.
-     * @param fb FactBase to wrap around.
-     * @param f file to store the logged inserts into.
+     * 
+     * @param pid
+     *            predicate that this FactBase is for.
+     * @param fb
+     *            FactBase to wrap around.
+     * @param f
+     *            file to store the logged inserts into.
      */
     public FileWriterFactBase(PredicateIdentifier pid, FactBase fb, File f) {
         predicateName = pid.getName();
@@ -85,7 +90,9 @@ public class FileWriterFactBase extends FactBase {
 
     /**
      * Prints a RBTuple to the log file.
-     * @param args Tuple to log.
+     * 
+     * @param args
+     *            Tuple to log.
      */
     private void printTuple(RBTuple args) {
         for (int i = 0; i < args.getNumSubterms(); i++) {
@@ -107,8 +114,7 @@ public class FileWriterFactBase extends FactBase {
     }
 
     /**
-     * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode,
-     * tyRuBa.engine.compilation.CompilationContext)
+     * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode, tyRuBa.engine.compilation.CompilationContext)
      */
     @Override
     public Compiled basicCompile(PredicateMode mode, CompilationContext context) {

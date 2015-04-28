@@ -5,27 +5,28 @@ import tyRuBa.engine.RBContext;
 
 public class CompiledConjunction_SemiDet_SemiDet extends SemiDetCompiled {
 
-	private final SemiDetCompiled left;
-	private final SemiDetCompiled right;
+    private final SemiDetCompiled left;
 
-	public CompiledConjunction_SemiDet_SemiDet(SemiDetCompiled left, SemiDetCompiled right) {
-		super(left.getMode().multiply(right.getMode()));
-		this.left = left;
-		this.right = right;
-	}
+    private final SemiDetCompiled right;
 
-	@Override
+    public CompiledConjunction_SemiDet_SemiDet(SemiDetCompiled left, SemiDetCompiled right) {
+        super(left.getMode().multiply(right.getMode()));
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
     public Frame runSemiDet(Object input, RBContext context) {
-		Frame leftResult = left.runSemiDet(input, context);
-		if (leftResult == null)
-			return null;
-		else
-			return right.runSemiDet(leftResult, context);
-	}
+        Frame leftResult = left.runSemiDet(input, context);
+        if (leftResult == null)
+            return null;
+        else
+            return right.runSemiDet(leftResult, context);
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "(" + right + " ==> " + left + ")";
-	}
+        return "(" + right + " ==> " + left + ")";
+    }
 
 }

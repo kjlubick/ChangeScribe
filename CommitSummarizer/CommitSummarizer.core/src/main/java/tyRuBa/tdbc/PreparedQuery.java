@@ -18,35 +18,36 @@ import tyRuBa.util.ElementSource;
 /**
  * @author dsjanzen
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ *         To change the template for this generated type comment go to Window - Preferences - Java - Code Generation - Code and Comments
  */
-public class PreparedQuery extends PreparedStatement{
-	
-	private RBExpression preparedExp; 
-	   // A prepared exp: has been mode and typechecked.
-	
-	private Compiled     compiled;
-	   // Compiled version of the above.
-	
-	public PreparedQuery(QueryEngine engine,RBExpression preparedExp,TypeEnv tEnv) {
-		super(engine,tEnv);
-		this.preparedExp = preparedExp;
-		this.compiled = preparedExp.compile(new CompilationContext());
-	}
-	
-	public static PreparedQuery prepare(QueryEngine queryEngine,String queryTemplate) 
-	throws ParseException, TypeModeError {
-		return queryEngine.prepareForRunning(queryTemplate);
-	}
+public class PreparedQuery extends PreparedStatement {
 
-	public ResultSet executeQuery() throws TyrubaException {
-		checkReadyToRun();
-		return new ResultSet(compiled.start(putMap));
-	}
+    private RBExpression preparedExp;
 
-	public ElementSource start() {
-		return compiled.start(putMap);
-	}
+    // A prepared exp: has been mode and typechecked.
+
+    private Compiled compiled;
+
+    // Compiled version of the above.
+
+    public PreparedQuery(QueryEngine engine, RBExpression preparedExp, TypeEnv tEnv) {
+        super(engine, tEnv);
+        this.preparedExp = preparedExp;
+        this.compiled = preparedExp.compile(new CompilationContext());
+    }
+
+    public static PreparedQuery prepare(QueryEngine queryEngine, String queryTemplate)
+            throws ParseException, TypeModeError {
+        return queryEngine.prepareForRunning(queryTemplate);
+    }
+
+    public ResultSet executeQuery() throws TyrubaException {
+        checkReadyToRun();
+        return new ResultSet(compiled.start(putMap));
+    }
+
+    public ElementSource start() {
+        return compiled.start(putMap);
+    }
 
 }

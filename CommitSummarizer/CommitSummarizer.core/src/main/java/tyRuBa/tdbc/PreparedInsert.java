@@ -14,27 +14,28 @@ import tyRuBa.engine.RBPredicateExpression;
  * @author kdvolder
  */
 public class PreparedInsert extends PreparedStatement {
-	
-	RBPredicateExpression fact;
-	  // A fact which may contain templateVars
-	
-	public PreparedInsert(QueryEngine engine,RBPredicateExpression fact,TypeEnv tEnv) {
-		super(engine,tEnv);
-		this.fact = fact;
-	}
 
-	public void executeInsert() throws TyrubaException {
-		checkReadyToRun();
-		try {
-			getEngine().insert((RBPredicateExpression)fact.substitute(putMap));
-		} catch (TypeModeError e) {
-			throw new TyrubaException(e);
-		}
-	}
-	
-	@Override
+    RBPredicateExpression fact;
+
+    // A fact which may contain templateVars
+
+    public PreparedInsert(QueryEngine engine, RBPredicateExpression fact, TypeEnv tEnv) {
+        super(engine, tEnv);
+        this.fact = fact;
+    }
+
+    public void executeInsert() throws TyrubaException {
+        checkReadyToRun();
+        try {
+            getEngine().insert((RBPredicateExpression) fact.substitute(putMap));
+        } catch (TypeModeError e) {
+            throw new TyrubaException(e);
+        }
+    }
+
+    @Override
     public String toString() {
-		return "PrepIns("+fact+", "+putMap+")";
-	}
+        return "PrepIns(" + fact + ", " + putMap + ")";
+    }
 
 }

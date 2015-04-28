@@ -16,32 +16,32 @@ import tyRuBa.parser.ParseException;
  */
 public class Connection {
 
-	private QueryEngine queryEngine;
-	
-	public Connection(QueryEngine queryEngine) {
-		this.queryEngine = queryEngine;
-	}
-	
-	public Query createQuery() {
-		return new Query(queryEngine);
-	}
+    private QueryEngine queryEngine;
 
-	public Insert createInsert() {
-		return new Insert(queryEngine);
-	}
-	
-	public PreparedQuery prepareQuery(String qry) throws TyrubaException {
-		try {
-			return queryEngine.prepareForRunning(qry);
-		} catch (ParseException e) {
-			throw new TyrubaException(e);
-		} catch (TypeModeError e) {
-			throw new TyrubaException(e);
-		}
-	}
+    public Connection(QueryEngine queryEngine) {
+        this.queryEngine = queryEngine;
+    }
 
-	public PreparedInsert prepareInsert(String fact) throws ParseException, TypeModeError {
-		return queryEngine.prepareForInsertion(fact);		
-	}
+    public Query createQuery() {
+        return new Query(queryEngine);
+    }
+
+    public Insert createInsert() {
+        return new Insert(queryEngine);
+    }
+
+    public PreparedQuery prepareQuery(String qry) throws TyrubaException {
+        try {
+            return queryEngine.prepareForRunning(qry);
+        } catch (ParseException e) {
+            throw new TyrubaException(e);
+        } catch (TypeModeError e) {
+            throw new TyrubaException(e);
+        }
+    }
+
+    public PreparedInsert prepareInsert(String fact) throws ParseException, TypeModeError {
+        return queryEngine.prepareForInsertion(fact);
+    }
 
 }

@@ -5,29 +5,29 @@ import tyRuBa.engine.RBContext;
 
 public class CompiledTest extends SemiDetCompiled {
 
-	private Compiled tested;
+    private Compiled tested;
 
-	public CompiledTest(Compiled tested) {
-		super(tested.getMode().first());
-		this.tested = tested;
-	}
+    public CompiledTest(Compiled tested) {
+        super(tested.getMode().first());
+        this.tested = tested;
+    }
 
-	@Override
+    @Override
     public Frame runSemiDet(Object input, RBContext context) {
-		if (tested.runNonDet(input, context).hasMoreElements())
-			return (Frame)input;
-		else 
-			return null;
-	}
-	
-	@Override
-    public Compiled negate() {
-		return new CompiledNot(tested);
-	}
+        if (tested.runNonDet(input, context).hasMoreElements())
+            return (Frame) input;
+        else
+            return null;
+    }
 
-	@Override
+    @Override
+    public Compiled negate() {
+        return new CompiledNot(tested);
+    }
+
+    @Override
     public String toString() {
-		return "TEST(" + tested + ")";
-	}
+        return "TEST(" + tested + ")";
+    }
 
 }

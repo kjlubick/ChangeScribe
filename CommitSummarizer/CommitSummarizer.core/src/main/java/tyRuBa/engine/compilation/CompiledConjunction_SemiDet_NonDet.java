@@ -6,27 +6,28 @@ import tyRuBa.util.ElementSource;
 
 public class CompiledConjunction_SemiDet_NonDet extends Compiled {
 
-	private final SemiDetCompiled left;
-	private final Compiled right;
+    private final SemiDetCompiled left;
 
-	public CompiledConjunction_SemiDet_NonDet(SemiDetCompiled left, Compiled right) {
-		super(left.getMode().multiply(right.getMode()));
-		this.left = left;
-		this.right = right;
-	}
+    private final Compiled right;
 
-	@Override
+    public CompiledConjunction_SemiDet_NonDet(SemiDetCompiled left, Compiled right) {
+        super(left.getMode().multiply(right.getMode()));
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
     public ElementSource runNonDet(Object input, RBContext context) {
-		Frame leftResult = left.runSemiDet(input, context);
-		if (leftResult == null)
-			return ElementSource.theEmpty;
-		else
-			return right.runNonDet(leftResult, context);
-	}
-	
-	@Override
+        Frame leftResult = left.runSemiDet(input, context);
+        if (leftResult == null)
+            return ElementSource.theEmpty;
+        else
+            return right.runNonDet(leftResult, context);
+    }
+
+    @Override
     public String toString() {
-		return "(" + right + "==>" + left + ")";
-	}
+        return "(" + right + "==>" + left + ")";
+    }
 
 }

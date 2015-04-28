@@ -23,99 +23,102 @@ import tyRuBa.modes.TypeEnv;
 import tyRuBa.modes.TupleType;
 import tyRuBa.modes.TypeModeError;
 
-/** 
- * This is an expression that represents a call to a predicate *before* it has
- * been mode checked. After it has been modechecked it will be replaced by an
- * appropriate RBModedPredicateExpression.
+/**
+ * This is an expression that represents a call to a predicate *before* it has been mode checked. After it has been modechecked it will be replaced by an appropriate
+ * RBModedPredicateExpression.
  */
 
 public class RBPredicateExpression extends RBExpression {
 
-	protected PredicateIdentifier pred;
-	private RBTuple args;
-    private RuleBase rules = null; 
-      // This is set by modeChecking and points to the moded rulebase for this predicate's 
-      // execution.
+    protected PredicateIdentifier pred;
 
-	/** Constructor */
-	public RBPredicateExpression(String predName, ArrayList argTerms) {
-		this(predName, RBTuple.make(argTerms));
-	}
-	
-	public RBPredicateExpression withNewArgs(RBTuple newArgs) {
-		return new RBPredicateExpression(pred,newArgs);
-	}
+    private RBTuple args;
 
-	public RBPredicateExpression(String predName, RBTuple args) {
-		this.pred = new PredicateIdentifier(predName, args.getNumSubterms());
-		this.args = args;
-	}
+    private RuleBase rules = null;
 
-	public RBPredicateExpression(PredicateIdentifier pred, RBTuple args) {
-		this.pred = pred;
-		this.args = args;
-	}
+    // This is set by modeChecking and points to the moded rulebase for this predicate's
+    // execution.
 
-	/** Constructor */
-	RBPredicateExpression(String predName, RBTerm[] argTerms) {
-		this(predName, RBTuple.make(argTerms));
-	}
+    /** Constructor */
+    public RBPredicateExpression(String predName, ArrayList argTerms) {
+        this(predName, RBTuple.make(argTerms));
+    }
+
+    public RBPredicateExpression withNewArgs(RBTuple newArgs) {
+        return new RBPredicateExpression(pred, newArgs);
+    }
+
+    public RBPredicateExpression(String predName, RBTuple args) {
+        this.pred = new PredicateIdentifier(predName, args.getNumSubterms());
+        this.args = args;
+    }
+
+    public RBPredicateExpression(PredicateIdentifier pred, RBTuple args) {
+        this.pred = pred;
+        this.args = args;
+    }
+
+    /** Constructor */
+    RBPredicateExpression(String predName, RBTerm[] argTerms) {
+        this(predName, RBTuple.make(argTerms));
+    }
 
     @Override
     public Compiled compile(CompilationContext c) {
-        Assert.assertNotNull("Must be mode checked first!",getMode());
+        Assert.assertNotNull("Must be mode checked first!", getMode());
         if (getMode().hi.compareTo(Multiplicity.one) <= 0) {
             return new SemiDetCompiledPredicateExpression(getMode(), rules, getArgs());
         }
-        else {          
+        else {
             return new CompiledPredicateExpression(getMode(), rules, getArgs());
         }
     }
 
-	public PredicateIdentifier getPredId() {
-		return pred;
-	}
+    public PredicateIdentifier getPredId() {
+        return pred;
+    }
 
-	public String getPredName() {
-		return pred.name;
-	}
+    public String getPredName() {
+        return pred.name;
+    }
 
-	public RBTuple getArgs() {
-		return args;
-	}
+    public RBTuple getArgs() {
+        return args;
+    }
 
-	public int getNumArgs() {
-		return args.getNumSubterms();
-	}
+    public int getNumArgs() {
+        return args.getNumSubterms();
+    }
 
-	public RBTerm getArgAt(int pos) {
-		return args.getSubterm(pos);
-	}
-	
-	@Override
+    public RBTerm getArgAt(int pos) {
+        return args.getSubterm(pos);
+    }
+
+    @Override
     public Object clone() {
-		try {
-			RBPredicateExpression cl = (RBPredicateExpression) super.clone();
-			cl.args = (RBTuple)args.clone();
-			return cl;
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			throw new Error("This should not happen");
-		}
-	}
+        try {
+            RBPredicateExpression cl = (RBPredicateExpression) super.clone();
+            cl.args = (RBTuple) args.clone();
+            return cl;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new Error("This should not happen");
+        }
+    }
 
-	@Override
+    @Override
     public String toString() {
-		StringBuffer result = new StringBuffer(getPredName());
-		int numSubterms = args.getNumSubterms();
-		result.append("(");
-		for (int i = 0; i < numSubterms; i++) {
-			if (i>0) result.append(",");
-			result.append(args.getSubterm(i));
-		}
-		result.append(")");
-		
-	    if (getMode()!=null) {
+        StringBuffer result = new StringBuffer(getPredName());
+        int numSubterms = args.getNumSubterms();
+        result.append("(");
+        for (int i = 0; i < numSubterms; i++) {
+            if (i > 0)
+                result.append(",");
+            result.append(args.getSubterm(i));
+        }
+        result.append(")");
+
+        if (getMode() != null) {
             result.append(" {");
             if (rules == null) {
                 result.append("MODE ERROR");
@@ -127,67 +130,67 @@ public class RBPredicateExpression extends RBExpression {
         return result.toString();
     }
 
-	@Override
-    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) 
-	throws TypeModeError {
-		try {
-			TypeEnv myEnv = Factory.makeTypeEnv();
-			PredicateIdentifier pred = getPredId();
-			PredInfo pInfo = predinfo.getPredInfo(pred);
-			if (pInfo == null) {
-				throw new TypeModeError("Unknown predicate " + pred);
-			} else {
-				TupleType predType = pInfo.getTypeList();
+    @Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv)
+            throws TypeModeError {
+        try {
+            TypeEnv myEnv = Factory.makeTypeEnv();
+            PredicateIdentifier pred = getPredId();
+            PredInfo pInfo = predinfo.getPredInfo(pred);
+            if (pInfo == null) {
+                throw new TypeModeError("Unknown predicate " + pred);
+            } else {
+                TupleType predType = pInfo.getTypeList();
 
-				for (int i = 0; i < getNumArgs(); i++) {
-					Type argType = getArgAt(i).getType(myEnv);
-					argType.checkEqualTypes(predType.get(i));
-				}
-				return startEnv.intersect(myEnv);
-			}
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-	}
+                for (int i = 0; i < getNumArgs(); i++) {
+                    Type argType = getArgAt(i).getType(myEnv);
+                    argType.checkEqualTypes(predType.get(i));
+                }
+                return startEnv.intersect(myEnv);
+            }
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+    }
 
-	@Override
-    public RBExpression convertToMode(ModeCheckContext context, 
-	boolean rearrange) throws TypeModeError {
-		ModeCheckContext resultContext = (ModeCheckContext) context.clone();
-		BindingList bindings = Factory.makeBindingList();
-		RuleBase bestRuleBase =
-			resultContext.getBestRuleBase(getPredId(), getArgs(), bindings);
-		if (bestRuleBase == null) {
-			return Factory.makeModedExpression(
-				this, 
-				new ErrorMode("there is no rulebase that allows " + getPredName()
-					+ bindings), 
-				resultContext);
-		} else {
-			Mode resultMode = bestRuleBase.getMode();
-			Collection vars = getVariables();
-			resultContext.removeAllBound(vars);
-			if (vars.isEmpty()) {
-				// This check will change the mode to semidet if the
-				// predicate was called with unbound variables, but they are
-				// IgnoredVariables only.
-				resultMode = Mode.makeSemidet();
-			} else {			
-				resultContext.bindVars(vars);
-				resultMode.setPercentFree(bindings);
-			}
-		 
-			return Factory.makeModedExpression(this,resultMode, resultContext, bestRuleBase);
-		}
-	}
+    @Override
+    public RBExpression convertToMode(ModeCheckContext context,
+            boolean rearrange) throws TypeModeError {
+        ModeCheckContext resultContext = (ModeCheckContext) context.clone();
+        BindingList bindings = Factory.makeBindingList();
+        RuleBase bestRuleBase =
+                resultContext.getBestRuleBase(getPredId(), getArgs(), bindings);
+        if (bestRuleBase == null) {
+            return Factory.makeModedExpression(
+                    this,
+                    new ErrorMode("there is no rulebase that allows " + getPredName()
+                            + bindings),
+                    resultContext);
+        } else {
+            Mode resultMode = bestRuleBase.getMode();
+            Collection vars = getVariables();
+            resultContext.removeAllBound(vars);
+            if (vars.isEmpty()) {
+                // This check will change the mode to semidet if the
+                // predicate was called with unbound variables, but they are
+                // IgnoredVariables only.
+                resultMode = Mode.makeSemidet();
+            } else {
+                resultContext.bindVars(vars);
+                resultMode.setPercentFree(bindings);
+            }
 
-	@Override
+            return Factory.makeModedExpression(this, resultMode, resultContext, bestRuleBase);
+        }
+    }
+
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
     public RBExpression makeModed(Mode resultMode, ModeCheckContext resultContext, RuleBase bestRuleBase) {
-        RBPredicateExpression modedExp = (RBPredicateExpression) this.makeModed(resultMode,resultContext);
+        RBPredicateExpression modedExp = (RBPredicateExpression) this.makeModed(resultMode, resultContext);
         modedExp.setRuleBase(bestRuleBase);
         return modedExp;
     }

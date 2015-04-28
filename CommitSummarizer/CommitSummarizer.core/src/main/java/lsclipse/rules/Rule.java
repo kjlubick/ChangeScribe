@@ -5,13 +5,13 @@ import tyRuBa.tdbc.ResultSet;
 import tyRuBa.tdbc.TyrubaException;
 
 public interface Rule {
-	public abstract String getName();
+    public abstract String getName();
 
-	public abstract String getRefactoringString();
+    public abstract String getRefactoringString();
 
-	public abstract RefactoringQuery getRefactoringQuery();
+    public abstract RefactoringQuery getRefactoringQuery();
 
-	// Make sure the important facts are separated by "\",\"" without a space.
-	public abstract String checkAdherence(ResultSet rs) throws TyrubaException;
+    // Make sure the important facts are separated by "\",\"" without a space.
+    public abstract String checkAdherence(ResultSet rs) throws TyrubaException;
 
 }

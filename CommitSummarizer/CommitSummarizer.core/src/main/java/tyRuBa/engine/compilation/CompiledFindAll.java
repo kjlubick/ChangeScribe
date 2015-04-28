@@ -13,33 +13,35 @@ import tyRuBa.util.ElementSource;
  */
 public class CompiledFindAll extends SemiDetCompiled {
 
-	private final Compiled query;
-	private final RBTerm extract;
-	private final RBTerm result;
+    private final Compiled query;
 
-	public CompiledFindAll(Compiled query, RBTerm extract, RBTerm result) {
-		super(Mode.makeDet());
-		this.query = query;
-		this.extract = extract;
-		this.result = result;
-	}
+    private final RBTerm extract;
 
-	@Override
+    private final RBTerm result;
+
+    public CompiledFindAll(Compiled query, RBTerm extract, RBTerm result) {
+        super(Mode.makeDet());
+        this.query = query;
+        this.extract = extract;
+        this.result = result;
+    }
+
+    @Override
     public Frame runSemiDet(Object input, RBContext context) {
-		ElementSource res = query.runNonDet(((Frame)input).clone(), context);
-		res = res.map(new Action() {
-			@Override
+        ElementSource res = query.runNonDet(((Frame) input).clone(), context);
+        res = res.map(new Action() {
+            @Override
             public Object compute(Object arg) {
-				return extract.substitute((Frame) arg);
-			}
-		});
-		RBTerm resultList = FrontEnd.makeList(res);
-		return result.unify(resultList, (Frame)input);
-	}
+                return extract.substitute((Frame) arg);
+            }
+        });
+        RBTerm resultList = FrontEnd.makeList(res);
+        return result.unify(resultList, (Frame) input);
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "COMPILED FINDALL(" + query + "," + extract + "," + result + ")";
-	}
+        return "COMPILED FINDALL(" + query + "," + extract + "," + result + ")";
+    }
 
 }

@@ -14,68 +14,67 @@ import tyRuBa.modes.TypeModeError;
 
 public class RBNotFilter extends RBExpression {
 
-	private RBExpression negated_q;
+    private RBExpression negated_q;
 
-	public RBNotFilter(RBExpression not_q) {
-		negated_q = not_q;
-	}
+    public RBNotFilter(RBExpression not_q) {
+        negated_q = not_q;
+    }
 
-	public RBExpression getNegatedQuery() {
-		return negated_q;
-	}
+    public RBExpression getNegatedQuery() {
+        return negated_q;
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "NOT(" + getNegatedQuery() + ")";
-	}
+        return "NOT(" + getNegatedQuery() + ")";
+    }
 
-	@Override
+    @Override
     public Compiled compile(CompilationContext c) {
-		return getNegatedQuery().compile(c).negate();
-	}
+        return getNegatedQuery().compile(c).negate();
+    }
 
-
-	@Override
+    @Override
     public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
-		try {
-			getNegatedQuery().typecheck(predinfo, startEnv);
-			return startEnv;
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-	}
+        try {
+            getNegatedQuery().typecheck(predinfo, startEnv);
+            return startEnv;
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+    }
 
-	@Override
+    @Override
     public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
-	throws TypeModeError {
-		Collection vars = negated_q.getFreeVariables(context);
-		
-		if (vars.isEmpty()) {
-			RBExpression converted = negated_q.convertToMode(context, rearrange); 
-			return Factory.makeModedExpression(
-				new RBNotFilter(converted),
-				converted.getMode().negate(),
-				context);
-		} else {
-			return Factory.makeModedExpression(
-				this,
-				new ErrorMode("Variables improperly left unbound in NOT: " + vars),
-				context);
-		}
-	}
+            throws TypeModeError {
+        Collection vars = negated_q.getFreeVariables(context);
 
-	@Override
+        if (vars.isEmpty()) {
+            RBExpression converted = negated_q.convertToMode(context, rearrange);
+            return Factory.makeModedExpression(
+                    new RBNotFilter(converted),
+                    converted.getMode().negate(),
+                    context);
+        } else {
+            return Factory.makeModedExpression(
+                    this,
+                    new ErrorMode("Variables improperly left unbound in NOT: " + vars),
+                    context);
+        }
+    }
+
+    @Override
     public RBExpression convertToNormalForm(boolean negate) {
-		if (negate) {
-			return getNegatedQuery().convertToNormalForm(false);
-		} else {
-			return getNegatedQuery().convertToNormalForm(true);
-		}
-	}
+        if (negate) {
+            return getNegatedQuery().convertToNormalForm(false);
+        } else {
+            return getNegatedQuery().convertToNormalForm(true);
+        }
+    }
 
-	@Override
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
 }

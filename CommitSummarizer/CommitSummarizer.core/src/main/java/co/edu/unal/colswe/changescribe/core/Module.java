@@ -1,56 +1,55 @@
 package co.edu.unal.colswe.changescribe.core;
 
 public class Module {
-	
-	private String packageName;
-	private String moduleName;
 
-	public Module() {
-		// TODO Auto-generated constructor stub
-	}
+    private String packageName;
 
-	public String getPackageName() {
-		return packageName;
-	}
+    private String moduleName;
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
-	}
+    public Module() {
+        // TODO Auto-generated constructor stub
+    }
 
-	public String getModuleName() {
-		return moduleName;
-	}
+    public String getPackageName() {
+        return packageName;
+    }
 
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
-	}
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((packageName == null) ? 0 : packageName.hashCode());
-		return result;
-	}
+    public String getModuleName() {
+        return moduleName;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Module other = (Module) obj;
-		if (packageName == null) {
-			if (other.packageName != null)
-				return false;
-		} else if (!packageName.equals(other.packageName))
-			return false;
-		return true;
-	}
-	
-	
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((packageName == null) ? 0 : packageName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Module other = (Module) obj;
+        if (packageName == null) {
+            if (other.packageName != null)
+                return false;
+        } else if (!packageName.equals(other.packageName))
+            return false;
+        return true;
+    }
 
 }

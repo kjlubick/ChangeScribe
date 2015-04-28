@@ -18,6 +18,7 @@ import tyRuBa.engine.Validator;
 
 /**
  * A ValidatorManager that is persisted to a file on disk.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -43,7 +44,9 @@ public class FileBasedValidatorManager implements ValidatorManager {
 
     /**
      * Creates a new FileBasedValidatorManager.
-     * @param storagePath where to store the validators.
+     * 
+     * @param storagePath
+     *            where to store the validators.
      */
     public FileBasedValidatorManager(String storagePath) {
         this.storagePath = storagePath;
@@ -85,7 +88,9 @@ public class FileBasedValidatorManager implements ValidatorManager {
 
     /**
      * Creates a new FileBasedValidatorManager.
-     * @param url url to stored validator manager.
+     * 
+     * @param url
+     *            url to stored validator manager.
      */
     public FileBasedValidatorManager(URL url) {
         this.storagePath = url.toString();
@@ -114,8 +119,7 @@ public class FileBasedValidatorManager implements ValidatorManager {
     }
 
     /**
-     * @see tyRuBa.engine.factbase.ValidatorManager#add(tyRuBa.engine.Validator,
-     * java.lang.String)
+     * @see tyRuBa.engine.factbase.ValidatorManager#add(tyRuBa.engine.Validator, java.lang.String)
      */
     @Override
     public void add(Validator v, String identifier) {
@@ -129,8 +133,7 @@ public class FileBasedValidatorManager implements ValidatorManager {
     }
 
     /**
-     * @see tyRuBa.engine.factbase.ValidatorManager#update(long,
-     * java.lang.Boolean, java.lang.Boolean)
+     * @see tyRuBa.engine.factbase.ValidatorManager#update(long, java.lang.Boolean, java.lang.Boolean)
      */
     @Override
     public void update(long validatorHandle, Boolean outdated, Boolean hasFacts) {

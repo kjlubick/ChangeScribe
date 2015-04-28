@@ -15,32 +15,34 @@ import tyRuBa.util.ElementSource;
  */
 public class CompiledCount extends SemiDetCompiled {
 
-	private final Compiled query;
-	private final RBTerm extract;
-	private final RBTerm result;
+    private final Compiled query;
 
-	public CompiledCount(Compiled query,RBTerm extract, RBTerm result) {
-		super(Mode.makeDet());
-		this.query = query;
-		this.extract = extract;
-		this.result = result;
-	}
+    private final RBTerm extract;
 
-	@Override
+    private final RBTerm result;
+
+    public CompiledCount(Compiled query, RBTerm extract, RBTerm result) {
+        super(Mode.makeDet());
+        this.query = query;
+        this.extract = extract;
+        this.result = result;
+    }
+
+    @Override
     public Frame runSemiDet(Object input, RBContext context) {
-		ElementSource res = query.runNonDet(((Frame)input).clone(), context);
-		Set results = new HashSet();
-		while (res.hasMoreElements()) {
-			Frame frame = (Frame)res.nextElement();
-			results.add(extract.substitute(frame));
-		}
-		RBTerm resultCount = FrontEnd.makeInteger(results.size());
-		return result.unify(resultCount, (Frame)input);
-	}
+        ElementSource res = query.runNonDet(((Frame) input).clone(), context);
+        Set results = new HashSet();
+        while (res.hasMoreElements()) {
+            Frame frame = (Frame) res.nextElement();
+            results.add(extract.substitute(frame));
+        }
+        RBTerm resultCount = FrontEnd.makeInteger(results.size());
+        return result.unify(resultCount, (Frame) input);
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "COMPILED FINDALL(" + query + "," + result + ")";
-	}
+        return "COMPILED FINDALL(" + query + "," + result + ")";
+    }
 
 }

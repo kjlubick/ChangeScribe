@@ -17,26 +17,27 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public class AdapterUtils {
 
-	private AdapterUtils() {
-		// Cannot be instantiated
-	}
+    private AdapterUtils() {
+        // Cannot be instantiated
+    }
 
-	/**
-	 * Adapt object to given target class type
-	 *
-	 * @param object
-	 * @param target
-	 * @param <V> type of target
-	 * @return adapted
-	 */
-	@SuppressWarnings("unchecked")
-	public static <V> V adapt(Object object, Class<V> target) {
-		if (object == null)
-			return null;
-		if (target.isInstance(object))
-			return (V) object;
-		if (object instanceof IAdaptable)
-			return (V) ((IAdaptable) object).getAdapter(target);
-		return null;
-	}
+    /**
+     * Adapt object to given target class type
+     *
+     * @param object
+     * @param target
+     * @param <V>
+     *            type of target
+     * @return adapted
+     */
+    @SuppressWarnings("unchecked")
+    public static <V> V adapt(Object object, Class<V> target) {
+        if (object == null)
+            return null;
+        if (target.isInstance(object))
+            return (V) object;
+        if (object instanceof IAdaptable)
+            return (V) ((IAdaptable) object).getAdapter(target);
+        return null;
+    }
 }

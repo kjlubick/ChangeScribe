@@ -12,96 +12,97 @@ import tyRuBa.engine.RBTuple;
 import tyRuBa.engine.RBVariable;
 import tyRuBa.engine.RuleBase;
 
-/** 
- * A ModeCheckContext contains a BindingEnv and a ModedRuleBaseIndex used
- * during convertToMode 
+/**
+ * A ModeCheckContext contains a BindingEnv and a ModedRuleBaseIndex used during convertToMode
  */
 
 public class ModeCheckContext implements Cloneable {
 
-	private BindingEnv bindings;
-	private ModedRuleBaseIndex rulebases;
-	
-	/** Constructor */
-	public ModeCheckContext(BindingEnv initialBindings, ModedRuleBaseIndex rulebases) {
-		this.bindings = initialBindings;
-		this.rulebases = rulebases;
-	}
+    private BindingEnv bindings;
 
-	/** return ModedRuleBase with the "best" mode that allow for term */
-	public RuleBase getBestRuleBase(PredicateIdentifier predId,
-	RBTuple args, BindingList bindings) {
-		for (int i = 0; i < args.getNumSubterms(); i++) {
-			bindings.add(args.getSubterm(i).getBindingMode(this));
-		}
-		RuleBase result = rulebases.getBest(predId, bindings);
-		return result;
-	}
+    private ModedRuleBaseIndex rulebases;
 
-	public ModedRuleBaseIndex getModedRuleBaseIndex() {
-		return rulebases;
-	}
-	
-	public BindingEnv getBindingEnv() {
-		return bindings;
-	}
-	
-	/** return true if var becomes bound during execution */
-	public boolean isBound(RBVariable var) {
-		return getBindingEnv().isBound(var);
-	}
+    /** Constructor */
+    public ModeCheckContext(BindingEnv initialBindings, ModedRuleBaseIndex rulebases) {
+        this.bindings = initialBindings;
+        this.rulebases = rulebases;
+    }
 
-	public void removeAllBound(Collection vars) {
-		Iterator itr = vars.iterator();
-		while (itr.hasNext()) {
-			RBVariable curr = (RBVariable)itr.next();
-			if (isBound(curr)) {
-				itr.remove();
-			}
-		}
-	}
-	
-	/** variable becomes bound */
-	public void makeBound(RBVariable variable) {
-		bindings.putBindingMode(variable, Factory.makeBound());
-	}
-	
-	/** all RBVariable in vars become bound */
-	public void bindVars(Collection vars) {
-		Iterator itr = vars.iterator();
-		while (itr.hasNext()) {
-			makeBound((RBVariable)itr.next());
-		}
-	}
+    /** return ModedRuleBase with the "best" mode that allow for term */
+    public RuleBase getBestRuleBase(PredicateIdentifier predId,
+            RBTuple args, BindingList bindings) {
+        for (int i = 0; i < args.getNumSubterms(); i++) {
+            bindings.add(args.getSubterm(i).getBindingMode(this));
+        }
+        RuleBase result = rulebases.getBest(predId, bindings);
+        return result;
+    }
 
-	@Override
+    public ModedRuleBaseIndex getModedRuleBaseIndex() {
+        return rulebases;
+    }
+
+    public BindingEnv getBindingEnv() {
+        return bindings;
+    }
+
+    /** return true if var becomes bound during execution */
+    public boolean isBound(RBVariable var) {
+        return getBindingEnv().isBound(var);
+    }
+
+    public void removeAllBound(Collection vars) {
+        Iterator itr = vars.iterator();
+        while (itr.hasNext()) {
+            RBVariable curr = (RBVariable) itr.next();
+            if (isBound(curr)) {
+                itr.remove();
+            }
+        }
+    }
+
+    /** variable becomes bound */
+    public void makeBound(RBVariable variable) {
+        bindings.putBindingMode(variable, Factory.makeBound());
+    }
+
+    /** all RBVariable in vars become bound */
+    public void bindVars(Collection vars) {
+        Iterator itr = vars.iterator();
+        while (itr.hasNext()) {
+            makeBound((RBVariable) itr.next());
+        }
+    }
+
+    @Override
     public Object clone() {
-		ModeCheckContext cl = new ModeCheckContext(bindings,
-			getModedRuleBaseIndex());
-		cl.bindings = (BindingEnv)getBindingEnv().clone();
-		return cl;
-	}
+        ModeCheckContext cl = new ModeCheckContext(bindings,
+                getModedRuleBaseIndex());
+        cl.bindings = (BindingEnv) getBindingEnv().clone();
+        return cl;
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "---------ModeCheckContext---------\n" 
-			+ "Bindings: " + bindings;
-	}
+        return "---------ModeCheckContext---------\n"
+                + "Bindings: " + bindings;
+    }
 
-	/** return ModeCheckContext consisting only of RBVariables that are bound
-	 *  in both this and other */
-	public ModeCheckContext intersection(ModeCheckContext other) {
-		return new ModeCheckContext(getBindingEnv().intersection(
-			other.getBindingEnv()), getModedRuleBaseIndex());
-	}
+    /**
+     * return ModeCheckContext consisting only of RBVariables that are bound in both this and other
+     */
+    public ModeCheckContext intersection(ModeCheckContext other) {
+        return new ModeCheckContext(getBindingEnv().intersection(
+                other.getBindingEnv()), getModedRuleBaseIndex());
+    }
 
-	public boolean checkIfAllBound(Collection boundVars) {
-		for (Iterator iter = boundVars.iterator(); iter.hasNext();) {
-			RBVariable element = (RBVariable) iter.next();
-			if (!isBound(element)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    public boolean checkIfAllBound(Collection boundVars) {
+        for (Iterator iter = boundVars.iterator(); iter.hasNext();) {
+            RBVariable element = (RBVariable) iter.next();
+            if (!isBound(element)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -8,23 +8,23 @@ import co.edu.unal.colswe.changescribe.core.stereotype.stereotyped.StereotypedEl
 import co.edu.unal.colswe.changescribe.core.textgenerator.phrase.MethodPhraseGenerator;
 
 public class StereotypeMethodDescriptor {
-	
-	public static String describe(List<StereotypedElement> element) {
-		String description = "";
-		int i = 0;
-		for (StereotypedElement method : element) {
-			if(method.getElement() instanceof MethodDeclaration) {
-				MethodPhraseGenerator phraseGenerator = new MethodPhraseGenerator(method, "BASIC");
-				phraseGenerator.generate();
-				if(!description.contains(phraseGenerator.getPhrase())) {
-					String phrase = (i == (element.size() - 1)) ? phraseGenerator.getPhrase().replace(";", "") : phraseGenerator.getPhrase();
-					description += phrase; 
-				}	
-				
-			}
-			i++;
-		}
-		return description;
-	}
+
+    public static String describe(List<StereotypedElement> element) {
+        String description = "";
+        int i = 0;
+        for (StereotypedElement method : element) {
+            if (method.getElement() instanceof MethodDeclaration) {
+                MethodPhraseGenerator phraseGenerator = new MethodPhraseGenerator(method, "BASIC");
+                phraseGenerator.generate();
+                if (!description.contains(phraseGenerator.getPhrase())) {
+                    String phrase = (i == (element.size() - 1)) ? phraseGenerator.getPhrase().replace(";", "") : phraseGenerator.getPhrase();
+                    description += phrase;
+                }
+
+            }
+            i++;
+        }
+        return description;
+    }
 
 }

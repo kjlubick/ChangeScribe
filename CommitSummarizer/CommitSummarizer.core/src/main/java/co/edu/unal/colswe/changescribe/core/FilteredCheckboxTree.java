@@ -13,127 +13,138 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.WorkbenchJob;
 
 /**
- * A FilteredCheckboxTree implementation to be used internally in EGit code.  This tree stores
- * all the tree elements internally, and keeps the check state in sync.  This way, even if an
- * element is filtered, the caller can get and set the checked state.
+ * A FilteredCheckboxTree implementation to be used internally in EGit code. This tree stores all the tree elements internally, and keeps the check state in sync. This way, even if
+ * an element is filtered, the caller can get and set the checked state.
  */
 public class FilteredCheckboxTree extends FilteredTree {
 
-	private static final long FILTER_DELAY = 400;
+    private static final long FILTER_DELAY = 400;
 
-	FormToolkit fToolkit;
-	CachedCheckboxTreeViewer checkboxViewer;
+    FormToolkit fToolkit;
 
-	/**
-	 * Constructor that creates a tree with preset style bits and a CachedContainerCheckedTreeViewer for the tree.
-	 *
-	 * @param parent parent composite
-	 * @param toolkit optional toolkit to create UI elements with, required if the tree is being created in a form editor
-	 */
-	public FilteredCheckboxTree(Composite parent, FormToolkit toolkit) {
-		this(parent, toolkit, SWT.NONE);
-	}
+    CachedCheckboxTreeViewer checkboxViewer;
 
-	/**
-	 * Constructor that creates a tree with preset style bits and a CachedContainerCheckedTreeViewer for the tree.
-	 *
-	 * @param parent parent composite
-	 * @param toolkit optional toolkit to create UI elements with, required if the tree is being created in a form editor
-	 * @param treeStyle
-	 */
-	public FilteredCheckboxTree(Composite parent, FormToolkit toolkit, int treeStyle) {
-		this(parent, toolkit, treeStyle, new PatternFilter());
-	}
+    /**
+     * Constructor that creates a tree with preset style bits and a CachedContainerCheckedTreeViewer for the tree.
+     *
+     * @param parent
+     *            parent composite
+     * @param toolkit
+     *            optional toolkit to create UI elements with, required if the tree is being created in a form editor
+     */
+    public FilteredCheckboxTree(Composite parent, FormToolkit toolkit) {
+        this(parent, toolkit, SWT.NONE);
+    }
 
-	/**
-	 * Constructor that creates a tree with preset style bits and a CachedContainerCheckedTreeViewer for the tree.
-	 *
-	 * @param parent parent composite
-	 * @param toolkit optional toolkit to create UI elements with, required if the tree is being created in a form editor
-	 * @param treeStyle
-	 * @param filter pattern filter to use in the filter control
-	 */
-	public FilteredCheckboxTree(Composite parent, FormToolkit toolkit, int treeStyle, PatternFilter filter) {
-		super(parent, treeStyle, filter, true);
-		fToolkit = toolkit;
-	}
+    /**
+     * Constructor that creates a tree with preset style bits and a CachedContainerCheckedTreeViewer for the tree.
+     *
+     * @param parent
+     *            parent composite
+     * @param toolkit
+     *            optional toolkit to create UI elements with, required if the tree is being created in a form editor
+     * @param treeStyle
+     */
+    public FilteredCheckboxTree(Composite parent, FormToolkit toolkit, int treeStyle) {
+        this(parent, toolkit, treeStyle, new PatternFilter());
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.dialogs.FilteredTree#doCreateTreeViewer(org.eclipse.swt.widgets.Composite, int)
-	 */
-	@Override
+    /**
+     * Constructor that creates a tree with preset style bits and a CachedContainerCheckedTreeViewer for the tree.
+     *
+     * @param parent
+     *            parent composite
+     * @param toolkit
+     *            optional toolkit to create UI elements with, required if the tree is being created in a form editor
+     * @param treeStyle
+     * @param filter
+     *            pattern filter to use in the filter control
+     */
+    public FilteredCheckboxTree(Composite parent, FormToolkit toolkit, int treeStyle, PatternFilter filter) {
+        super(parent, treeStyle, filter, true);
+        fToolkit = toolkit;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.dialogs.FilteredTree#doCreateTreeViewer(org.eclipse.swt.widgets.Composite, int)
+     */
+    @Override
     protected TreeViewer doCreateTreeViewer(Composite actParent, int style) {
-		int treeStyle = style | SWT.CHECK | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER;
-		Tree tree = null;
-		if (fToolkit != null) {
-			tree = fToolkit.createTree(actParent, treeStyle);
-		} else {
-			tree = new Tree(actParent, treeStyle);
-		}
+        int treeStyle = style | SWT.CHECK | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER;
+        Tree tree = null;
+        if (fToolkit != null) {
+            tree = fToolkit.createTree(actParent, treeStyle);
+        } else {
+            tree = new Tree(actParent, treeStyle);
+        }
 
-		checkboxViewer = new CachedCheckboxTreeViewer(tree);
-		return checkboxViewer;
-	}
+        checkboxViewer = new CachedCheckboxTreeViewer(tree);
+        return checkboxViewer;
+    }
 
-	/*
-	 * Overridden to hook a listener on the job and set the deferred content provider
-	 * to synchronous mode before a filter is done.
-	 * @see org.eclipse.ui.dialogs.FilteredTree#doCreateRefreshJob()
-	 */
-	@Override
+    /*
+     * Overridden to hook a listener on the job and set the deferred content provider to synchronous mode before a filter is done.
+     * 
+     * @see org.eclipse.ui.dialogs.FilteredTree#doCreateRefreshJob()
+     */
+    @Override
     protected WorkbenchJob doCreateRefreshJob() {
-		WorkbenchJob filterJob = super.doCreateRefreshJob();
-		filterJob.addJobChangeListener(new JobChangeAdapter() {
-			@Override
+        WorkbenchJob filterJob = super.doCreateRefreshJob();
+        filterJob.addJobChangeListener(new JobChangeAdapter() {
+            @Override
             public void done(IJobChangeEvent event) {
-				if (event.getResult().isOK()) {
-					getDisplay().asyncExec(new Runnable() {
-						@Override
+                if (event.getResult().isOK()) {
+                    getDisplay().asyncExec(new Runnable() {
+                        @Override
                         public void run() {
-							if (checkboxViewer.getTree().isDisposed())
-								return;
-							checkboxViewer.restoreLeafCheckState();
-						}
-					});
-				}
-			}
-		});
-		return filterJob;
-	}
+                            if (checkboxViewer.getTree().isDisposed())
+                                return;
+                            checkboxViewer.restoreLeafCheckState();
+                        }
+                    });
+                }
+            }
+        });
+        return filterJob;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.dialogs.FilteredTree#doCreateFilterText(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.dialogs.FilteredTree#doCreateFilterText(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
     protected Text doCreateFilterText(Composite actParent) {
-		// Overridden so the text gets create using the toolkit if we have one
-		Text parentText = super.doCreateFilterText(actParent);
-		if (fToolkit != null) {
-			int style = parentText.getStyle();
-			parentText.dispose();
-			return fToolkit.createText(actParent, null, style);
-		}
-		return parentText;
-	}
+        // Overridden so the text gets create using the toolkit if we have one
+        Text parentText = super.doCreateFilterText(actParent);
+        if (fToolkit != null) {
+            int style = parentText.getStyle();
+            parentText.dispose();
+            return fToolkit.createText(actParent, null, style);
+        }
+        return parentText;
+    }
 
-	/**
-	 * Clears the filter
-	 */
-	public void clearFilter() {
-		getPatternFilter().setPattern(null);
-		setFilterText(getInitialText());
-		textChanged();
-	}
+    /**
+     * Clears the filter
+     */
+    public void clearFilter() {
+        getPatternFilter().setPattern(null);
+        setFilterText(getInitialText());
+        textChanged();
+    }
 
-	/**
-	 * @return The checkbox treeviewer
-	 */
-	public CachedCheckboxTreeViewer getCheckboxTreeViewer() {
-		return checkboxViewer;
-	}
+    /**
+     * @return The checkbox treeviewer
+     */
+    public CachedCheckboxTreeViewer getCheckboxTreeViewer() {
+        return checkboxViewer;
+    }
 
-	@Override
-	protected long getRefreshJobDelay() {
-		return FILTER_DELAY;
-	}
+    @Override
+    protected long getRefreshJobDelay() {
+        return FILTER_DELAY;
+    }
 }

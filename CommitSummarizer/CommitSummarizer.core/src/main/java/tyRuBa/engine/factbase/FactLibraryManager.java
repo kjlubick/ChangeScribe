@@ -25,6 +25,7 @@ import tyRuBa.util.ElementSource;
 
 /**
  * A FactLibraryManager manages the URLFactLibraries for a QueryEngine.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -44,7 +45,9 @@ public class FactLibraryManager {
 
     /**
      * Adds a fact library for the specified jar file.
-     * @param jarFileLocation the location of the jar file.
+     * 
+     * @param jarFileLocation
+     *            the location of the jar file.
      */
     public void addLibraryJarFile(String jarFileLocation) {
         if (!libraries.containsKey(jarFileLocation)) {
@@ -59,7 +62,9 @@ public class FactLibraryManager {
 
     /**
      * Adds a fact library located at the specified base URL location.
-     * @param baseURL the base location of the fact library.
+     * 
+     * @param baseURL
+     *            the base location of the fact library.
      */
     public void addLibraryURLLocation(String baseURL) {
         if (!libraries.containsKey(baseURL)) {
@@ -69,7 +74,9 @@ public class FactLibraryManager {
 
     /**
      * Retrieves a fact library for a given location.
-     * @param location location of the library.
+     * 
+     * @param location
+     *            location of the library.
      */
     public URLFactLibrary getLibrary(String location) {
         return (URLFactLibrary) libraries.get(location);
@@ -77,7 +84,9 @@ public class FactLibraryManager {
 
     /**
      * Removes a fact library from the system.
-     * @param location location of the library.
+     * 
+     * @param location
+     *            location of the library.
      */
     public void removeLibrary(String location) {
         libraries.remove(location);
@@ -86,19 +95,23 @@ public class FactLibraryManager {
     /** Removes all fact libraries. */
     public void removeAll() {
         libraries = new HashMap();
-        //Quick and dirty to test something:
-//        addLibraryURLLocation("file:///Users/kdvolder/Desktop/eclipse/eclipse-facts/");
+        // Quick and dirty to test something:
+        // addLibraryURLLocation("file:///Users/kdvolder/Desktop/eclipse/eclipse-facts/");
     }
 
     /**
      * Compiles the fact libraries for a given predicate and mode.
-     * @param pm the mode this compilation is for.
-     * @param predId the predicate in the library to compile for.
-     * @param context compilation context
+     * 
+     * @param pm
+     *            the mode this compilation is for.
+     * @param predId
+     *            the predicate in the library to compile for.
+     * @param context
+     *            compilation context
      */
     public Compiled compile(PredicateMode pm, PredicateIdentifier predId, CompilationContext context) {
         if (libraries.size() == 0) {
-            return Compiled.fail; //no libraries, no data.
+            return Compiled.fail; // no libraries, no data.
         }
 
         final Index[] indexes = new Index[libraries.size()];
@@ -149,7 +162,7 @@ public class FactLibraryManager {
             }
         } else {
             if (pm.getParamModes().getNumFree() != 0) {
-                //CASE 3: NonDet and NOT all bound
+                // CASE 3: NonDet and NOT all bound
                 return new Compiled(pm.getMode()) {
 
                     @Override
@@ -175,7 +188,7 @@ public class FactLibraryManager {
                     }
                 };
             } else {
-                //CASE 4: NonDet and all bound
+                // CASE 4: NonDet and all bound
                 throw new Error("This case should not happen");
                 // why not? all bound => SemiDet
             }

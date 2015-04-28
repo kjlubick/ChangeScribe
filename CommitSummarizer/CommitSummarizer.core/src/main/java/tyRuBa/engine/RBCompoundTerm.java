@@ -16,20 +16,19 @@ import tyRuBa.modes.TypeModeError;
 import tyRuBa.modes.UserDefinedTypeConstructor;
 import tyRuBa.util.ObjectTuple;
 
-/** 
- * All instance of RBCompoundTerm must be created through calling
- * ConstructorType.apply
+/**
+ * All instance of RBCompoundTerm must be created through calling ConstructorType.apply
  */
 public abstract class RBCompoundTerm extends RBTerm {
 
     public static RBCompoundTerm make(ConstructorType constructorType, RBTerm term) {
-        return new RBGenericCompoundTerm(constructorType,term);
+        return new RBGenericCompoundTerm(constructorType, term);
     }
-    
+
     public static RBTerm makeRepAsJava(RepAsJavaConstructorType type, Object obj) {
-        return new RBRepAsJavaObjectCompoundTerm(type,obj);
+        return new RBRepAsJavaObjectCompoundTerm(type, obj);
     }
-    
+
     public static RBTerm makeJava(Object o) {
         if (o instanceof Object[]) {
             // Turn arrays into tyruba lists
@@ -40,143 +39,142 @@ public abstract class RBCompoundTerm extends RBTerm {
             return FrontEnd.makeList(terms);
         }
         if (o instanceof UppedTerm) {
-            return ((UppedTerm)o).down();
+            return ((UppedTerm) o).down();
         } else {
             return new RBJavaObjectCompoundTerm(o);
         }
     }
 
-	public int getNumArgs() {
-		return getConstructorType().getArity();
-	}
+    public int getNumArgs() {
+        return getConstructorType().getArity();
+    }
 
-	public RBTerm getArg(int i) {
-		if (getArg() instanceof RBTuple) {
-			return ((RBTuple)getArg()).getSubterm(i);
-		} else if (i == 0) {
-			return getArg();
-		} else { 
-			throw new NoSuchElementException();
-		}
-	}
-
+    public RBTerm getArg(int i) {
+        if (getArg() instanceof RBTuple) {
+            return ((RBTuple) getArg()).getSubterm(i);
+        } else if (i == 0) {
+            return getArg();
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
 
     public abstract RBTerm getArg();
 
     public abstract ConstructorType getConstructorType();
 
-	@Override
+    @Override
     public boolean equals(Object x) {
-		if (!(x instanceof RBCompoundTerm)) {
-			return false;
-		} else {
-			RBCompoundTerm cx = (RBCompoundTerm) x;
-			if (cx.getConstructorType().equals(this.getConstructorType())) {
-				return cx.getArg().equals(this.getArg());
-			} else {
-				return false;
-			}
-		}
-	}
-	
-	@Override
+        if (!(x instanceof RBCompoundTerm)) {
+            return false;
+        } else {
+            RBCompoundTerm cx = (RBCompoundTerm) x;
+            if (cx.getConstructorType().equals(this.getConstructorType())) {
+                return cx.getArg().equals(this.getArg());
+            } else {
+                return false;
+            }
+        }
+    }
+
+    @Override
     public int formHashCode() {
-		return getConstructorType().hashCode() * 19 + getArg().formHashCode();
-	}
+        return getConstructorType().hashCode() * 19 + getArg().formHashCode();
+    }
 
-	@Override
+    @Override
     public int hashCode() {
-		return getConstructorType().hashCode() * 19 + getArg().hashCode();
-	}
+        return getConstructorType().hashCode() * 19 + getArg().hashCode();
+    }
 
-	@Override
+    @Override
     boolean freefor(RBVariable v) {
-		return getArg().freefor(v);
-	}
+        return getArg().freefor(v);
+    }
 
-	@Override
+    @Override
     public BindingMode getBindingMode(ModeCheckContext context) {
-		BindingMode bm = getArg().getBindingMode(context);
-		if (bm.isBound()) {
-			return bm;
-		} else {
-			return Factory.makePartiallyBound();
-		}
-	}
-	
-	@Override
+        BindingMode bm = getArg().getBindingMode(context);
+        if (bm.isBound()) {
+            return bm;
+        } else {
+            return Factory.makePartiallyBound();
+        }
+    }
+
+    @Override
     public boolean isGround() {
-		return getArg().isGround();
-	}
+        return getArg().isGround();
+    }
 
-	@Override
+    @Override
     protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
-		if (!(other instanceof RBCompoundTerm)) {
-			return false;
-		} else {
-			RBCompoundTerm cother = (RBCompoundTerm) other;
-			if (this.getConstructorType().equals(cother.getConstructorType())) {
-				return this.getArg().sameForm(cother.getArg(), lr, rl);
-			} else {
-				return false;
-			}
-		}
-	}
+        if (!(other instanceof RBCompoundTerm)) {
+            return false;
+        } else {
+            RBCompoundTerm cother = (RBCompoundTerm) other;
+            if (this.getConstructorType().equals(cother.getConstructorType())) {
+                return this.getArg().sameForm(cother.getArg(), lr, rl);
+            } else {
+                return false;
+            }
+        }
+    }
 
-	@Override
+    @Override
     public Frame unify(RBTerm other, Frame f) {
-		if (!(other instanceof RBCompoundTerm)) {
-			if (other instanceof RBVariable) {
-				return other.unify(this, f);
-			} else {
-				return null;
-			}
-		} else {
-			RBCompoundTerm cother = (RBCompoundTerm) other;
-			if (! cother.getConstructorType().equals(this.getConstructorType())) {
-				return null;
-			} else {
-				return this.getArg().unify(cother.getArg(), f);
-			}
-		}
-	}
+        if (!(other instanceof RBCompoundTerm)) {
+            if (other instanceof RBVariable) {
+                return other.unify(this, f);
+            } else {
+                return null;
+            }
+        } else {
+            RBCompoundTerm cother = (RBCompoundTerm) other;
+            if (!cother.getConstructorType().equals(this.getConstructorType())) {
+                return null;
+            } else {
+                return this.getArg().unify(cother.getArg(), f);
+            }
+        }
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return getConstructorType().getFunctorId().toString() + getArg();
-	}
+        return getConstructorType().getFunctorId().toString() + getArg();
+    }
 
-	@Override
+    @Override
     protected Type getType(TypeEnv env) throws TypeModeError {
-		Type argType = getArg().getType(env);
-		return getConstructorType().apply(argType);
-	}
+        Type argType = getArg().getType(env);
+        return getConstructorType().apply(argType);
+    }
 
-	@Override
+    @Override
     public void makeAllBound(ModeCheckContext context) {
         getArg().makeAllBound(context);
-	}
-	
-	@Override
-    public Object up() {
-		TypeConstructor tc = getTypeConstructor();
-		if (tc instanceof UserDefinedTypeConstructor) {
-		    TypeMapping mapping = ((UserDefinedTypeConstructor)tc).getMapping();
-		    if (mapping != null) {
-		    		return mapping.toJava(getArg().up());         
-		    	}
-		}
-		return super.up();
-	}
-	
-	public final TypeConstructor getTypeConstructor() {
-		return getConstructorType().getTypeConst();
-	}
+    }
 
-	@Override
+    @Override
+    public Object up() {
+        TypeConstructor tc = getTypeConstructor();
+        if (tc instanceof UserDefinedTypeConstructor) {
+            TypeMapping mapping = ((UserDefinedTypeConstructor) tc).getMapping();
+            if (mapping != null) {
+                return mapping.toJava(getArg().up());
+            }
+        }
+        return super.up();
+    }
+
+    public final TypeConstructor getTypeConstructor() {
+        return getConstructorType().getTypeConst();
+    }
+
+    @Override
     public Object accept(TermVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
@@ -204,9 +202,9 @@ public abstract class RBCompoundTerm extends RBTerm {
             for (int i = 1; i < numArgs; i++) {
                 RBTerm arg = getArg(i);
                 if (arg instanceof RBRepAsJavaObjectCompoundTerm) {
-                    objs[i] = ((RBRepAsJavaObjectCompoundTerm)arg).getValue();
+                    objs[i] = ((RBRepAsJavaObjectCompoundTerm) arg).getValue();
                 } else if (arg instanceof RBJavaObjectCompoundTerm) {
-                    objs[i] = ((RBJavaObjectCompoundTerm)arg).getObject();                    
+                    objs[i] = ((RBJavaObjectCompoundTerm) arg).getObject();
                 } else {
                     objs[i] = arg;
                 }

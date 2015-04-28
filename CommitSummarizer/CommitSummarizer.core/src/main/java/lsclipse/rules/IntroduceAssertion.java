@@ -13,47 +13,50 @@ import tyRuBa.tdbc.ResultSet;
 import tyRuBa.tdbc.TyrubaException;
 
 public class IntroduceAssertion implements Rule {
-	private static final String NEWM_BODY = "?newmBody";
-	private static final String OLDM_BODY = "?oldmBody";
-	private static final String M_FULL_NAME = "?mFullName";
-	private String name_;
+    private static final String NEWM_BODY = "?newmBody";
 
-	public IntroduceAssertion() {
-		name_ = "introduce_assertion";
-	}
+    private static final String OLDM_BODY = "?oldmBody";
 
-	@Override
-	public String getName() {
-		return name_;
-	}
+    private static final String M_FULL_NAME = "?mFullName";
 
-	@Override
-	public String getRefactoringString() {
-		return getName() + "(" + M_FULL_NAME + ")";
-	}
+    private String name_;
 
-	@Override
-	public RefactoringQuery getRefactoringQuery() {
-		return new RefactoringQuery(getName(), getQueryString());
-	}
+    public IntroduceAssertion() {
+        name_ = "introduce_assertion";
+    }
 
-	private String getQueryString() {
-		return "deleted_methodbody(" + M_FULL_NAME + "," + OLDM_BODY
-				+ "),added_methodbody(" + M_FULL_NAME + "," + NEWM_BODY + ")";
-	}
+    @Override
+    public String getName() {
+        return name_;
+    }
 
-	@Override
-	public String checkAdherence(ResultSet rs) throws TyrubaException {
-		String oldmBody = rs.getString(OLDM_BODY);
-		String newmBody = rs.getString(NEWM_BODY);
-		int oldNumAsserts = oldmBody.split("assert").length - 1;
-		int newNumAsserts = newmBody.split("assert").length - 1;
+    @Override
+    public String getRefactoringString() {
+        return getName() + "(" + M_FULL_NAME + ")";
+    }
 
-		if (newNumAsserts > oldNumAsserts) {
-			return getName() + "(\"" + rs.getString(M_FULL_NAME) + "\")";
-		}
+    @Override
+    public RefactoringQuery getRefactoringQuery() {
+        return new RefactoringQuery(getName(), getQueryString());
+    }
 
-		return null;
-	}
+    private String getQueryString() {
+        return "deleted_methodbody(" + M_FULL_NAME + "," + OLDM_BODY
+                + "),added_methodbody(" + M_FULL_NAME + "," + NEWM_BODY + ")";
+    }
+
+    @Override
+    public String checkAdherence(ResultSet rs) throws TyrubaException {
+        String oldmBody = rs.getString(OLDM_BODY);
+        String newmBody = rs.getString(NEWM_BODY);
+        int oldNumAsserts = oldmBody.split("assert").length - 1;
+        int newNumAsserts = newmBody.split("assert").length - 1;
+
+        if (newNumAsserts > oldNumAsserts) {
+            return getName() + "(\"" + rs.getString(M_FULL_NAME) + "\")";
+        }
+
+        return null;
+    }
 
 }

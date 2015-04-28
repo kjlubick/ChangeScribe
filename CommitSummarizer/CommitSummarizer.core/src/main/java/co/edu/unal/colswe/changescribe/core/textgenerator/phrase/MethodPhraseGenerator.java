@@ -17,70 +17,76 @@ import co.edu.unal.colswe.changescribe.core.textgenerator.pos.TaggedTerm;
 import co.edu.unal.colswe.changescribe.core.textgenerator.tokenizer.Tokenizer;
 
 public class MethodPhraseGenerator implements PhraseGenerator {
-	
-	private MethodDeclaration method;
-	private final StereotypedElement element;
-	private String type;
-	private String phraseString;
-	private LinkedList<Parameter> parameters = new LinkedList<Parameter>();
-	private Phrase phrase;
-	
-	public MethodPhraseGenerator(StereotypedElement element, String type) {
-		super();
-		this.element = element;
-		this.type = type;
-		
-		this.method = (MethodDeclaration)  element.getElement();
-		setParameters();
-		
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void setParameters() {
-		List<SingleVariableDeclaration> parameters2 = (getMethod().parameters());
-		for (int i = 0; i < parameters2.size(); i++) {
-			SingleVariableDeclaration param = parameters2.get(i);
-			Parameter parameter = new Parameter(param.getType().toString(), param.getName().getFullyQualifiedName());
-			if(!parameter.isPrimitive()) {
-				getParameters().add(parameter);
-			}
-		}
-	}
 
-	public enum MethodPhraseType {
-		BASIC, COMPLETE
-	}
+    private MethodDeclaration method;
 
-	@Override
-	public void generate() {
-		if(type.equals(MethodPhraseType.BASIC.toString())) {
-			generateSimpleDescription();
-		} else {
-			//TODO generate description to body method
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void generateSimpleDescription() {
-		String methodName = Tokenizer.split(getMethod().getName().getFullyQualifiedName());
-		String className = "";
-		String returnType = "";
-		if(getMethod().getReturnType2() != null) {
-			returnType = getMethod().getReturnType2().toString();
-		}
-		if(getMethod().getParent() instanceof TypeDeclaration) {
-			className = Tokenizer.split(((TypeDeclaration) getMethod().getParent()).getName().toString());
-		} /*else if(getMethod().getParent() instanceof AnonymousClassDeclaration) {
-			className = Tokenizer.split(((AnonymousClassDeclaration) getMethod().getParent())..toString());
-		}*/
-		
-	 final LinkedList<TaggedTerm> taggedMethod = POSTagger.tag(Tokenizer.split(getMethod().getName().getFullyQualifiedName()));
+    private final StereotypedElement element;
+
+    private String type;
+
+    private String phraseString;
+
+    private LinkedList<Parameter> parameters = new LinkedList<Parameter>();
+
+    private Phrase phrase;
+
+    public MethodPhraseGenerator(StereotypedElement element, String type) {
+        super();
+        this.element = element;
+        this.type = type;
+
+        this.method = (MethodDeclaration) element.getElement();
+        setParameters();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setParameters() {
+        List<SingleVariableDeclaration> parameters2 = (getMethod().parameters());
+        for (int i = 0; i < parameters2.size(); i++) {
+            SingleVariableDeclaration param = parameters2.get(i);
+            Parameter parameter = new Parameter(param.getType().toString(), param.getName().getFullyQualifiedName());
+            if (!parameter.isPrimitive()) {
+                getParameters().add(parameter);
+            }
+        }
+    }
+
+    public enum MethodPhraseType {
+        BASIC, COMPLETE
+    }
+
+    @Override
+    public void generate() {
+        if (type.equals(MethodPhraseType.BASIC.toString())) {
+            generateSimpleDescription();
+        } else {
+            // TODO generate description to body method
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void generateSimpleDescription() {
+        String methodName = Tokenizer.split(getMethod().getName().getFullyQualifiedName());
+        String className = "";
+        String returnType = "";
+        if (getMethod().getReturnType2() != null) {
+            returnType = getMethod().getReturnType2().toString();
+        }
+        if (getMethod().getParent() instanceof TypeDeclaration) {
+            className = Tokenizer.split(((TypeDeclaration) getMethod().getParent()).getName().toString());
+        } /*
+           * else if(getMethod().getParent() instanceof AnonymousClassDeclaration) { className = Tokenizer.split(((AnonymousClassDeclaration) getMethod().getParent())..toString());
+           * }
+           */
+
+        final LinkedList<TaggedTerm> taggedMethod = POSTagger.tag(Tokenizer.split(getMethod().getName().getFullyQualifiedName()));
         if (getMethod().isConstructor()) {
-        	if(getMethod().parameters() != null && getMethod().parameters().size() > 0) {
-        		this.phrase = new VerbPhrase("instantiate", new NounPhrase(taggedMethod),  this.parameters);
-        	} else {
-        		this.phrase = new VerbPhrase("instantiate", new NounPhrase(taggedMethod));
-        	}
+            if (getMethod().parameters() != null && getMethod().parameters().size() > 0) {
+                this.phrase = new VerbPhrase("instantiate", new NounPhrase(taggedMethod), this.parameters);
+            } else {
+                this.phrase = new VerbPhrase("instantiate", new NounPhrase(taggedMethod));
+            }
         }
         else if (PhraseUtils.hasLeadingVerb(getTaggedText(methodName).get(0))) {
             if (PhraseUtils.isThirdPersonVerb(taggedMethod.getFirst())) {
@@ -135,53 +141,54 @@ public class MethodPhraseGenerator implements PhraseGenerator {
         else {
             this.phrase = new VerbPhrase(taggedMethod, className, this.parameters, false);
         }
-	    phrase.generate(); 
-		System.out.println("METHOD: " + returnType + " " + methodName + "(" + MethodPhraseUtils.getMethodParamsString(getMethod().parameters()) + ") "  + " PHRASE: " + phrase.toString());
-		phraseString = "\t" + StringUtils.capitalize(phrase.toString())  + ";\n";
-	}
-	
-	private LinkedList<TaggedTerm> getTaggedText(String phrase) {
-		return POSTagger.tag(phrase);
-	}
-	
-	public String getReturnType(String method) {
-		return method.substring(0, method.indexOf(" "));
-	}
-	
-	public MethodDeclaration getMethod() {
-		return method;
-	}
+        phrase.generate();
+        System.out.println("METHOD: " + returnType + " " + methodName + "(" + MethodPhraseUtils.getMethodParamsString(getMethod().parameters()) + ") " + " PHRASE: "
+                + phrase.toString());
+        phraseString = "\t" + StringUtils.capitalize(phrase.toString()) + ";\n";
+    }
 
-	public void setMethod(MethodDeclaration method) {
-		this.method = method;
-	}
+    private LinkedList<TaggedTerm> getTaggedText(String phrase) {
+        return POSTagger.tag(phrase);
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getReturnType(String method) {
+        return method.substring(0, method.indexOf(" "));
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public MethodDeclaration getMethod() {
+        return method;
+    }
 
-	public StereotypedElement getElement() {
-		return element;
-	}
+    public void setMethod(MethodDeclaration method) {
+        this.method = method;
+    }
 
-	public String getPhrase() {
-		return phraseString;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setPhrase(String phrase) {
-		this.phraseString = phrase;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public LinkedList<Parameter> getParameters() {
-		return parameters;
-	}
+    public StereotypedElement getElement() {
+        return element;
+    }
 
-	public void setParameters(LinkedList<Parameter> parameters) {
-		this.parameters = parameters;
-	}
+    public String getPhrase() {
+        return phraseString;
+    }
+
+    public void setPhrase(String phrase) {
+        this.phraseString = phrase;
+    }
+
+    public LinkedList<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(LinkedList<Parameter> parameters) {
+        this.parameters = parameters;
+    }
 
 }

@@ -13,24 +13,24 @@ import tyRuBa.engine.RBUniqueQuantifier;
 
 public interface ExpressionVisitor {
 
-	public Object visit(RBConjunction conjunction);
+    public Object visit(RBConjunction conjunction);
 
-	public Object visit(RBDisjunction disjunction);
+    public Object visit(RBDisjunction disjunction);
 
-	public Object visit(RBExistsQuantifier exists);
+    public Object visit(RBExistsQuantifier exists);
 
-	public Object visit(RBFindAll findAll);
+    public Object visit(RBFindAll findAll);
 
-	public Object visit(RBCountAll count);
+    public Object visit(RBCountAll count);
 
-	public Object visit(RBModeSwitchExpression modeSwitch);
+    public Object visit(RBModeSwitchExpression modeSwitch);
 
-	public Object visit(RBNotFilter notFilter);
+    public Object visit(RBNotFilter notFilter);
 
-	public Object visit(RBPredicateExpression predExp);
+    public Object visit(RBPredicateExpression predExp);
 
-	public Object visit(RBTestFilter testFilter);
+    public Object visit(RBTestFilter testFilter);
 
-	public Object visit(RBUniqueQuantifier unique);
+    public Object visit(RBUniqueQuantifier unique);
 
 }

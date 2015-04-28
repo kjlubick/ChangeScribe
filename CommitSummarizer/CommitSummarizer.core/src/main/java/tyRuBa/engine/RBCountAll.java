@@ -17,96 +17,98 @@ import tyRuBa.modes.TypeModeError;
 
 public class RBCountAll extends RBExpression {
 
-	private RBExpression query;
-	private RBTerm extract;
-	private RBTerm result;
+    private RBExpression query;
 
-	public RBCountAll(RBExpression q, RBTerm e, RBTerm r) {
-		query = q;
-		extract = e;
-		result = r;
-	}
+    private RBTerm extract;
 
-	public RBExpression getQuery() {
-		return query;
-	}
+    private RBTerm result;
 
-	public RBTerm getExtract() {
-		return extract;
-	}
-	
-	public RBTerm getResult() {
-		return result; 
-	}
+    public RBCountAll(RBExpression q, RBTerm e, RBTerm r) {
+        query = q;
+        extract = e;
+        result = r;
+    }
 
-	@Override
+    public RBExpression getQuery() {
+        return query;
+    }
+
+    public RBTerm getExtract() {
+        return extract;
+    }
+
+    public RBTerm getResult() {
+        return result;
+    }
+
+    @Override
     public String toString() {
-		return "COUNTALL(" + getQuery() + "," + getExtract() + "," + getResult() + ")";
-	}
+        return "COUNTALL(" + getQuery() + "," + getExtract() + "," + getResult() + ")";
+    }
 
-	@Override
+    @Override
     public Compiled compile(CompilationContext c) {
-		return new CompiledCount(getQuery().compile(c),getExtract(),getResult());
-	}
+        return new CompiledCount(getQuery().compile(c), getExtract(), getResult());
+    }
 
-	@Override
+    @Override
     public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
-		try {
-			TypeEnv afterQueryEnv = getQuery().typecheck(predinfo, startEnv);
-			TypeEnv resultTypeEnv = Factory.makeTypeEnv();
-			Type resultType = getResult().getType(resultTypeEnv);
-			resultType.checkEqualTypes(Factory.makeAtomicType(
-					Factory.makeTypeConstructor(java.lang.Integer.class)));
-//			resultType.checkEqualTypes(getResult().getType(afterQueryEnv));
-			return afterQueryEnv.intersect(resultTypeEnv);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-	}
+        try {
+            TypeEnv afterQueryEnv = getQuery().typecheck(predinfo, startEnv);
+            TypeEnv resultTypeEnv = Factory.makeTypeEnv();
+            Type resultType = getResult().getType(resultTypeEnv);
+            resultType.checkEqualTypes(Factory.makeAtomicType(
+                    Factory.makeTypeConstructor(java.lang.Integer.class)));
+            // resultType.checkEqualTypes(getResult().getType(afterQueryEnv));
+            return afterQueryEnv.intersect(resultTypeEnv);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+    }
 
-	@Override
+    @Override
     public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
-		Collection freevars = query.getFreeVariables(context);
-		Collection extractedVars = getExtract().getVariables();
-		freevars.removeAll(extractedVars);
-		
-		if (!freevars.isEmpty()) {
-			return Factory.makeModedExpression(
-				this,
-				new ErrorMode("Variables improperly left unbound in COUNT: " 
-					+ freevars),
-				context);
-		} else {
-			RBExpression convQuery = query.convertToMode(context, rearrange);
-			Mode convertedMode = convQuery.getMode();
-			if (convertedMode instanceof ErrorMode) { 
-				return Factory.makeModedExpression(this, convQuery.getMode(), 
-					convQuery.getNewContext());
-			} else {
-				ModeCheckContext newContext = (ModeCheckContext)context.clone();
-				result.makeAllBound(newContext);
-				return Factory.makeModedExpression(
-					new RBCountAll(convQuery, getExtract(), getResult()),
-					convertedMode.findAll(), newContext);
-			}
-		}
-	}
-	
-	@Override
-    public RBExpression convertToNormalForm(boolean negate) {
-		RBExpression result = 
-			new RBCountAll(getQuery().convertToNormalForm(false), 
-					getExtract(), getResult());
-		if (negate) {
-			return new RBNotFilter(result);
-		} else {
-			return result;
-		}
-	}
+        Collection freevars = query.getFreeVariables(context);
+        Collection extractedVars = getExtract().getVariables();
+        freevars.removeAll(extractedVars);
 
-	@Override
+        if (!freevars.isEmpty()) {
+            return Factory.makeModedExpression(
+                    this,
+                    new ErrorMode("Variables improperly left unbound in COUNT: "
+                            + freevars),
+                    context);
+        } else {
+            RBExpression convQuery = query.convertToMode(context, rearrange);
+            Mode convertedMode = convQuery.getMode();
+            if (convertedMode instanceof ErrorMode) {
+                return Factory.makeModedExpression(this, convQuery.getMode(),
+                        convQuery.getNewContext());
+            } else {
+                ModeCheckContext newContext = (ModeCheckContext) context.clone();
+                result.makeAllBound(newContext);
+                return Factory.makeModedExpression(
+                        new RBCountAll(convQuery, getExtract(), getResult()),
+                        convertedMode.findAll(), newContext);
+            }
+        }
+    }
+
+    @Override
+    public RBExpression convertToNormalForm(boolean negate) {
+        RBExpression result =
+                new RBCountAll(getQuery().convertToNormalForm(false),
+                        getExtract(), getResult());
+        if (negate) {
+            return new RBNotFilter(result);
+        } else {
+            return result;
+        }
+    }
+
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
 }

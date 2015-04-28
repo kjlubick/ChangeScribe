@@ -5,27 +5,27 @@ import tyRuBa.engine.RBContext;
 import tyRuBa.util.ElementSource;
 
 public class CompiledFirst extends SemiDetCompiled {
-	
-	Compiled compiled;
 
-	public CompiledFirst(Compiled compiled) {
-		super(compiled.getMode().first());
-		this.compiled = compiled;
-	}
+    Compiled compiled;
 
-	@Override
+    public CompiledFirst(Compiled compiled) {
+        super(compiled.getMode().first());
+        this.compiled = compiled;
+    }
+
+    @Override
     public Frame runSemiDet(Object input, RBContext context) {
-		ElementSource result = compiled.runNonDet(input, context);
-		if (result.hasMoreElements()) {
-			return (Frame)result.nextElement();
-		}
-		else
-			return null;
-	}
+        ElementSource result = compiled.runNonDet(input, context);
+        if (result.hasMoreElements()) {
+            return (Frame) result.nextElement();
+        }
+        else
+            return null;
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "FIRST(" + compiled + ")";
-	}
+        return "FIRST(" + compiled + ")";
+    }
 
 }

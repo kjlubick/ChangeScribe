@@ -15,59 +15,60 @@ import tyRuBa.engine.RBTerm;
 import tyRuBa.engine.RBTuple;
 
 /**
- * A ConstructorType represents the type of a constructor for making composite terms
- * out of there parts. It can be applied to a number of argument types and returns
- * the type of the corresponding compoundterm.  
+ * A ConstructorType represents the type of a constructor for making composite terms out of there parts. It can be applied to a number of argument types and returns the type of the
+ * corresponding compoundterm.
  */
 public class GenericConstructorType extends ConstructorType implements Serializable {
 
-	FunctorIdentifier identifier;
-	Type     args;
-	CompositeType result;
+    FunctorIdentifier identifier;
 
-	public GenericConstructorType(FunctorIdentifier identifier,Type args, CompositeType result) {
-		this.identifier = identifier;
+    Type args;
+
+    CompositeType result;
+
+    public GenericConstructorType(FunctorIdentifier identifier, Type args, CompositeType result) {
+        this.identifier = identifier;
         this.args = args;
-		this.result = result;
-	}
-	
-	@Override
+        this.result = result;
+    }
+
+    @Override
     public FunctorIdentifier getFunctorId() {
-		return identifier;
-	}
+        return identifier;
+    }
 
     @Override
     public TypeConstructor getTypeConst() {
         return result.getTypeConstructor();
     }
-    
-	@Override
+
+    @Override
     public int getArity() {
         if (args instanceof TupleType)
-            return ((TupleType)args).size();
+            return ((TupleType) args).size();
         else
             return 1;
-	}
+    }
 
-	@Override
+    @Override
     public RBTerm apply(RBTerm tuple) {
-		return RBCompoundTerm.make(this,tuple);
-	}
-	
+        return RBCompoundTerm.make(this, tuple);
+    }
+
     @Override
     public RBTerm apply(ArrayList terms) {
         return apply(RBTuple.make(terms));
     }
-    
-	@Override
-    public Type apply(Type argType) throws TypeModeError {          
-		Map renamings = new HashMap();
-		Type iargs = args.clone(renamings);            
-		CompositeType iresult = (CompositeType)result.clone(renamings);
-		//TODO: This is not quite correct but just for now...                      
+
+    @Override
+    public Type apply(Type argType) throws TypeModeError {
+        Map renamings = new HashMap();
+        Type iargs = args.clone(renamings);
+        CompositeType iresult = (CompositeType) result.clone(renamings);
+        // TODO: This is not quite correct but just for now...
         argType.checkEqualTypes(iargs);
-		return iresult.getTypeConstructor().apply(iresult.getArgs(), true); 
-	}
+        return iresult.getTypeConstructor().apply(iresult.getArgs(), true);
+    }
 
     @Override
     public boolean equals(Object other) {
@@ -78,10 +79,9 @@ public class GenericConstructorType extends ConstructorType implements Serializa
             return args.equals(ctOther.args) && identifier.equals(ctOther.identifier) && result.equals(ctOther.result);
         }
     }
-    
+
     @Override
     public int hashCode() {
-    		return args.hashCode() + identifier.hashCode()*13 + result.hashCode()*31;
+        return args.hashCode() + identifier.hashCode() * 13 + result.hashCode() * 31;
     }
 }
-

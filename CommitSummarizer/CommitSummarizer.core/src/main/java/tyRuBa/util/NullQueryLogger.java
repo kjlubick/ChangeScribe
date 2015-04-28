@@ -10,14 +10,17 @@ import tyRuBa.engine.RBExpression;
  */
 public class NullQueryLogger extends QueryLogger {
 
-	public static NullQueryLogger the = new NullQueryLogger();
-	
-	private NullQueryLogger() {}
+    public static NullQueryLogger the = new NullQueryLogger();
 
-	@Override
-    final public void close() {}
+    private NullQueryLogger() {
+    }
 
-	@Override
-    final public void logQuery(RBExpression query) {}
+    @Override
+    final public void close() {
+    }
+
+    @Override
+    final public void logQuery(RBExpression query) {
+    }
 
 }

@@ -10,25 +10,26 @@ import co.edu.unal.colswe.changescribe.core.stereotype.stereotyped.StereotypedMe
 import co.edu.unal.colswe.changescribe.core.visitor.TypeVisitor;
 
 public class TypeAnalyzer {
-	private List<StereotypedMethod> stereotypedMethods;
-	private StringBuilder report;
+    private List<StereotypedMethod> stereotypedMethods;
 
-	public TypeAnalyzer(final TypeDeclaration type) {
-		super();
-		this.stereotypedMethods = new LinkedList<StereotypedMethod>();
-		this.report = new StringBuilder();
-		final TypeVisitor visitor = new TypeVisitor(this);
-		if(type != null && visitor != null) {
-			type.accept(visitor);
-		}
-	}
+    private StringBuilder report;
 
-	public List<StereotypedMethod> getStereotypedMethods() {
-		return this.stereotypedMethods;
-	}
+    public TypeAnalyzer(final TypeDeclaration type) {
+        super();
+        this.stereotypedMethods = new LinkedList<StereotypedMethod>();
+        this.report = new StringBuilder();
+        final TypeVisitor visitor = new TypeVisitor(this);
+        if (type != null && visitor != null) {
+            type.accept(visitor);
+        }
+    }
 
-	public StringBuilder getReport() {
-		return this.report;
-	}
+    public List<StereotypedMethod> getStereotypedMethods() {
+        return this.stereotypedMethods;
+    }
+
+    public StringBuilder getReport() {
+        return this.report;
+    }
 
 }

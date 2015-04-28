@@ -10,6 +10,7 @@ import tyRuBa.util.pager.Pager.ResourceId;
 
 /**
  * Represents a location on by a URL
+ * 
  * @category FactBase
  * @author riecken
  */

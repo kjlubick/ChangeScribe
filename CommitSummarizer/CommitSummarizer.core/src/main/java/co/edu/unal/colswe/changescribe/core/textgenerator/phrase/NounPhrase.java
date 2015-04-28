@@ -9,82 +9,85 @@ import co.edu.unal.colswe.changescribe.core.textgenerator.pos.TaggedTerm;
 import co.edu.unal.colswe.changescribe.core.textgenerator.tokenizer.Tokenizer;
 
 public class NounPhrase extends Phrase {
-	private StringBuilder phrase;
-	private List<Parameter> parameters;
-	private String connector;
-	private StringBuilder complementPhrase;
+    private StringBuilder phrase;
 
-	public NounPhrase(String name) {
-		super(POSTagger.tag(Tokenizer.split(name)));
-	}
-	
-	public NounPhrase(LinkedList<TaggedTerm> taggedPhrase) {
-		super(taggedPhrase);
-	}
+    private List<Parameter> parameters;
 
-	public NounPhrase(LinkedList<TaggedTerm> taggedPhrase, List<Parameter> parameters, String connector) {
-		super(taggedPhrase);
-		this.setParameters(parameters);
-		this.connector = connector;
-	}
+    private String connector;
 
-	@Override
+    private StringBuilder complementPhrase;
+
+    public NounPhrase(String name) {
+        super(POSTagger.tag(Tokenizer.split(name)));
+    }
+
+    public NounPhrase(LinkedList<TaggedTerm> taggedPhrase) {
+        super(taggedPhrase);
+    }
+
+    public NounPhrase(LinkedList<TaggedTerm> taggedPhrase, List<Parameter> parameters, String connector) {
+        super(taggedPhrase);
+        this.setParameters(parameters);
+        this.connector = connector;
+    }
+
+    @Override
     public void generate() {
-		if (this.taggedPhrase == null || this.taggedPhrase.isEmpty()) {
-			return;
-		}
-		this.phrase = new StringBuilder();
-		for (final TaggedTerm tt : this.taggedPhrase) {
-			this.phrase.append(String.valueOf(tt.getTerm()) + " ");
-		}
-		
-		if(parameters != null && !parameters.isEmpty()) {
-			this.complementPhrase = new StringBuilder();
-			String argsDescriptor = "";
-			for(Parameter param : getParameters()) {
-				ParameterPhrase pp = new ParameterPhrase(param);
-				pp.generate();
-				String paramText = pp.toString();
-				if(!argsDescriptor.toLowerCase().contains(paramText.toLowerCase())) {
-					if(!argsDescriptor.equals("")) {
-						argsDescriptor += ", ";
-					} else {
-						argsDescriptor = "";
-					}
-					argsDescriptor += paramText;
-				}
-			}
-			this.complementPhrase.append(StringUtils.clearLastCharacterInText(argsDescriptor, ",") + " ");
-		}
-		
-	}
+        if (this.taggedPhrase == null || this.taggedPhrase.isEmpty()) {
+            return;
+        }
+        this.phrase = new StringBuilder();
+        for (final TaggedTerm tt : this.taggedPhrase) {
+            this.phrase.append(String.valueOf(tt.getTerm()) + " ");
+        }
 
-	@Override
+        if (parameters != null && !parameters.isEmpty()) {
+            this.complementPhrase = new StringBuilder();
+            String argsDescriptor = "";
+            for (Parameter param : getParameters()) {
+                ParameterPhrase pp = new ParameterPhrase(param);
+                pp.generate();
+                String paramText = pp.toString();
+                if (!argsDescriptor.toLowerCase().contains(paramText.toLowerCase())) {
+                    if (!argsDescriptor.equals("")) {
+                        argsDescriptor += ", ";
+                    } else {
+                        argsDescriptor = "";
+                    }
+                    argsDescriptor += paramText;
+                }
+            }
+            this.complementPhrase.append(StringUtils.clearLastCharacterInText(argsDescriptor, ",") + " ");
+        }
+
+    }
+
+    @Override
     public String toString() {
-		StringBuilder phrase = new StringBuilder();
-		if(this.phrase != null && !this.phrase.toString().equals("")) {
-			phrase.append(this.phrase.toString() + " ");
-		}
-		if(this.complementPhrase != null && !this.complementPhrase.toString().equals("")) {
-			phrase.append(connector + " " + this.complementPhrase.toString() + " ");
-		}
-		
-		return phrase.toString().trim();
-	}
+        StringBuilder phrase = new StringBuilder();
+        if (this.phrase != null && !this.phrase.toString().equals("")) {
+            phrase.append(this.phrase.toString() + " ");
+        }
+        if (this.complementPhrase != null && !this.complementPhrase.toString().equals("")) {
+            phrase.append(connector + " " + this.complementPhrase.toString() + " ");
+        }
 
-	public List<Parameter> getParameters() {
-		return parameters;
-	}
+        return phrase.toString().trim();
+    }
 
-	public void setParameters(List<Parameter> parameters) {
-		this.parameters = parameters;
-	}
+    public List<Parameter> getParameters() {
+        return parameters;
+    }
 
-	public String getConnector() {
-		return connector;
-	}
+    public void setParameters(List<Parameter> parameters) {
+        this.parameters = parameters;
+    }
 
-	public void setConnector(String connector) {
-		this.connector = connector;
-	}
+    public String getConnector() {
+        return connector;
+    }
+
+    public void setConnector(String connector) {
+        this.connector = connector;
+    }
 }

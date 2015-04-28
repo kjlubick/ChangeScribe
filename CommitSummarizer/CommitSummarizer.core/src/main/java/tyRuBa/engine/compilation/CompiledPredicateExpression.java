@@ -10,43 +10,45 @@ import tyRuBa.util.ElementSource;
 
 public class CompiledPredicateExpression extends Compiled {
 
-	final private RuleBase rules;
-	final private RBTuple args;
+    final private RuleBase rules;
 
-	public CompiledPredicateExpression(Mode mode, RuleBase rules, RBTuple args) {
-		super(mode);
-		this.rules = rules;
-		this.args = args;	
-	}
+    final private RBTuple args;
 
-	@Override
+    public CompiledPredicateExpression(Mode mode, RuleBase rules, RBTuple args) {
+        super(mode);
+        this.rules = rules;
+        this.args = args;
+    }
+
+    @Override
     final public ElementSource runNonDet(final Object input, RBContext context) {
-		RBTuple goal = (RBTuple)args.substitute((Frame)input);
-		ElementSource result = compiledRules().runNonDet(goal, context);
-		if (((Frame)input).isEmpty()) {
-//			PoormansProfiler.countEmptyFrameAppend++;
-			return result;
-		} else {
-			return result.map(new Action() {
-				@Override
+        RBTuple goal = (RBTuple) args.substitute((Frame) input);
+        ElementSource result = compiledRules().runNonDet(goal, context);
+        if (((Frame) input).isEmpty()) {
+            // PoormansProfiler.countEmptyFrameAppend++;
+            return result;
+        } else {
+            return result.map(new Action() {
+                @Override
                 public Object compute(Object resultFrame) {
-					return ((Frame)input).append((Frame)resultFrame);
-				}
-				@Override
+                    return ((Frame) input).append((Frame) resultFrame);
+                }
+
+                @Override
                 public String toString() {
-					return "++" + input;
-				}
-			});
-		}
-	}
+                    return "++" + input;
+                }
+            });
+        }
+    }
 
-	private Compiled compiledRules() {
-		return rules.getCompiled();
-	}
+    private Compiled compiledRules() {
+        return rules.getCompiled();
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "PRED(" + args + ")";
-	}
+        return "PRED(" + args + ")";
+    }
 
 }

@@ -10,60 +10,60 @@ import tyRuBa.modes.TypeEnv;
 /** A variable who's binding is totally ignored like prologs _ variable */
 public class RBIgnoredVariable extends RBVariable {
 
-	public static final RBIgnoredVariable the = new RBIgnoredVariable();
+    public static final RBIgnoredVariable the = new RBIgnoredVariable();
 
-	private RBIgnoredVariable() {
-		super("?");
-	}
+    private RBIgnoredVariable() {
+        super("?");
+    }
 
-	@Override
+    @Override
     public Frame unify(RBTerm other, Frame f) {
-		return f;
-	}
+        return f;
+    }
 
-	@Override
+    @Override
     boolean freefor(RBVariable v) {
-		return true;
-	}
+        return true;
+    }
 
-	@Override
+    @Override
     protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
-		return this == other;
-	}
+        return this == other;
+    }
 
-	@Override
+    @Override
     public int formHashCode() {
-		return 1;
-	}
+        return 1;
+    }
 
-	@Override
+    @Override
     public boolean equals(Object obj) {
-		return obj == this;
-	}
+        return obj == this;
+    }
 
-	@Override
+    @Override
     public int hashCode() {
-		return 66727982;
-	}
+        return 66727982;
+    }
 
-	@Override
+    @Override
     public Object clone() {
-		return this;
-	}
-	
-	@Override
-    protected Type getType(TypeEnv env) {
-		return Factory.makeTVar("");
-	}
-	
-	@Override
-    public Object accept(TermVisitor v) {
-		return v.visit(this);
-	}
+        return this;
+    }
 
-	public Object readResolve() throws ObjectStreamException {
-		return the; // this is a singleton class, should not allow
-		            // creation of copies, not even by deserialization
-	}
-	
+    @Override
+    protected Type getType(TypeEnv env) {
+        return Factory.makeTVar("");
+    }
+
+    @Override
+    public Object accept(TermVisitor v) {
+        return v.visit(this);
+    }
+
+    public Object readResolve() throws ObjectStreamException {
+        return the; // this is a singleton class, should not allow
+                    // creation of copies, not even by deserialization
+    }
+
 }

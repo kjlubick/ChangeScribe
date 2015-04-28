@@ -10,96 +10,95 @@ import tyRuBa.modes.TupleType;
 import tyRuBa.modes.TypeModeError;
 
 /**
- * A ValidatorComponent is an RBComponent wrapping an other RBComponent
- * "guarding" it with a Validator. The Validator may at any time become
- * invalidated. At this time the Validator itself becomes invalidated
- * and may be removed from wherever it happens to be stored.
+ * A ValidatorComponent is an RBComponent wrapping an other RBComponent "guarding" it with a Validator. The Validator may at any time become invalidated. At this time the Validator
+ * itself becomes invalidated and may be removed from wherever it happens to be stored.
  * 
  * @author kdvolder
  */
 
 public class ValidatorComponent extends RBComponent {
 
-	private Validator validator;
-	private RBComponent comp;
+    private Validator validator;
 
-	public ValidatorComponent(RBComponent c, Validator validator) {
-		this.validator = validator;
-		this.comp = c;
-	}
+    private RBComponent comp;
 
-	@Override
+    public ValidatorComponent(RBComponent c, Validator validator) {
+        this.validator = validator;
+        this.comp = c;
+    }
+
+    @Override
     public boolean isValid() {
-		return (validator != null && validator.isValid());
-	}
+        return (validator != null && validator.isValid());
+    }
 
-	void checkValid() {
-		if (!isValid()) {
-			throw new Error("Internal Error: Using an invalidated component: "
-					+this);
-		}
-	}
+    void checkValid() {
+        if (!isValid()) {
+            throw new Error("Internal Error: Using an invalidated component: "
+                    + this);
+        }
+    }
 
-	@Override
+    @Override
     public Validator getValidator() {
-		return validator;
-	}
+        return validator;
+    }
 
-	@Override
+    @Override
     public RBTuple getArgs() {
-		checkValid();
-		return comp.getArgs();
-	}
-	
-	@Override
+        checkValid();
+        return comp.getArgs();
+    }
+
+    @Override
     public PredicateIdentifier getPredId() {
-		checkValid();
-		return comp.getPredId();
-	}
-	
-	@Override
+        checkValid();
+        return comp.getPredId();
+    }
+
+    @Override
     public TupleType typecheck(PredInfoProvider predinfos) throws TypeModeError {
-		checkValid();
-		return comp.typecheck(predinfos);
-	}
+        checkValid();
+        return comp.typecheck(predinfos);
+    }
 
-	@Override
+    @Override
     public RBComponent convertToNormalForm() {
-		checkValid();
-		return new ValidatorComponent(comp.convertToNormalForm(), validator);
-	}
+        checkValid();
+        return new ValidatorComponent(comp.convertToNormalForm(), validator);
+    }
 
-	@Override
+    @Override
     public boolean isGroundFact() {
-		checkValid();
-		return comp.isGroundFact();
-	}
+        checkValid();
+        return comp.isGroundFact();
+    }
 
-	@Override
+    @Override
     public String toString() {
-		if (isValid())
-			return comp.toString();
-		else
-			return "ValidatorComponent(INVALIDATED,"+comp+")";
-	}
+        if (isValid())
+            return comp.toString();
+        else
+            return "ValidatorComponent(INVALIDATED," + comp + ")";
+    }
 
-	@Override
+    @Override
     public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) throws TypeModeError {
-		checkValid();
-		RBComponent converted = comp.convertToMode(mode, context);
-		return new ValidatorComponent(converted, validator);
-	}
+        checkValid();
+        RBComponent converted = comp.convertToMode(mode, context);
+        return new ValidatorComponent(converted, validator);
+    }
 
-	@Override
+    @Override
     public Mode getMode() {
-		checkValid();
-		return comp.getMode();
-	}
+        checkValid();
+        return comp.getMode();
+    }
 
-	@Override
+    @Override
     public Compiled compile(final CompilationContext c) {
-		checkValid();
-		return comp.compile(c);
-	}
+        checkValid();
+        return comp.compile(c);
+    }
 
 }

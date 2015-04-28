@@ -19,8 +19,8 @@ import tyRuBa.modes.PredicateMode;
 import tyRuBa.util.pager.URLLocation;
 
 /**
- * A URLFactLibrary is a collection of facts that are stored at some location.
- * They can be accessed and queried, but not modified.
+ * A URLFactLibrary is a collection of facts that are stored at some location. They can be accessed and queried, but not modified.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -61,9 +61,13 @@ public class URLFactLibrary {
 
     /**
      * Retrieves an index for a given mode of a predicate.
-     * @param predicateName name of the predicate that the index is for.
-     * @param arity arity of the predicate.
-     * @param mode mode of the predicate.
+     * 
+     * @param predicateName
+     *            name of the predicate that the index is for.
+     * @param arity
+     *            arity of the predicate.
+     * @param mode
+     *            mode of the predicate.
      */
     public Index getIndex(String predicateName, int arity, PredicateMode mode) {
 

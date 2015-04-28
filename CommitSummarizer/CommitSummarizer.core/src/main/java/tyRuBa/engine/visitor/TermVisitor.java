@@ -10,17 +10,17 @@ import tyRuBa.engine.RBVariable;
 
 public interface TermVisitor {
 
-	Object visit(RBCompoundTerm compoundTerm);
+    Object visit(RBCompoundTerm compoundTerm);
 
-	Object visit(RBIgnoredVariable ignoredVar);
+    Object visit(RBIgnoredVariable ignoredVar);
 
-	Object visit(RBPair pair);
+    Object visit(RBPair pair);
 
-	Object visit(RBQuoted quoted);
-	
-	Object visit(RBTuple tuple);
+    Object visit(RBQuoted quoted);
 
-	Object visit(RBVariable var);
+    Object visit(RBTuple tuple);
 
-	Object visit(RBTemplateVar var);    
+    Object visit(RBVariable var);
+
+    Object visit(RBTemplateVar var);
 }

@@ -13,6 +13,7 @@ import tyRuBa.util.pager.Pager.ResourceId;
 
 /**
  * An Id for a resource that is stored on disk. Accessed using URLs.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -60,14 +61,14 @@ public class URLResourceID extends ResourceId {
     /** Opens an OutputStream to the resource. */
     @Override
     public OutputStream writeResource() throws IOException {
-        //read only, so return null;
+        // read only, so return null;
         return null;
     }
 
     /** Deletes the resource */
     @Override
     public void removeResource() {
-        //read only, so do nothing
+        // read only, so do nothing
     }
 
     /** Checks whether the resource exists. */

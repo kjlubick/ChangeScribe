@@ -28,7 +28,8 @@
 //	
 //	public void tstTypeCheckTime() throws ParseException, TypeModeError {
 //		SimpleRuleBaseBucket bucket = new SimpleRuleBaseBucket(frontend);
-//		RBExpression e = bucket.makeExpression("string_append(abc,def,?a)");//		long runtime;
+//		RBExpression e = bucket.makeExpression("string_append(abc,def,?a)");
+//		long runtime;
 //
 //		for (int loop = 0; loop <= 100; loop++) {
 //			runtime = System.currentTimeMillis();
@@ -54,4 +55,4 @@
 //		}
 //
 //	}
-//}
+// }

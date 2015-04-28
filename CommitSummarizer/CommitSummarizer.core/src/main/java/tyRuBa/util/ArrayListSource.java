@@ -4,41 +4,45 @@ import java.util.ArrayList;
 
 public class ArrayListSource extends ElementSource {
 
-	int pos = 0;
-	int sz;
-	ArrayList els;
-	
-	public ArrayListSource(ArrayList els) {
-		this.els = els;
-		sz = els.size();
-	}
-	
-	@Override
+    int pos = 0;
+
+    int sz;
+
+    ArrayList els;
+
+    public ArrayListSource(ArrayList els) {
+        this.els = els;
+        sz = els.size();
+    }
+
+    @Override
     public int status() {
-		return (pos < sz) ? ELEMENT_READY : NO_MORE_ELEMENTS;
-	}
-	@Override
+        return (pos < sz) ? ELEMENT_READY : NO_MORE_ELEMENTS;
+    }
+
+    @Override
     public Object nextElement() {
-		return els.get(pos++);
-	}
-	@Override
+        return els.get(pos++);
+    }
+
+    @Override
     public void print(PrintingState p) {
-		p.print("{");
-		for (int i = pos; i < els.size(); i++) {
-			if (i > 0)
-				p.print(",");
-			p.print(els.get(i).toString());
-		}
-		p.print("}");
-	}
-	
-	@Override
+        p.print("{");
+        for (int i = pos; i < els.size(); i++) {
+            if (i > 0)
+                p.print(",");
+            p.print(els.get(i).toString());
+        }
+        p.print("}");
+    }
+
+    @Override
     public ElementSource first() {
-		// An ArrayListSource is not lazy... so don;t bother being lazy either
-		if (hasMoreElements())
-			return ElementSource.singleton(nextElement());
-		else
-			return ElementSource.theEmpty;
-	}
+        // An ArrayListSource is not lazy... so don;t bother being lazy either
+        if (hasMoreElements())
+            return ElementSource.singleton(nextElement());
+        else
+            return ElementSource.theEmpty;
+    }
 
 }

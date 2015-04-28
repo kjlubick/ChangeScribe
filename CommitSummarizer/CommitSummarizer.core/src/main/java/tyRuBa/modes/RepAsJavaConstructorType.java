@@ -19,13 +19,15 @@ import tyRuBa.engine.RBTerm;
 public class RepAsJavaConstructorType extends ConstructorType implements Serializable {
 
     FunctorIdentifier functorId;
+
     CompositeType result;
+
     Type repAsType;
-    
+
     public RepAsJavaConstructorType(FunctorIdentifier functorId, Type repAs, CompositeType result) {
         this.functorId = functorId;
         this.result = result;
-        this.repAsType = repAs;        
+        this.repAsType = repAs;
     }
 
     @Override
@@ -46,10 +48,10 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
     @Override
     public RBTerm apply(RBTerm term) {
         if (term instanceof RBJavaObjectCompoundTerm) {
-            return RBCompoundTerm.makeRepAsJava(this,((RBJavaObjectCompoundTerm)term).getObject());
+            return RBCompoundTerm.makeRepAsJava(this, ((RBJavaObjectCompoundTerm) term).getObject());
         }
         else {
-            return RBCompoundTerm.make(this,term);
+            return RBCompoundTerm.make(this, term);
         }
     }
 
@@ -62,14 +64,14 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
     public Type apply(Type argType) throws TypeModeError {
         Map renamings = new HashMap();
         Type iargs = repAsType.clone(renamings);
-        CompositeType iresult = (CompositeType)result.clone(renamings);
+        CompositeType iresult = (CompositeType) result.clone(renamings);
         argType.checkEqualTypes(iargs);
         return iresult.getTypeConstructor().apply(iresult.getArgs(), true);
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other.getClass() != this.getClass()) { //TODO: This is probably a very subtle equality bug!
+        if (other.getClass() != this.getClass()) { // TODO: This is probably a very subtle equality bug!
             return false;
         } else {
             RepAsJavaConstructorType ctOther = (RepAsJavaConstructorType) other;
@@ -79,7 +81,7 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
 
     @Override
     public int hashCode() {
-    		return repAsType.hashCode() + 13 * functorId.hashCode() + 31*result.hashCode();
+        return repAsType.hashCode() + 13 * functorId.hashCode() + 31 * result.hashCode();
     }
-    
+
 }

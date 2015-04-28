@@ -17,97 +17,100 @@ import tyRuBa.modes.TypeModeError;
 
 public class RBFindAll extends RBExpression {
 
-	private RBExpression query;
-	private RBTerm extract;
-	private RBTerm result;
+    private RBExpression query;
 
-	public RBFindAll(RBExpression q, RBTerm e, RBTerm r) {
-		query = q;
-		extract = e;
-		result = r;
-	}
+    private RBTerm extract;
 
-	public RBExpression getQuery() {
-		return query;
-	}
-	
-	public RBTerm getExtract() {
-		return extract;
-	}
-	public RBTerm getResult() {
-		return result; 
-	}
+    private RBTerm result;
 
-	@Override
+    public RBFindAll(RBExpression q, RBTerm e, RBTerm r) {
+        query = q;
+        extract = e;
+        result = r;
+    }
+
+    public RBExpression getQuery() {
+        return query;
+    }
+
+    public RBTerm getExtract() {
+        return extract;
+    }
+
+    public RBTerm getResult() {
+        return result;
+    }
+
+    @Override
     public String toString() {
-		return "FINDALL(" + getQuery() + "," + getExtract() + "," 
-			+ getResult() + ")";
-	}
+        return "FINDALL(" + getQuery() + "," + getExtract() + ","
+                + getResult() + ")";
+    }
 
-	@Override
+    @Override
     public Compiled compile(CompilationContext c) {
-		return new CompiledFindAll(getQuery().compile(c),getExtract(),getResult());
-	}
+        return new CompiledFindAll(getQuery().compile(c), getExtract(), getResult());
+    }
 
-	@Override
+    @Override
     public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
-		try {
-			TypeEnv afterQueryEnv = getQuery().typecheck(predinfo, startEnv);
-			Type extractType = getExtract().getType(afterQueryEnv);
-			Type inferredResultType = Factory.makeListType(extractType);
-			TypeEnv resultTypeEnv = Factory.makeTypeEnv();
-			Type resultType = getResult().getType(resultTypeEnv);
-			resultType.checkEqualTypes(inferredResultType);
-//			resultType.checkEqualTypes(getResult().getType(afterQueryEnv));
-			return afterQueryEnv.intersect(resultTypeEnv);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-	}
+        try {
+            TypeEnv afterQueryEnv = getQuery().typecheck(predinfo, startEnv);
+            Type extractType = getExtract().getType(afterQueryEnv);
+            Type inferredResultType = Factory.makeListType(extractType);
+            TypeEnv resultTypeEnv = Factory.makeTypeEnv();
+            Type resultType = getResult().getType(resultTypeEnv);
+            resultType.checkEqualTypes(inferredResultType);
+            // resultType.checkEqualTypes(getResult().getType(afterQueryEnv));
+            return afterQueryEnv.intersect(resultTypeEnv);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+    }
 
-	@Override
+    @Override
     public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
-		Collection freevars = query.getFreeVariables(context);
-		Collection extractedVars = getExtract().getVariables();
-		freevars.removeAll(extractedVars);
-		
-		if (!freevars.isEmpty()) {
-			return Factory.makeModedExpression(
-				this,
-				new ErrorMode("Variables improperly left unbound in FINDALL: " 
-					+ freevars),
-				context);
-		} else {
-			RBExpression convQuery = query.convertToMode(context, rearrange);
-			Mode convertedMode = convQuery.getMode();
-			if (convertedMode instanceof ErrorMode) { 
-				return Factory.makeModedExpression(this, convQuery.getMode(), 
-					convQuery.getNewContext());
-			} else {
-				ModeCheckContext newContext = (ModeCheckContext)context.clone();
-				result.makeAllBound(newContext);
-				return Factory.makeModedExpression(
-					new RBFindAll(convQuery, getExtract(), result),
-					convertedMode.findAll(), newContext);
-			}
-		}
-	}
-	
-	@Override
-    public RBExpression convertToNormalForm(boolean negate) {
-		RBExpression result = 
-			new RBFindAll(getQuery().convertToNormalForm(false), 
-			getExtract(), getResult());
-		if (negate) {
-			return new RBNotFilter(result);
-		} else {
-			return result;
-		}
-	}
+        Collection freevars = query.getFreeVariables(context);
+        Collection extractedVars = getExtract().getVariables();
+        freevars.removeAll(extractedVars);
 
-	@Override
+        if (!freevars.isEmpty()) {
+            return Factory.makeModedExpression(
+                    this,
+                    new ErrorMode("Variables improperly left unbound in FINDALL: "
+                            + freevars),
+                    context);
+        } else {
+            RBExpression convQuery = query.convertToMode(context, rearrange);
+            Mode convertedMode = convQuery.getMode();
+            if (convertedMode instanceof ErrorMode) {
+                return Factory.makeModedExpression(this, convQuery.getMode(),
+                        convQuery.getNewContext());
+            } else {
+                ModeCheckContext newContext = (ModeCheckContext) context.clone();
+                result.makeAllBound(newContext);
+                return Factory.makeModedExpression(
+                        new RBFindAll(convQuery, getExtract(), result),
+                        convertedMode.findAll(), newContext);
+            }
+        }
+    }
+
+    @Override
+    public RBExpression convertToNormalForm(boolean negate) {
+        RBExpression result =
+                new RBFindAll(getQuery().convertToNormalForm(false),
+                        getExtract(), getResult());
+        if (negate) {
+            return new RBNotFilter(result);
+        } else {
+            return result;
+        }
+    }
+
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
 }

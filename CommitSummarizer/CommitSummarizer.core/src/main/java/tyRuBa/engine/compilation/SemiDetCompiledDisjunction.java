@@ -5,26 +5,27 @@ import tyRuBa.engine.RBContext;
 
 public class SemiDetCompiledDisjunction extends SemiDetCompiled {
 
-	private SemiDetCompiled right;
-	private SemiDetCompiled left;
+    private SemiDetCompiled right;
 
-	public SemiDetCompiledDisjunction(SemiDetCompiled left, SemiDetCompiled right) {
-		this.left = left;
-		this.right = right;
-	}
+    private SemiDetCompiled left;
 
-	@Override
+    public SemiDetCompiledDisjunction(SemiDetCompiled left, SemiDetCompiled right) {
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
     public Frame runSemiDet(Object input, RBContext context) {
-		Frame result = left.runSemiDet(input, context);
-		if (result == null)
-			return right.runSemiDet(input, context);
-		else
-			return result;
-	}
-	
-	@Override
+        Frame result = left.runSemiDet(input, context);
+        if (result == null)
+            return right.runSemiDet(input, context);
+        else
+            return result;
+    }
+
+    @Override
     public String toString() {
-		return "SEMIDET(" + left + " + " + right + ")";
-	}
+        return "SEMIDET(" + left + " + " + right + ")";
+    }
 
 }

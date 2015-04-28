@@ -22,6 +22,7 @@ import tyRuBa.util.ElementSource;
 
 /**
  * A FactBase that uses an ArrayList to store facts. Inefficient, but simple.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -61,8 +62,7 @@ public class SimpleArrayListFactBase extends FactBase {
     }
 
     /**
-     * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode,
-     * tyRuBa.engine.compilation.CompilationContext)
+     * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode, tyRuBa.engine.compilation.CompilationContext)
      */
     @Override
     public Compiled basicCompile(PredicateMode mode, CompilationContext context) {
@@ -111,6 +111,6 @@ public class SimpleArrayListFactBase extends FactBase {
      */
     @Override
     public void backup() {
-        //this factbase is not persistent
+        // this factbase is not persistent
     }
 }

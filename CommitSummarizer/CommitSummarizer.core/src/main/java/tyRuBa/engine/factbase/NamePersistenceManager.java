@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A NamePersistenceManager manages the mappings between Strings and filenames
- * for those strings. In this case the filenames are numbers.
+ * A NamePersistenceManager manages the mappings between Strings and filenames for those strings. In this case the filenames are numbers.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -30,7 +30,9 @@ public class NamePersistenceManager implements Serializable {
 
     /**
      * Creates a new NamePersistenceManager.
-     * @param storagePath path at which the mappings are persisted.
+     * 
+     * @param storagePath
+     *            path at which the mappings are persisted.
      */
     public NamePersistenceManager(String storagePath) {
         File nameFile = new File(storagePath + "/names.data");
@@ -56,7 +58,9 @@ public class NamePersistenceManager implements Serializable {
 
     /**
      * Creates a new NamePersistenceManager.
-     * @param storageLocation url location at which the persisted mappings are.
+     * 
+     * @param storageLocation
+     *            url location at which the persisted mappings are.
      */
     public NamePersistenceManager(URL storageLocation) {
         storagePath = storageLocation.toString();
@@ -75,7 +79,9 @@ public class NamePersistenceManager implements Serializable {
 
     /**
      * Gets a filename from a given Java string.
-     * @param tyRuBaName String to get filename for.
+     * 
+     * @param tyRuBaName
+     *            String to get filename for.
      */
     public String getPersistentName(String tyRuBaName) {
         String result = (String) nameMap.get(tyRuBaName);
@@ -88,8 +94,7 @@ public class NamePersistenceManager implements Serializable {
     }
 
     /**
-     * Backs up this manager. The mappings are written out so that they can be
-     * loaded at some future point.
+     * Backs up this manager. The mappings are written out so that they can be loaded at some future point.
      */
     public void backup() {
         File nameFile = new File(storagePath + "/names.data");

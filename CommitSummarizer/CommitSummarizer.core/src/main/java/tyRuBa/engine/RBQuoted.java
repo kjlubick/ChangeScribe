@@ -8,40 +8,40 @@ import tyRuBa.modes.TypeModeError;
 
 public class RBQuoted extends RBAbstractPair {
 
-	private static final RBTerm quotedName = FrontEnd.makeName("{}");
+    private static final RBTerm quotedName = FrontEnd.makeName("{}");
 
-	public RBQuoted(RBTerm listOfParts) {
-		super(quotedName, listOfParts);
-	}
+    public RBQuoted(RBTerm listOfParts) {
+        super(quotedName, listOfParts);
+    }
 
-	@Override
+    @Override
     public Object up() {
-		return quotedToString();
-	}
-	
-	@Override
+        return quotedToString();
+    }
+
+    @Override
     public String toString() {
-		return "{" + getQuotedParts().quotedToString() + "}";
-	}
+        return "{" + getQuotedParts().quotedToString() + "}";
+    }
 
-	@Override
+    @Override
     public String quotedToString() {
-		return getQuotedParts().quotedToString();
-	}
+        return getQuotedParts().quotedToString();
+    }
 
-	public RBTerm getQuotedParts() {
-		return getCdr();
-	}
-	
-	@Override
+    public RBTerm getQuotedParts() {
+        return getCdr();
+    }
+
+    @Override
     protected Type getType(TypeEnv env) throws TypeModeError {
-		return Factory.makeSubAtomicType(Factory.makeTypeConstructor(String.class));
-	}
+        return Factory.makeSubAtomicType(Factory.makeTypeConstructor(String.class));
+    }
 
-	@Override
+    @Override
     public Object accept(TermVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()

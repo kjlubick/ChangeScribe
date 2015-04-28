@@ -14,76 +14,77 @@ import tyRuBa.modes.ModeCheckContext;
 
 public abstract class AbstractCollectVarsVisitor implements ExpressionVisitor, TermVisitor {
 
-	Collection vars;
-	protected ModeCheckContext context;
-	
-	public AbstractCollectVarsVisitor(Collection vars, ModeCheckContext context) {
-		this.vars = vars;
-		this.context = context;
-	}
+    Collection vars;
 
-	public Collection getVars() {
-		return vars;
-	}
+    protected ModeCheckContext context;
 
-	@Override
+    public AbstractCollectVarsVisitor(Collection vars, ModeCheckContext context) {
+        this.vars = vars;
+        this.context = context;
+    }
+
+    public Collection getVars() {
+        return vars;
+    }
+
+    @Override
     public Object visit(RBConjunction conjunction) {
-		for (int i = 0; i < conjunction.getNumSubexps(); i++) {
-			conjunction.getSubexp(i).accept(this);
-		}
-		return null;
-	}
+        for (int i = 0; i < conjunction.getNumSubexps(); i++) {
+            conjunction.getSubexp(i).accept(this);
+        }
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBModeSwitchExpression modeSwitch) {
-		for (int i = 0; i < modeSwitch.getNumModeCases(); i++) {
-			modeSwitch.getModeCaseAt(i).getExp().accept(this);
-		}
-		if (modeSwitch.hasDefaultExp()) {
-			modeSwitch.getDefaultExp().accept(this);
-		}
-		return null;
-	}
+        for (int i = 0; i < modeSwitch.getNumModeCases(); i++) {
+            modeSwitch.getModeCaseAt(i).getExp().accept(this);
+        }
+        if (modeSwitch.hasDefaultExp()) {
+            modeSwitch.getDefaultExp().accept(this);
+        }
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBPredicateExpression predExp) {
-		return predExp.getArgs().accept(this);
-	}
+        return predExp.getArgs().accept(this);
+    }
 
-	@Override
+    @Override
     public Object visit(RBCompoundTerm compoundTerm) {
-		compoundTerm.getArg().accept(this);
-		return null;
-	}
+        compoundTerm.getArg().accept(this);
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBTuple tuple) {
-		for (int i = 0; i < tuple.getNumSubterms(); i++) {
-			tuple.getSubterm(i).accept(this);
-		}
-		return null;
-	}
+        for (int i = 0; i < tuple.getNumSubterms(); i++) {
+            tuple.getSubterm(i).accept(this);
+        }
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBPair pair) {
-		pair.getCar().accept(this);
-		
-		RBTerm cdr = pair.getCdr();
-		
-		while(cdr instanceof RBPair) {
-			pair = (RBPair)cdr;
-			pair.getCar().accept(this);
-			cdr = pair.getCdr();
-		}
-		
-		cdr.accept(this);
-		
-		return null;
-	}
+        pair.getCar().accept(this);
 
-	@Override
+        RBTerm cdr = pair.getCdr();
+
+        while (cdr instanceof RBPair) {
+            pair = (RBPair) cdr;
+            pair.getCar().accept(this);
+            cdr = pair.getCdr();
+        }
+
+        cdr.accept(this);
+
+        return null;
+    }
+
+    @Override
     public Object visit(RBQuoted quoted) {
-		return quoted.getQuotedParts().accept(this);
-	}
-	
+        return quoted.getQuotedParts().accept(this);
+    }
+
 }

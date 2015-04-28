@@ -29,8 +29,11 @@ public class CommentRecorderParser extends Parser {
 
     // support for comments
     int[] commentStops = new int[10];
+
     int[] commentStarts = new int[10];
+
     int commentPtr = -1; // no comment test with commentPtr value -1
+
     protected final static int CommentIncrement = 100;
 
     /**
@@ -91,7 +94,9 @@ public class CommentRecorderParser extends Parser {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeClassHeader()
      */
     @Override
@@ -100,7 +105,9 @@ public class CommentRecorderParser extends Parser {
         super.consumeClassHeader();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeEmptyTypeDeclaration()
      */
     @Override
@@ -109,7 +116,9 @@ public class CommentRecorderParser extends Parser {
         super.consumeEmptyTypeDeclaration();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#consumeInterfaceHeader()
      */
     @Override
@@ -118,7 +127,9 @@ public class CommentRecorderParser extends Parser {
         super.consumeInterfaceHeader();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#endParse(int)
      */
     @Override
@@ -131,8 +142,9 @@ public class CommentRecorderParser extends Parser {
         return unit;
     }
 
-    /* (non-Javadoc)
-     * Save all source comments currently stored before flushing them.
+    /*
+     * (non-Javadoc) Save all source comments currently stored before flushing them.
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#flushCommentsDefinedPriorTo(int)
      */
     @Override
@@ -196,35 +208,34 @@ public class CommentRecorderParser extends Parser {
         pushOnCommentsStack(0, index); // store comment before flushing them
 
         switch (validCount) {
-            case 0:
-                // do nothing
-                break;
-            // move valid comment infos, overriding obsolete comment infos
-            case 2:
-                scanner.commentStarts[0] = scanner.commentStarts[index + 1];
-                scanner.commentStops[0] = scanner.commentStops[index + 1];
-                scanner.commentTagStarts[0] = scanner.commentTagStarts[index + 1];
-                scanner.commentStarts[1] = scanner.commentStarts[index + 2];
-                scanner.commentStops[1] = scanner.commentStops[index + 2];
-                scanner.commentTagStarts[1] = scanner.commentTagStarts[index + 2];
-                break;
-            case 1:
-                scanner.commentStarts[0] = scanner.commentStarts[index + 1];
-                scanner.commentStops[0] = scanner.commentStops[index + 1];
-                scanner.commentTagStarts[0] = scanner.commentTagStarts[index + 1];
-                break;
-            default:
-                System.arraycopy(scanner.commentStarts, index + 1, scanner.commentStarts, 0, validCount);
-                System.arraycopy(scanner.commentStops, index + 1, scanner.commentStops, 0, validCount);
-                System.arraycopy(scanner.commentTagStarts, index + 1, scanner.commentTagStarts, 0, validCount);
+        case 0:
+            // do nothing
+            break;
+        // move valid comment infos, overriding obsolete comment infos
+        case 2:
+            scanner.commentStarts[0] = scanner.commentStarts[index + 1];
+            scanner.commentStops[0] = scanner.commentStops[index + 1];
+            scanner.commentTagStarts[0] = scanner.commentTagStarts[index + 1];
+            scanner.commentStarts[1] = scanner.commentStarts[index + 2];
+            scanner.commentStops[1] = scanner.commentStops[index + 2];
+            scanner.commentTagStarts[1] = scanner.commentTagStarts[index + 2];
+            break;
+        case 1:
+            scanner.commentStarts[0] = scanner.commentStarts[index + 1];
+            scanner.commentStops[0] = scanner.commentStops[index + 1];
+            scanner.commentTagStarts[0] = scanner.commentTagStarts[index + 1];
+            break;
+        default:
+            System.arraycopy(scanner.commentStarts, index + 1, scanner.commentStarts, 0, validCount);
+            System.arraycopy(scanner.commentStops, index + 1, scanner.commentStops, 0, validCount);
+            System.arraycopy(scanner.commentTagStarts, index + 1, scanner.commentTagStarts, 0, validCount);
         }
         scanner.commentPtr = validCount - 1;
         return position;
     }
 
     /*
-     * Build a n*2 matrix of comments positions.
-     * For each position, 0 is for start position and 1 for end position of the comment.
+     * Build a n*2 matrix of comments positions. For each position, 0 is for start position and 1 for end position of the comment.
      */
     public int[][] getCommentsPositions() {
         int[][] positions = new int[commentPtr + 1][2];
@@ -235,7 +246,9 @@ public class CommentRecorderParser extends Parser {
         return positions;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#initialize()
      */
     @Override
@@ -244,7 +257,9 @@ public class CommentRecorderParser extends Parser {
         commentPtr = -1;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#initialize()
      */
     @Override
@@ -253,21 +268,22 @@ public class CommentRecorderParser extends Parser {
         commentPtr = -1;
     }
 
-    /* (non-Javadoc)
-     * Create and store a specific comment recorder scanner.
+    /*
+     * (non-Javadoc) Create and store a specific comment recorder scanner.
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#initializeScanner()
      */
     @Override
     public void initializeScanner() {
         scanner =
                 new Scanner(
-                        false /*comment*/,
-                        false /*whitespace*/,
-                        options.getSeverity(CompilerOptions.NonExternalizedString) != ProblemSeverities.Ignore /*nls*/,
-                        options.sourceLevel /*sourceLevel*/,
-                        options.taskTags/*taskTags*/,
-                        options.taskPriorities/*taskPriorities*/,
-                        options.isTaskCaseSensitive/*taskCaseSensitive*/);
+                        false /* comment */,
+                        false /* whitespace */,
+                        options.getSeverity(CompilerOptions.NonExternalizedString) != ProblemSeverities.Ignore /* nls */,
+                        options.sourceLevel /* sourceLevel */,
+                        options.taskTags/* taskTags */,
+                        options.taskPriorities/* taskPriorities */,
+                        options.isTaskCaseSensitive/* taskCaseSensitive */);
     }
 
     /*
@@ -304,8 +320,9 @@ public class CommentRecorderParser extends Parser {
         }
     }
 
-    /* (non-Javadoc)
-     * Save all source comments currently stored before flushing them.
+    /*
+     * (non-Javadoc) Save all source comments currently stored before flushing them.
+     * 
      * @see org.eclipse.jdt.internal.compiler.parser.Parser#resetModifiers()
      */
     @Override

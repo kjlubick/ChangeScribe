@@ -31,14 +31,11 @@ import tyRuBa.util.ElementSource;
 import tyRuBa.util.pager.FileLocation;
 
 /**
- * This FactBase implementation uses hash maps as the backing storage. Indexes
- * (hash tables indexed on the "bound" part of the fact) are created for each
- * declared predicate mode. These indexes are persisted by a paging mechanism
- * used by the global Pager. The paging mechanism also ensures that a reasonable
- * amount of data is stored in each index (see cache size in front end). New
- * indexes can be created on the fly, but it is not recommended as it will be
- * slow. It is best to declare all modes that will be used and have the overhead
+ * This FactBase implementation uses hash maps as the backing storage. Indexes (hash tables indexed on the "bound" part of the fact) are created for each declared predicate mode.
+ * These indexes are persisted by a paging mechanism used by the global Pager. The paging mechanism also ensures that a reasonable amount of data is stored in each index (see cache
+ * size in front end). New indexes can be created on the fly, but it is not recommended as it will be slow. It is best to declare all modes that will be used and have the overhead
  * occur during insertion rather than querying.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -75,28 +72,26 @@ public class HashTableFactBase extends FactBase {
     }
 
     /**
-     * Initializes the indexes. Indexes are always created for the all bound
-     * mode and all free mode. In addition, any other modes defined in the
-     * predicate declaration have indexes created for them. Any other modes will
-     * have their indexes created on the fly.
+     * Initializes the indexes. Indexes are always created for the all bound mode and all free mode. In addition, any other modes defined in the predicate declaration have indexes
+     * created for them. Any other modes will have their indexes created on the fly.
      */
     private void initIndexes(PredInfo info) {
         indexes = new HashMap();
 
-        //all free is special (used for creating new indexes)
+        // all free is special (used for creating new indexes)
         BindingList allFree = Factory.makeBindingList(arity, Factory.makeFree());
         PredicateMode freeMode = new PredicateMode(allFree, new Mode(Multiplicity.zero, Multiplicity.many), false);
         allFreeIndex = new Index(freeMode, new FileLocation(storageLocation + "/"
                 + freeMode.getParamModes().getBFString() + "/"), engine, name + "/" + arity);
         indexes.put(freeMode.getParamModes(), allFreeIndex);
 
-        //always want all bound NOTE: ***all bound and all free share the same
+        // always want all bound NOTE: ***all bound and all free share the same
         // index***
         BindingList allBound = Factory.makeBindingList(arity, Factory.makeBound());
         PredicateMode boundMode = new PredicateMode(allBound, new Mode(Multiplicity.zero, Multiplicity.one), false);
         indexes.put(boundMode.getParamModes(), allFreeIndex);
 
-        //At least make the indexes for modes that are defined..
+        // At least make the indexes for modes that are defined..
         for (int i = 0; i < info.getNumPredicateMode(); i++) {
             PredicateMode pm = info.getPredicateModeAt(i);
             BindingList paramModes = pm.getParamModes();
@@ -109,7 +104,7 @@ public class HashTableFactBase extends FactBase {
             }
         }
 
-        //Try to reconnect to indexes if they're around
+        // Try to reconnect to indexes if they're around
         int numIndexes = (int) (Math.pow(2, arity));
         for (int i = 0; i < numIndexes; i++) {
             BindingList blist = Factory.makeBindingList();
@@ -138,7 +133,9 @@ public class HashTableFactBase extends FactBase {
 
     /**
      * Gets an index for a given mode.
-     * @param mode mode to get the index for.
+     * 
+     * @param mode
+     *            mode to get the index for.
      */
     private Index getIndex(PredicateMode mode) {
         Index index = (Index) indexes.get(mode.getParamModes());
@@ -151,14 +148,9 @@ public class HashTableFactBase extends FactBase {
     }
 
     /**
-     * Creates an index on the fly. 
-     * WARNING: Creating indexes on the fly may be
-     * very slow. This is because we need to load *all* of the facts from the
-     * "allFree" index into memory, possibly doing many disk pages during the
-     * process. Depending on how large the data set is, it may take several
-     * minutes to create a new index. It is best if all modes that will be used
-     * are defined in the rules files so that indexes will always be created for
-     * them.
+     * Creates an index on the fly. WARNING: Creating indexes on the fly may be very slow. This is because we need to load *all* of the facts from the "allFree" index into memory,
+     * possibly doing many disk pages during the process. Depending on how large the data set is, it may take several minutes to create a new index. It is best if all modes that
+     * will be used are defined in the rules files so that indexes will always be created for them.
      */
     private Index makeIndex(PredicateMode mode) {
         Index index;
@@ -201,7 +193,7 @@ public class HashTableFactBase extends FactBase {
         for (Iterator iter = indexes.entrySet().iterator(); iter.hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();
             BindingList key = (BindingList) entry.getKey();
-            if (key.getNumFree() != 0) { //skip for all bound
+            if (key.getNumFree() != 0) { // skip for all bound
                 Index index = (Index) entry.getValue();
                 index.addFact(IndexValue.make(v, f.getArgs()));
             }
@@ -209,8 +201,7 @@ public class HashTableFactBase extends FactBase {
     }
 
     /**
-     * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode,
-     * tyRuBa.engine.compilation.CompilationContext)
+     * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode, tyRuBa.engine.compilation.CompilationContext)
      */
     @Override
     public Compiled basicCompile(final PredicateMode mode, CompilationContext context) {
@@ -254,7 +245,7 @@ public class HashTableFactBase extends FactBase {
             }
         } else {
             if (mode.getParamModes().getNumFree() != 0) {
-                //CASE 3: NonDet and NOT all bound
+                // CASE 3: NonDet and NOT all bound
                 return new Compiled(mode.getMode()) {
 
                     @Override
@@ -276,7 +267,7 @@ public class HashTableFactBase extends FactBase {
                     }
                 };
             } else {
-                //CASE 4: NonDet and all bound
+                // CASE 4: NonDet and all bound
                 throw new Error("This case should not happen");
                 // why not? all bound => SemiDet
             }
@@ -291,7 +282,7 @@ public class HashTableFactBase extends FactBase {
         for (Iterator iter = indexes.entrySet().iterator(); iter.hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();
             BindingList key = (BindingList) entry.getKey();
-            if (key.getNumFree() != 0) { //skip for all bound
+            if (key.getNumFree() != 0) { // skip for all bound
                 Index idx = (Index) entry.getValue();
                 idx.backup();
             }

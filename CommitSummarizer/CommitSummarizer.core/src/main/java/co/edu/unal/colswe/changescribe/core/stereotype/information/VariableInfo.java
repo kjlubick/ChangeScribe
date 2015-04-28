@@ -6,96 +6,100 @@ import java.util.Set;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 
 public class VariableInfo {
-	private IVariableBinding variableBinding;
-	private Set<IVariableBinding> assignedFields;
-	private boolean isInstantiated;
-	private boolean isReturned;
-	private boolean isModified;
+    private IVariableBinding variableBinding;
 
-	public VariableInfo(final IVariableBinding name) {
-		super();
-		this.variableBinding = name;
-		this.isInstantiated = false;
-		this.isReturned = false;
-		this.isModified = false;
-		this.assignedFields = new HashSet<IVariableBinding>();
-	}
+    private Set<IVariableBinding> assignedFields;
 
-	public VariableInfo(final IVariableBinding name,
-			final boolean isInstantiated) {
-		super();
-		this.variableBinding = name;
-		this.isInstantiated = isInstantiated;
-		this.isReturned = false;
-		this.isModified = false;
-		this.assignedFields = new HashSet<IVariableBinding>();
-	}
+    private boolean isInstantiated;
 
-	public IVariableBinding getVariableBinding() {
-		return this.variableBinding;
-	}
+    private boolean isReturned;
 
-	public Set<IVariableBinding> getAssignedFields() {
-		return this.assignedFields;
-	}
+    private boolean isModified;
 
-	public void addAssignedField(final IVariableBinding field) {
-		this.assignedFields.add(field);
-	}
+    public VariableInfo(final IVariableBinding name) {
+        super();
+        this.variableBinding = name;
+        this.isInstantiated = false;
+        this.isReturned = false;
+        this.isModified = false;
+        this.assignedFields = new HashSet<IVariableBinding>();
+    }
 
-	public void setInstantiated(final boolean isInstantiated) {
-		this.isInstantiated = isInstantiated;
-	}
+    public VariableInfo(final IVariableBinding name,
+            final boolean isInstantiated) {
+        super();
+        this.variableBinding = name;
+        this.isInstantiated = isInstantiated;
+        this.isReturned = false;
+        this.isModified = false;
+        this.assignedFields = new HashSet<IVariableBinding>();
+    }
 
-	public void setReturned(final boolean isReturned) {
-		this.isReturned = isReturned;
-	}
+    public IVariableBinding getVariableBinding() {
+        return this.variableBinding;
+    }
 
-	public void setModified(final boolean isModified) {
-		this.isModified = isModified;
-	}
+    public Set<IVariableBinding> getAssignedFields() {
+        return this.assignedFields;
+    }
 
-	public boolean isInstantiated() {
-		return this.isInstantiated;
-	}
+    public void addAssignedField(final IVariableBinding field) {
+        this.assignedFields.add(field);
+    }
 
-	public boolean isReturned() {
-		return this.isReturned;
-	}
+    public void setInstantiated(final boolean isInstantiated) {
+        this.isInstantiated = isInstantiated;
+    }
 
-	public boolean isModified() {
-		return this.isModified;
-	}
+    public void setReturned(final boolean isReturned) {
+        this.isReturned = isReturned;
+    }
 
-	@Override
+    public void setModified(final boolean isModified) {
+        this.isModified = isModified;
+    }
+
+    public boolean isInstantiated() {
+        return this.isInstantiated;
+    }
+
+    public boolean isReturned() {
+        return this.isReturned;
+    }
+
+    public boolean isModified() {
+        return this.isModified;
+    }
+
+    @Override
     public int hashCode() {
-		int result = 1;
-		result = 31
-				* result
-				+ ((this.variableBinding == null) ? 0 : this.variableBinding
-						.hashCode());
-		return result;
-	}
+        int result = 1;
+        result = 31
+                * result
+                + ((this.variableBinding == null) ? 0 : this.variableBinding
+                        .hashCode());
+        return result;
+    }
 
-	@Override
+    @Override
     public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (this.getClass() != obj.getClass()) {
-			return false;
-		}
-		final VariableInfo other = (VariableInfo) obj;
-		if (this.variableBinding == null) {
-			if (other.variableBinding != null) {
-				return false;
-			}
-		} else if (!this.variableBinding.equals(other.variableBinding)) {
-			return false;
-		}
-		return true;
-	}
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        final VariableInfo other = (VariableInfo) obj;
+        if (this.variableBinding == null) {
+            if (other.variableBinding != null) {
+                return false;
+            }
+        } else if (!this.variableBinding.equals(other.variableBinding)) {
+            return false;
+        }
+        return true;
+    }
 }

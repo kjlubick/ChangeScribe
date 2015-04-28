@@ -12,39 +12,39 @@ import tyRuBa.engine.RBVariable;
 
 public class SubstituteVisitor extends SubstituteOrInstantiateVisitor {
 
-	public SubstituteVisitor(Frame frame) {
-		super(frame);
-	}
+    public SubstituteVisitor(Frame frame) {
+        super(frame);
+    }
 
-	@Override
+    @Override
     public Object visit(RBUniqueQuantifier unique) {
-		Frame f = getFrame();
-		for (int i = 0; i < unique.getNumVars(); i++) {
-			f.remove(unique.getVarAt(i));
-		}
-		RBExpression exp = (RBExpression) unique.getExp().accept(this);
-		return new RBUniqueQuantifier(unique.getQuantifiedVars(), exp);
-	}
+        Frame f = getFrame();
+        for (int i = 0; i < unique.getNumVars(); i++) {
+            f.remove(unique.getVarAt(i));
+        }
+        RBExpression exp = (RBExpression) unique.getExp().accept(this);
+        return new RBUniqueQuantifier(unique.getQuantifiedVars(), exp);
+    }
 
-	@Override
+    @Override
     public Object visit(RBVariable var) {
-		RBTerm val = getFrame().get(var);
-		if (val == null) {
-			return var;
-		} else {
-			return val.accept(this);
-		}
-	}
+        RBTerm val = getFrame().get(var);
+        if (val == null) {
+            return var;
+        } else {
+            return val.accept(this);
+        }
+    }
 
-	@Override
+    @Override
     public Object visit(RBTemplateVar var) {
-		// Same implementation as for regular variables
-		RBTerm val = getFrame().get(var);
-		if (val == null) {
-			return var;
-		} else {
-			return val.accept(this);
-		}
-	}
-    
+        // Same implementation as for regular variables
+        RBTerm val = getFrame().get(var);
+        if (val == null) {
+            return var;
+        } else {
+            return val.accept(this);
+        }
+    }
+
 }

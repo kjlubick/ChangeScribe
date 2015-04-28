@@ -28,219 +28,221 @@ import edu.stanford.nlp.io.IOUtils;
 
 public class Utils {
 
-	public Utils() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public static File getFileContentOfLastCommit(String filePath,Repository repository) throws RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException, IOException {
-		// find the HEAD
-		ObjectId lastCommitId = repository.resolve(Constants.HEAD);
+    public Utils() {
+        // TODO Auto-generated constructor stub
+    }
 
-		// a RevWalk allows to walk over commits based on some filtering that is
-		// defined
-		RevWalk revWalk = new RevWalk(repository);
-		RevCommit commit = revWalk.parseCommit(lastCommitId);
-		// and using commit's tree find the path
-		RevTree tree = commit.getTree();
-		System.out.println("Having tree: " + tree);
+    public static File getFileContentOfLastCommit(String filePath, Repository repository) throws RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException,
+            IOException {
+        // find the HEAD
+        ObjectId lastCommitId = repository.resolve(Constants.HEAD);
 
-		// now try to find a specific file
-		TreeWalk treeWalk = new TreeWalk(repository);
-		treeWalk.addTree(tree);
-		treeWalk.setRecursive(true);
-		treeWalk.setPostOrderTraversal(true);
-		treeWalk.setFilter(PathFilter.create(filePath));
-		if (!treeWalk.next()) {
-			
-			//TODO the file is added to project
-			throw new IllegalStateException(
-					"CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
-		}
+        // a RevWalk allows to walk over commits based on some filtering that is
+        // defined
+        RevWalk revWalk = new RevWalk(repository);
+        RevCommit commit = revWalk.parseCommit(lastCommitId);
+        // and using commit's tree find the path
+        RevTree tree = commit.getTree();
+        System.out.println("Having tree: " + tree);
 
-		ObjectId objectId = treeWalk.getObjectId(0);
-		ObjectLoader loader = repository.open(objectId);
+        // now try to find a specific file
+        TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.addTree(tree);
+        treeWalk.setRecursive(true);
+        treeWalk.setPostOrderTraversal(true);
+        treeWalk.setFilter(PathFilter.create(filePath));
+        if (!treeWalk.next()) {
 
-		return Utils.inputStreamToFile(loader.openStream());
-	}
-	
-	public static String getStringContentOfLastCommit(String filePath,Repository repository) throws RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException, IOException {
-		// find the HEAD
-		ObjectId lastCommitId = repository.resolve(Constants.HEAD);
+            // TODO the file is added to project
+            throw new IllegalStateException(
+                    "CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
+        }
 
-		// a RevWalk allows to walk over commits based on some filtering that is
-		// defined
-		RevWalk revWalk = new RevWalk(repository);
-		RevCommit commit = revWalk.parseCommit(lastCommitId);
-		// and using commit's tree find the path
-		RevTree tree = commit.getTree();
-		System.out.println("Having tree: " + tree);
+        ObjectId objectId = treeWalk.getObjectId(0);
+        ObjectLoader loader = repository.open(objectId);
 
-		// now try to find a specific file
-		TreeWalk treeWalk = new TreeWalk(repository);
-		treeWalk.addTree(tree);
-		treeWalk.setRecursive(true);
-		treeWalk.setPostOrderTraversal(true);
-		treeWalk.setFilter(PathFilter.create(filePath));
-		if (!treeWalk.next()) {
-			
-			//TODO the file is added to project
-			throw new IllegalStateException(
-					"CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
-		}
+        return Utils.inputStreamToFile(loader.openStream());
+    }
 
-		ObjectId objectId = treeWalk.getObjectId(0);
-		ObjectLoader loader = repository.open(objectId);
-		
-		return IOUtils.stringFromFile(Utils.inputStreamToFile(loader.openStream()).getAbsolutePath(), "utf-8");
-	}
-	
-	public static String getStringContentOfCommitID(String filePath,Repository repository, String commitID) throws RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException, IOException {
-		// find the HEAD
-		ObjectId lastCommitId = repository.resolve(commitID);
+    public static String getStringContentOfLastCommit(String filePath, Repository repository) throws RevisionSyntaxException, AmbiguousObjectException,
+            IncorrectObjectTypeException, IOException {
+        // find the HEAD
+        ObjectId lastCommitId = repository.resolve(Constants.HEAD);
 
-		// a RevWalk allows to walk over commits based on some filtering that is
-		// defined
-		RevWalk revWalk = new RevWalk(repository);
-		RevCommit commit = revWalk.parseCommit(lastCommitId);
-		// and using commit's tree find the path
-		RevTree tree = commit.getTree();
-		System.out.println("Having tree: " + tree);
+        // a RevWalk allows to walk over commits based on some filtering that is
+        // defined
+        RevWalk revWalk = new RevWalk(repository);
+        RevCommit commit = revWalk.parseCommit(lastCommitId);
+        // and using commit's tree find the path
+        RevTree tree = commit.getTree();
+        System.out.println("Having tree: " + tree);
 
-		// now try to find a specific file
-		TreeWalk treeWalk = new TreeWalk(repository);
-		treeWalk.addTree(tree);
-		treeWalk.setRecursive(true);
-		treeWalk.setPostOrderTraversal(true);
-		treeWalk.setFilter(PathFilter.create(filePath.substring(filePath.indexOf("/") + 1)));
-		if (!treeWalk.next()) {
-			
-			//TODO the file is added to project
-			throw new IllegalStateException(
-					"CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
-		}
+        // now try to find a specific file
+        TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.addTree(tree);
+        treeWalk.setRecursive(true);
+        treeWalk.setPostOrderTraversal(true);
+        treeWalk.setFilter(PathFilter.create(filePath));
+        if (!treeWalk.next()) {
 
-		ObjectId objectId = treeWalk.getObjectId(0);
-		ObjectLoader loader = repository.open(objectId);
-		
-		return IOUtils.stringFromFile(Utils.inputStreamToFile(loader.openStream()).getAbsolutePath(), "utf-8");
-	}
-	
-	public static File getFileContentOfCommitID(String filePath,Repository repository, String commitID) throws RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException, IOException {
-		// find the HEAD
-		ObjectId lastCommitId = repository.resolve(commitID);
-		
+            // TODO the file is added to project
+            throw new IllegalStateException(
+                    "CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
+        }
 
-		// a RevWalk allows to walk over commits based on some filtering that is
-		// defined
-		RevWalk revWalk = new RevWalk(repository);
-		RevCommit commit = revWalk.parseCommit(lastCommitId);
-		// and using commit's tree find the path
-		RevTree tree = commit.getTree();
-		System.out.println("Having tree: " + tree); 
+        ObjectId objectId = treeWalk.getObjectId(0);
+        ObjectLoader loader = repository.open(objectId);
 
-		// now try to find a specific file
-		TreeWalk treeWalk = new TreeWalk(repository);
-		treeWalk.addTree(tree);
-		treeWalk.setRecursive(true);
-		//treeWalk.setPostOrderTraversal(true);
-		treeWalk.setFilter(PathFilter.create(filePath.substring(filePath.indexOf("/") + 1)));
-		
-		if (!treeWalk.next()) {
-			treeWalk = new TreeWalk(repository);
-			treeWalk.addTree(tree);
-			treeWalk.setRecursive(true);
-			treeWalk.setFilter(PathFilter.create(filePath));
-			if(!treeWalk.next()) {
-				//TODO the file is added to project
-				throw new IllegalStateException(
-						"CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
-			}
-		}
+        return IOUtils.stringFromFile(Utils.inputStreamToFile(loader.openStream()).getAbsolutePath(), "utf-8");
+    }
 
-		ObjectId objectId = treeWalk.getObjectId(0);
-		ObjectLoader loader = repository.open(objectId);
-		
-		return Utils.inputStreamToFile(loader.openStream());
-	}
+    public static String getStringContentOfCommitID(String filePath, Repository repository, String commitID) throws RevisionSyntaxException, AmbiguousObjectException,
+            IncorrectObjectTypeException, IOException {
+        // find the HEAD
+        ObjectId lastCommitId = repository.resolve(commitID);
 
-	public static File inputStreamToFile(InputStream is) throws IOException {
-		File contentFile = File.createTempFile("tmpCont", ".txt");
+        // a RevWalk allows to walk over commits based on some filtering that is
+        // defined
+        RevWalk revWalk = new RevWalk(repository);
+        RevCommit commit = revWalk.parseCommit(lastCommitId);
+        // and using commit's tree find the path
+        RevTree tree = commit.getTree();
+        System.out.println("Having tree: " + tree);
 
-		OutputStream outputStream = null;
-		outputStream = new FileOutputStream(contentFile);
-		
-		int read = 0;
-		byte[] bytes = new byte[1024];
- 
-		while ((read = is.read(bytes)) != -1) {
-			outputStream.write(bytes, 0, read);
-		}
-		
-		outputStream.close();
-		
-		return contentFile;
-		
-	}
-	
-	public static String cleanRelativePath(String path) {
-		String newPath = path;
-		if(!System.getProperty("path.separator").equals("\\")) {
-			newPath.replaceAll("/", System.getProperty("file.separator"));
-		}
-		return newPath;
-		
-	}
-	
-	public static void compareModified(ChangedFile file,Git git) {
-		File previousType = null;
-		
-		try {
-			previousType = Utils.getFileContentOfLastCommit(file.getPath(), git.getRepository());
-			
-			if(previousType == null) {
-				throw new Exception("File renamed");
-			}
-			
-		} catch (RevisionSyntaxException e) {
-			e.printStackTrace();
-		} catch (AmbiguousObjectException e) {
-			e.printStackTrace();
-		} catch (IncorrectObjectTypeException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static boolean isInitialCommit(Git git) {
-		boolean isInitialCommit = true;
-		LogCommand log = git.log();
-		
-		Iterable<RevCommit> commits = null;
-		try {
-			commits = log.all().call();
-			
-			for (RevCommit revCommit : commits) {
-				revCommit.getId();
-				isInitialCommit = false;
-				break;
-			}
-		} catch (NoHeadException e) {
-			// TODO Auto-generated catch block
-			System.out.println("NO HEAD: INITIAL COMMIT");
-			isInitialCommit = true;
-		} catch (GitAPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		return isInitialCommit;
-	}
+        // now try to find a specific file
+        TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.addTree(tree);
+        treeWalk.setRecursive(true);
+        treeWalk.setPostOrderTraversal(true);
+        treeWalk.setFilter(PathFilter.create(filePath.substring(filePath.indexOf("/") + 1)));
+        if (!treeWalk.next()) {
+
+            // TODO the file is added to project
+            throw new IllegalStateException(
+                    "CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
+        }
+
+        ObjectId objectId = treeWalk.getObjectId(0);
+        ObjectLoader loader = repository.open(objectId);
+
+        return IOUtils.stringFromFile(Utils.inputStreamToFile(loader.openStream()).getAbsolutePath(), "utf-8");
+    }
+
+    public static File getFileContentOfCommitID(String filePath, Repository repository, String commitID) throws RevisionSyntaxException, AmbiguousObjectException,
+            IncorrectObjectTypeException, IOException {
+        // find the HEAD
+        ObjectId lastCommitId = repository.resolve(commitID);
+
+        // a RevWalk allows to walk over commits based on some filtering that is
+        // defined
+        RevWalk revWalk = new RevWalk(repository);
+        RevCommit commit = revWalk.parseCommit(lastCommitId);
+        // and using commit's tree find the path
+        RevTree tree = commit.getTree();
+        System.out.println("Having tree: " + tree);
+
+        // now try to find a specific file
+        TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.addTree(tree);
+        treeWalk.setRecursive(true);
+        // treeWalk.setPostOrderTraversal(true);
+        treeWalk.setFilter(PathFilter.create(filePath.substring(filePath.indexOf("/") + 1)));
+
+        if (!treeWalk.next()) {
+            treeWalk = new TreeWalk(repository);
+            treeWalk.addTree(tree);
+            treeWalk.setRecursive(true);
+            treeWalk.setFilter(PathFilter.create(filePath));
+            if (!treeWalk.next()) {
+                // TODO the file is added to project
+                throw new IllegalStateException(
+                        "CHANGECOMMIT -- Did not find expected file '" + filePath + "'");
+            }
+        }
+
+        ObjectId objectId = treeWalk.getObjectId(0);
+        ObjectLoader loader = repository.open(objectId);
+
+        return Utils.inputStreamToFile(loader.openStream());
+    }
+
+    public static File inputStreamToFile(InputStream is) throws IOException {
+        File contentFile = File.createTempFile("tmpCont", ".txt");
+
+        OutputStream outputStream = null;
+        outputStream = new FileOutputStream(contentFile);
+
+        int read = 0;
+        byte[] bytes = new byte[1024];
+
+        while ((read = is.read(bytes)) != -1) {
+            outputStream.write(bytes, 0, read);
+        }
+
+        outputStream.close();
+
+        return contentFile;
+
+    }
+
+    public static String cleanRelativePath(String path) {
+        String newPath = path;
+        if (!System.getProperty("path.separator").equals("\\")) {
+            newPath.replaceAll("/", System.getProperty("file.separator"));
+        }
+        return newPath;
+
+    }
+
+    public static void compareModified(ChangedFile file, Git git) {
+        File previousType = null;
+
+        try {
+            previousType = Utils.getFileContentOfLastCommit(file.getPath(), git.getRepository());
+
+            if (previousType == null) {
+                throw new Exception("File renamed");
+            }
+
+        } catch (RevisionSyntaxException e) {
+            e.printStackTrace();
+        } catch (AmbiguousObjectException e) {
+            e.printStackTrace();
+        } catch (IncorrectObjectTypeException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isInitialCommit(Git git) {
+        boolean isInitialCommit = true;
+        LogCommand log = git.log();
+
+        Iterable<RevCommit> commits = null;
+        try {
+            commits = log.all().call();
+
+            for (RevCommit revCommit : commits) {
+                revCommit.getId();
+                isInitialCommit = false;
+                break;
+            }
+        } catch (NoHeadException e) {
+            // TODO Auto-generated catch block
+            System.out.println("NO HEAD: INITIAL COMMIT");
+            isInitialCommit = true;
+        } catch (GitAPIException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return isInitialCommit;
+    }
 
 }

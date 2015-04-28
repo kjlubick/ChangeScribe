@@ -10,17 +10,17 @@ import co.edu.unal.colswe.changescribe.core.Activator;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+     */
+    @Override
     public void initializeDefaultPreferences() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		store.setDefault(PreferenceConstants.P_FILTER_COMMIT_MESSAGE, true);
-		store.setDefault(PreferenceConstants.P_FILTER_FACTOR, 10);
-		store.setDefault(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE, true);
-	}
+        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+        store.setDefault(PreferenceConstants.P_FILTER_COMMIT_MESSAGE, true);
+        store.setDefault(PreferenceConstants.P_FILTER_FACTOR, 10);
+        store.setDefault(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE, true);
+    }
 
 }

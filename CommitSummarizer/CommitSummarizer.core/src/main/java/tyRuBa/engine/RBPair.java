@@ -12,79 +12,80 @@ import tyRuBa.util.ObjectTuple;
  */
 public class RBPair extends RBAbstractPair {
 
-	/**
-	 * Constructor for incomplete RBPair. For efficiency reasons only. Evil.
-	 */
-	public RBPair(RBTerm aCar) {
-		super(aCar, null);
-	}
+    /**
+     * Constructor for incomplete RBPair. For efficiency reasons only. Evil.
+     */
+    public RBPair(RBTerm aCar) {
+        super(aCar, null);
+    }
 
-	/**
-	 * Constructor for RBPair.
-	 */
-	public RBPair(RBTerm aCar, RBTerm aCdr) {
-		super(aCar, aCdr);
-	}
+    /**
+     * Constructor for RBPair.
+     */
+    public RBPair(RBTerm aCar, RBTerm aCdr) {
+        super(aCar, aCdr);
+    }
 
-	public static RBTerm make(RBTerm[] terms) {
-		RBTerm t = FrontEnd.theEmptyList;
-		for (int i = terms.length - 1; i >= 0; i--) {
-			t = new RBPair(terms[i], t);
-		}
-		return t;
-	}
+    public static RBTerm make(RBTerm[] terms) {
+        RBTerm t = FrontEnd.theEmptyList;
+        for (int i = terms.length - 1; i >= 0; i--) {
+            t = new RBPair(terms[i], t);
+        }
+        return t;
+    }
 
-	/** If proper list then Turn into an Object[] otherwise
-	 *  just do as in super */
-	@Override
+    /**
+     * If proper list then Turn into an Object[] otherwise just do as in super
+     */
+    @Override
     public Object up() {
-		try {
-			int size = getNumSubterms();
-			Object[] array = new Object[size];
-			for (int i = 0; i < size; i++) {
-				array[i] = getSubterm(i).up();
-			}
-			return array;
-		} catch (ImproperListException e) {
-			return super.up();
-		}
-	}
+        try {
+            int size = getNumSubterms();
+            Object[] array = new Object[size];
+            for (int i = 0; i < size; i++) {
+                array[i] = getSubterm(i).up();
+            }
+            return array;
+        } catch (ImproperListException e) {
+            return super.up();
+        }
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "[" + cdrToString(true, this) + "]";
-	}
+        return "[" + cdrToString(true, this) + "]";
+    }
 
-	@Override
+    @Override
     public String quotedToString() {
-		return getCar().quotedToString() + getCdr().quotedToString();
-	}
+        return getCar().quotedToString() + getCdr().quotedToString();
+    }
 
-	@Override
+    @Override
     protected Type getType(TypeEnv env) throws TypeModeError {
-		Type car,cdr,result;
-		try {		
-			car = getCar().getType(env);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, getCar());
-		}
-		try {		
-			cdr = getCdr().getType(env);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, getCdr());
-		}
-		try {
-			result = Factory.makeListType(car).union(cdr);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}				
-		return result;
-	}
+        Type car, cdr, result;
+        try {
+            car = getCar().getType(env);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, getCar());
+        }
+        try {
+            cdr = getCdr().getType(env);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, getCdr());
+        }
+        try {
+            result = Factory.makeListType(car).union(cdr);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+        return result;
+    }
 
-	@Override
+    @Override
     public Object accept(TermVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()

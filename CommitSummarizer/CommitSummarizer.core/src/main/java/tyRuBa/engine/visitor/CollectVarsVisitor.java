@@ -15,81 +15,80 @@ import tyRuBa.engine.RBUniqueQuantifier;
 import tyRuBa.engine.RBVariable;
 
 /**
- * This visitor visits RBExpression and collects all variables that will
- * become bound after evaluation of the expression.
+ * This visitor visits RBExpression and collects all variables that will become bound after evaluation of the expression.
  */
 public class CollectVarsVisitor extends AbstractCollectVarsVisitor {
 
-	public CollectVarsVisitor(Collection vars) {
-		super(vars, null);
-	}
-	
-	public CollectVarsVisitor() {
-		super(new HashSet(), null);
-	}
+    public CollectVarsVisitor(Collection vars) {
+        super(vars, null);
+    }
 
-	@Override
+    public CollectVarsVisitor() {
+        super(new HashSet(), null);
+    }
+
+    @Override
     public Object visit(RBDisjunction disjunction) {
-		Collection oldVars = getVars();
-		Collection intersection = null;
-		for (int i = 0; i < disjunction.getNumSubexps(); i++) {
-			Collection next = disjunction.getSubexp(i).getVariables();
-			if (intersection==null)
-				intersection = next;
-			else
-				intersection.retainAll(next);
-		}
-		if (intersection != null) {
-			oldVars.addAll(intersection);
-		}
-		return null;
-	}
+        Collection oldVars = getVars();
+        Collection intersection = null;
+        for (int i = 0; i < disjunction.getNumSubexps(); i++) {
+            Collection next = disjunction.getSubexp(i).getVariables();
+            if (intersection == null)
+                intersection = next;
+            else
+                intersection.retainAll(next);
+        }
+        if (intersection != null) {
+            oldVars.addAll(intersection);
+        }
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBExistsQuantifier exists) {
-		return exists.getExp().accept(this);
-	}
+        return exists.getExp().accept(this);
+    }
 
-	@Override
+    @Override
     public Object visit(RBFindAll findAll) {
-		return findAll.getResult().accept(this);
-	}
+        return findAll.getResult().accept(this);
+    }
 
-	@Override
+    @Override
     public Object visit(RBCountAll count) {
-		return count.getResult().accept(this);
-	}
+        return count.getResult().accept(this);
+    }
 
-	@Override
+    @Override
     public Object visit(RBNotFilter notFilter) {
-		return null;
-	}
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBTestFilter testFilter) {
-		return null;
-	}
+        return null;
+    }
 
-	@Override
+    @Override
     public Object visit(RBUniqueQuantifier unique) {
-		return unique.getExp().accept(this);
-	}
+        return unique.getExp().accept(this);
+    }
 
-	@Override
+    @Override
     public Object visit(RBVariable var) {
-		getVars().add(var);
-		return null;
-	}
-	
-	@Override
-    public Object visit(RBIgnoredVariable ignoredVar) {
-		getVars().add(ignoredVar);
-		return null;
-	}
+        getVars().add(var);
+        return null;
+    }
 
-	@Override
+    @Override
+    public Object visit(RBIgnoredVariable ignoredVar) {
+        getVars().add(ignoredVar);
+        return null;
+    }
+
+    @Override
     public Object visit(RBTemplateVar templVar) {
-		return null;
-	}
-    
+        return null;
+    }
+
 }

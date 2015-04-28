@@ -12,15 +12,15 @@ import tyRuBa.engine.QueryEngine;
  * @author dsjanzen
  */
 public class Query {
-	
-	private QueryEngine queryEngine;
-	
-	Query(QueryEngine queryEngine) {
-		this.queryEngine = queryEngine;
-	}
-	
-	public ResultSet executeQuery(String queryString) throws TyrubaException {
-		return new ResultSet(queryEngine, queryString);
-	}
+
+    private QueryEngine queryEngine;
+
+    Query(QueryEngine queryEngine) {
+        this.queryEngine = queryEngine;
+    }
+
+    public ResultSet executeQuery(String queryString) throws TyrubaException {
+        return new ResultSet(queryEngine, queryString);
+    }
 
 }

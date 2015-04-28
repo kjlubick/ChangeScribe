@@ -10,7 +10,7 @@ public abstract class BoundaryType extends Type {
     abstract boolean isStrict();
 
     public boolean isSuperTypeOf(Type other) {
-        return other.isSubTypeOf(this,new HashMap());
+        return other.isSubTypeOf(this, new HashMap());
     }
 
 }

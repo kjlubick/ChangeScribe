@@ -12,21 +12,21 @@ import co.edu.unal.colswe.changescribe.core.textgenerator.phrase.util.PhraseUtil
 import co.edu.unal.colswe.changescribe.core.textgenerator.tokenizer.Tokenizer;
 
 public class GeneralDescriptor {
-	
-	public static String describe(StereotypedElement element, CompilationUnit cu, String operation, boolean isLocal) {
-		StereotypedType type = (StereotypedType) element;
-		StringBuilder description = new StringBuilder();
-		ITypeBinding superclass = null; 
-		ITypeBinding[] interfaces = null;
-		if (type.getElement().resolveBinding() != null) {
-			superclass = type.getElement().resolveBinding().getSuperclass();
-			interfaces = type.getElement().resolveBinding().getInterfaces();
-		}
-		
-		if(type.isInterface()) {
-			description.append(describeInterface(type) + " ");
-		} else {
-			if (interfaces != null && superclass != null && interfaces.length != 0 && !superclass.getKey().equals("Ljava/lang/Object;")) {
+
+    public static String describe(StereotypedElement element, CompilationUnit cu, String operation, boolean isLocal) {
+        StereotypedType type = (StereotypedType) element;
+        StringBuilder description = new StringBuilder();
+        ITypeBinding superclass = null;
+        ITypeBinding[] interfaces = null;
+        if (type.getElement().resolveBinding() != null) {
+            superclass = type.getElement().resolveBinding().getSuperclass();
+            interfaces = type.getElement().resolveBinding().getInterfaces();
+        }
+
+        if (type.isInterface()) {
+            description.append(describeInterface(type) + " ");
+        } else {
+            if (interfaces != null && superclass != null && interfaces.length != 0 && !superclass.getKey().equals("Ljava/lang/Object;")) {
                 description.append(PhraseUtils.getImplementationDescription(interfaces));
                 description.append(", and ");
                 description.append(PhraseUtils.getExtensionDescription(superclass));
@@ -48,41 +48,41 @@ public class GeneralDescriptor {
                 description.append("data class");
             } else {
                 description.append("class");
-            } if (type.getElement().resolveBinding() != null &&Modifier.isAbstract(type.getElement().resolveBinding().getModifiers())) {
+            }
+            if (type.getElement().resolveBinding() != null && Modifier.isAbstract(type.getElement().resolveBinding().getModifiers())) {
                 description.insert(0, "an abstract ");
             } else {
                 description.insert(0, PhraseUtils.getIndefiniteArticle(description.toString()).concat(" "));
             }
-		}
-		
-		if(!isLocal) {
-			description.insert(0, describeOperation(operation) + " ");
-		} else {
-			description.insert(0, describeOperation(operation) + " a local ");
-		}
-		
-		description.append(" for ");
-		NounPhrase classNamePhrase = new NounPhrase(Tokenizer.split(type.getElement().getName().getFullyQualifiedName()));
-		classNamePhrase.generate();
-		description.append(classNamePhrase.toString());
-		
+        }
 
-		return description.toString();
-	}
-	
-	private static String describeOperation(String operation) {
-		String description = "";
-		if(operation.equals(TypeChange.ADDED.toString()) || operation.equals(TypeChange.UNTRACKED.toString())) {
-			description = "Add";
-		} else if(operation.equals(TypeChange.REMOVED.toString())) {
-			description = "Remove";
-		}
-		return description;
-	}
-	
-	private static String describeInterface(StereotypedType type) {
-		ITypeBinding[] interfaces = type.getElement().resolveBinding().getInterfaces();
-        
+        if (!isLocal) {
+            description.insert(0, describeOperation(operation) + " ");
+        } else {
+            description.insert(0, describeOperation(operation) + " a local ");
+        }
+
+        description.append(" for ");
+        NounPhrase classNamePhrase = new NounPhrase(Tokenizer.split(type.getElement().getName().getFullyQualifiedName()));
+        classNamePhrase.generate();
+        description.append(classNamePhrase.toString());
+
+        return description.toString();
+    }
+
+    private static String describeOperation(String operation) {
+        String description = "";
+        if (operation.equals(TypeChange.ADDED.toString()) || operation.equals(TypeChange.UNTRACKED.toString())) {
+            description = "Add";
+        } else if (operation.equals(TypeChange.REMOVED.toString())) {
+            description = "Remove";
+        }
+        return description;
+    }
+
+    private static String describeInterface(StereotypedType type) {
+        ITypeBinding[] interfaces = type.getElement().resolveBinding().getInterfaces();
+
         final StringBuilder template = new StringBuilder();
         if (interfaces.length > 0) {
             final String enumeratedTypes = PhraseUtils.enumeratedTypes(type.getElement().resolveBinding().getInterfaces());
@@ -97,5 +97,5 @@ public class GeneralDescriptor {
         }
         return template.toString();
     }
-	
+
 }

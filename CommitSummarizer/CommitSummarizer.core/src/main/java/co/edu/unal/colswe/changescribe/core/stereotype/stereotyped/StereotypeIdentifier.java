@@ -16,149 +16,157 @@ import co.edu.unal.colswe.changescribe.core.ast.JParser;
 import co.edu.unal.colswe.changescribe.core.git.ChangedFile;
 
 public class StereotypeIdentifier {
-	private JParser parser;
-	private List<StereotypedElement> stereotypedElements;
-	double methodsMean;
-	double methodsStdDev;
-	private ICompilationUnit compilationUnit;
-	private String scmOperation; 
-	private StringBuilder builder;
-	private ChangedFile changedFile;
-	private List<SearchMatch> relatedTypes;
-	private double impactPercentaje;
+    private JParser parser;
 
-	public StereotypeIdentifier() {
-		super();
-		this.stereotypedElements = new LinkedList<StereotypedElement>();
-		builder = new StringBuilder();
-	}
-	
-	public StereotypeIdentifier(final ICompilationUnit unit,
-			final double methodsMean, final double methodsStdDev) {
-		super();
-		this.compilationUnit = unit;
-		this.parser = new JParser(unit);
-		this.methodsMean = methodsMean;
-		this.methodsStdDev = methodsStdDev;
-		this.stereotypedElements = new LinkedList<StereotypedElement>();
-		this.builder = new StringBuilder();
-	}
+    private List<StereotypedElement> stereotypedElements;
 
-	public StereotypeIdentifier(final IMember member, final double methodsMean,
-			final double methodsStdDev) {
-		super();
-		this.parser = new JParser(member);
-		this.methodsMean = methodsMean;
-		this.methodsStdDev = methodsStdDev;
-		this.stereotypedElements = new LinkedList<StereotypedElement>();
-	}
-	
-	public StereotypeIdentifier(File file) throws CoreException {
-		super();
-		this.parser = new JParser(file);
-		this.stereotypedElements = new LinkedList<StereotypedElement>();
-	}
+    double methodsMean;
 
-	public void setParameters(final ICompilationUnit unit,
-			final double methodsMean, final double methodsStdDev) {
-		this.parser = new JParser(unit);
-		this.methodsMean = methodsMean;
-		this.methodsStdDev = methodsStdDev;
-	}
+    double methodsStdDev;
 
-	public void setParameters(final IMember member, final double methodsMean,
-			final double methodsStdDev) {
-		this.parser = new JParser(member);
-		this.methodsMean = methodsMean;
-		this.methodsStdDev = methodsStdDev;
-	}
+    private ICompilationUnit compilationUnit;
 
-	public void identifyStereotypes() { 
-		if (this.parser == null) {
-			return;
-		}
-		this.parser.parse();
-		for (final ASTNode element : this.parser.getElements()) {
-			try {
-				StereotypedElement stereoElement;
-				if (element instanceof TypeDeclaration) {
-					stereoElement = new StereotypedType((TypeDeclaration) element, this.methodsMean, this.methodsStdDev);
-				} else {
-					if (!(element instanceof MethodDeclaration)) {
-						continue;
-					}
-					stereoElement = new StereotypedMethod((MethodDeclaration) element);
-				}
-				stereoElement.findStereotypes();
-				this.stereotypedElements.add(stereoElement);
-			} catch (NullPointerException ex) {
-				
-				//TODO DELETE
-				ex.printStackTrace();
-			}
-		}
-	}
+    private String scmOperation;
 
-	public List<StereotypedElement> getStereotypedElements() {
-		return this.stereotypedElements;
-	}
+    private StringBuilder builder;
 
-	public JParser getParser() {
-		return this.parser;
-	}
+    private ChangedFile changedFile;
 
-	public ICompilationUnit getCompilationUnit() {
-		return compilationUnit;
-	}
+    private List<SearchMatch> relatedTypes;
 
-	public void setCompilationUnit(ICompilationUnit compilationUnit) {
-		this.compilationUnit = compilationUnit;
-	}
+    private double impactPercentaje;
 
-	public String getScmOperation() {
-		return scmOperation;
-	}
+    public StereotypeIdentifier() {
+        super();
+        this.stereotypedElements = new LinkedList<StereotypedElement>();
+        builder = new StringBuilder();
+    }
 
-	public void setScmOperation(String scmOperation) {
-		this.scmOperation = scmOperation;
-	}
+    public StereotypeIdentifier(final ICompilationUnit unit,
+            final double methodsMean, final double methodsStdDev) {
+        super();
+        this.compilationUnit = unit;
+        this.parser = new JParser(unit);
+        this.methodsMean = methodsMean;
+        this.methodsStdDev = methodsStdDev;
+        this.stereotypedElements = new LinkedList<StereotypedElement>();
+        this.builder = new StringBuilder();
+    }
 
-	public StringBuilder getBuilder() {
-		return builder;
-	}
+    public StereotypeIdentifier(final IMember member, final double methodsMean,
+            final double methodsStdDev) {
+        super();
+        this.parser = new JParser(member);
+        this.methodsMean = methodsMean;
+        this.methodsStdDev = methodsStdDev;
+        this.stereotypedElements = new LinkedList<StereotypedElement>();
+    }
 
-	public void setBuilder(StringBuilder builder) {
-		this.builder = builder;
-	}
+    public StereotypeIdentifier(File file) throws CoreException {
+        super();
+        this.parser = new JParser(file);
+        this.stereotypedElements = new LinkedList<StereotypedElement>();
+    }
 
-	@Override
-	public String toString() {
-		return builder.toString();
-	}
+    public void setParameters(final ICompilationUnit unit,
+            final double methodsMean, final double methodsStdDev) {
+        this.parser = new JParser(unit);
+        this.methodsMean = methodsMean;
+        this.methodsStdDev = methodsStdDev;
+    }
 
-	public ChangedFile getChangedFile() {
-		return changedFile;
-	}
+    public void setParameters(final IMember member, final double methodsMean,
+            final double methodsStdDev) {
+        this.parser = new JParser(member);
+        this.methodsMean = methodsMean;
+        this.methodsStdDev = methodsStdDev;
+    }
 
-	public void setChangedFile(ChangedFile changedFile) {
-		this.changedFile = changedFile;
-	}
+    public void identifyStereotypes() {
+        if (this.parser == null) {
+            return;
+        }
+        this.parser.parse();
+        for (final ASTNode element : this.parser.getElements()) {
+            try {
+                StereotypedElement stereoElement;
+                if (element instanceof TypeDeclaration) {
+                    stereoElement = new StereotypedType((TypeDeclaration) element, this.methodsMean, this.methodsStdDev);
+                } else {
+                    if (!(element instanceof MethodDeclaration)) {
+                        continue;
+                    }
+                    stereoElement = new StereotypedMethod((MethodDeclaration) element);
+                }
+                stereoElement.findStereotypes();
+                this.stereotypedElements.add(stereoElement);
+            } catch (NullPointerException ex) {
 
-	public List<SearchMatch> getRelatedTypes() {
-		return relatedTypes;
-	}
+                // TODO DELETE
+                ex.printStackTrace();
+            }
+        }
+    }
 
-	public void setRelatedTypes(List<SearchMatch> relatedTypes) {
-		this.relatedTypes = relatedTypes;
-	}
+    public List<StereotypedElement> getStereotypedElements() {
+        return this.stereotypedElements;
+    }
 
-	public double getImpactPercentaje() {
-		return impactPercentaje;
-	}
+    public JParser getParser() {
+        return this.parser;
+    }
 
-	public void setImpactPercentaje(double impactPercentaje) {
-		this.impactPercentaje = impactPercentaje;
-	}
-	
-	
+    public ICompilationUnit getCompilationUnit() {
+        return compilationUnit;
+    }
+
+    public void setCompilationUnit(ICompilationUnit compilationUnit) {
+        this.compilationUnit = compilationUnit;
+    }
+
+    public String getScmOperation() {
+        return scmOperation;
+    }
+
+    public void setScmOperation(String scmOperation) {
+        this.scmOperation = scmOperation;
+    }
+
+    public StringBuilder getBuilder() {
+        return builder;
+    }
+
+    public void setBuilder(StringBuilder builder) {
+        this.builder = builder;
+    }
+
+    @Override
+    public String toString() {
+        return builder.toString();
+    }
+
+    public ChangedFile getChangedFile() {
+        return changedFile;
+    }
+
+    public void setChangedFile(ChangedFile changedFile) {
+        this.changedFile = changedFile;
+    }
+
+    public List<SearchMatch> getRelatedTypes() {
+        return relatedTypes;
+    }
+
+    public void setRelatedTypes(List<SearchMatch> relatedTypes) {
+        this.relatedTypes = relatedTypes;
+    }
+
+    public double getImpactPercentaje() {
+        return impactPercentaje;
+    }
+
+    public void setImpactPercentaje(double impactPercentaje) {
+        this.impactPercentaje = impactPercentaje;
+    }
+
 }

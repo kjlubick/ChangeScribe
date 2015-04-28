@@ -8,36 +8,37 @@ import tyRuBa.modes.Mode;
 
 public class SemiDetCompiledPredicateExpression extends SemiDetCompiled {
 
-	final private RuleBase rules;
-	final private RBTuple args;
+    final private RuleBase rules;
 
-	public SemiDetCompiledPredicateExpression(Mode mode, RuleBase rules, RBTuple args) {
-		super(mode);
-		this.rules = rules;
-		this.args = args;	
-	}
+    final private RBTuple args;
 
-	@Override
+    public SemiDetCompiledPredicateExpression(Mode mode, RuleBase rules, RBTuple args) {
+        super(mode);
+        this.rules = rules;
+        this.args = args;
+    }
+
+    @Override
     final public Frame runSemiDet(final Object input, RBContext context) {
-		RBTuple goal = (RBTuple)args.substitute((Frame)input);
-		Frame result = compiledRules().runSemiDet(goal, context);
-		if (((Frame)input).isEmpty()) {
-//			PoormansProfiler.countEmptyFrameAppend++;
-			return result;
-		} else if (result == null) {
-			return null;
-		} else {
-			return ((Frame)input).append(result);
-		}
-	}
+        RBTuple goal = (RBTuple) args.substitute((Frame) input);
+        Frame result = compiledRules().runSemiDet(goal, context);
+        if (((Frame) input).isEmpty()) {
+            // PoormansProfiler.countEmptyFrameAppend++;
+            return result;
+        } else if (result == null) {
+            return null;
+        } else {
+            return ((Frame) input).append(result);
+        }
+    }
 
-	private SemiDetCompiled compiledRules() {
-		return rules.getSemiDetCompiledRules();
-	}
-	
-	@Override
+    private SemiDetCompiled compiledRules() {
+        return rules.getSemiDetCompiledRules();
+    }
+
+    @Override
     public String toString() {
-		return "SEMIDET PRED(" + args + ")";
-	}
+        return "SEMIDET PRED(" + args + ")";
+    }
 
 }

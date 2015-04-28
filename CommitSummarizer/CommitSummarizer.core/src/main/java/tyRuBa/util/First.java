@@ -4,53 +4,49 @@
 package tyRuBa.util;
 
 /**
- * An ElementSource that keeps only the first element of
- * another Source. Implemented in such a way that it
- * does not destroy the lazy evaluation property of the
- * other source. Foo
+ * An ElementSource that keeps only the first element of another Source. Implemented in such a way that it does not destroy the lazy evaluation property of the other source. Foo
  * 
- * This source does not keep a reference to the other source
- * after it has retrieved its first element.
+ * This source does not keep a reference to the other source after it has retrieved its first element.
  */
 public class First extends ElementSource {
-	
-	private ElementSource source;
-	
-	public First(ElementSource from) {
-		source = from;
-	}
 
-	@Override
+    private ElementSource source;
+
+    public First(ElementSource from) {
+        source = from;
+    }
+
+    @Override
     public void print(PrintingState p) {
-		p.print("First(");
-		source.print(p);
-		p.outdent();
-		p.print(")");
-	}
+        p.print("First(");
+        source.print(p);
+        p.outdent();
+        p.print(")");
+    }
 
-	@Override
+    @Override
     public int status() {
-		if (source==null)
-			return NO_MORE_ELEMENTS;
-		else {
-			int stat = source.status();
-			if (source.status()==NO_MORE_ELEMENTS) {
-				source = null;
-			}
-			return stat;
-		}
-	}
+        if (source == null)
+            return NO_MORE_ELEMENTS;
+        else {
+            int stat = source.status();
+            if (source.status() == NO_MORE_ELEMENTS) {
+                source = null;
+            }
+            return stat;
+        }
+    }
 
-	@Override
+    @Override
     public Object nextElement() {
-		ElementSource it = source;
-		source = null;
-		return it.nextElement();
-	}
+        ElementSource it = source;
+        source = null;
+        return it.nextElement();
+    }
 
-	@Override
+    @Override
     public ElementSource first() {
-		return this;
-	}
+        return this;
+    }
 
 }

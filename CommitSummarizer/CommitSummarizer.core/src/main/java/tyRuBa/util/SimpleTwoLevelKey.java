@@ -11,8 +11,9 @@ import java.io.Serializable;
 public class SimpleTwoLevelKey implements TwoLevelKey, Serializable {
 
     String first;
+
     Object second;
-    
+
     public SimpleTwoLevelKey(String first, Object second) {
         this.first = first;
         if (this.first instanceof String) {
@@ -34,7 +35,7 @@ public class SimpleTwoLevelKey implements TwoLevelKey, Serializable {
         return second;
     }
 
-//    public String getFirstAsString() {
-//        return first.toString();
-//    }
+    // public String getFirstAsString() {
+    // return first.toString();
+    // }
 }

@@ -15,37 +15,37 @@ import tyRuBa.engine.RBVariable;
 
 public class InstantiateVisitor extends SubstituteOrInstantiateVisitor {
 
-	public InstantiateVisitor(Frame frame) {
-		super(frame);
-	}
+    public InstantiateVisitor(Frame frame) {
+        super(frame);
+    }
 
-	@Override
+    @Override
     public Object visit(RBUniqueQuantifier unique) {
-		RBExpression exp = (RBExpression) unique.getExp().accept(this);
-		Collection vars = new HashSet();
-		for (int i = 0; i < unique.getNumVars(); i++) {
-			vars.add(unique.getVarAt(i).accept(this));
-		}
-		return new RBUniqueQuantifier(vars, exp);
-	}
+        RBExpression exp = (RBExpression) unique.getExp().accept(this);
+        Collection vars = new HashSet();
+        for (int i = 0; i < unique.getNumVars(); i++) {
+            vars.add(unique.getVarAt(i).accept(this));
+        }
+        return new RBUniqueQuantifier(vars, exp);
+    }
 
-	@Override
+    @Override
     public Object visit(RBVariable var) {
-		RBTerm val = getFrame().get(var);
-		if (val == null) {
-			val = (RBVariable) var.clone();
-			getFrame().put(var, val);
-			return val;
-		} else {
-			return val;
-		}
-	}
+        RBTerm val = getFrame().get(var);
+        if (val == null) {
+            val = (RBVariable) var.clone();
+            getFrame().put(var, val);
+            return val;
+        } else {
+            return val;
+        }
+    }
 
-	@Override
+    @Override
     public Object visit(RBTemplateVar templVar) {
-		//Instantiation only happens at runtime. TemplateVar should not
-		//exsit any more at runtime so...
-		throw new Error("Unsupported operation");
-	}
+        // Instantiation only happens at runtime. TemplateVar should not
+        // exsit any more at runtime so...
+        throw new Error("Unsupported operation");
+    }
 
 }

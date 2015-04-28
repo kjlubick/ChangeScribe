@@ -35,109 +35,107 @@ import org.eclipse.team.ui.ISharedImages;
 import org.eclipse.team.ui.TeamImages;
 
 /**
- * Label decorator for warning/error problem markers (used in Staging View and
- * Commit Dialog).
+ * Label decorator for warning/error problem markers (used in Staging View and Commit Dialog).
  * <p>
  * Users must make the decoratable element implement {@link IProblemDecoratable}.
  */
 public class ProblemLabelDecorator extends BaseLabelProvider implements
-		ILabelDecorator, IResourceChangeListener {
+        ILabelDecorator, IResourceChangeListener {
 
-	private final StructuredViewer viewer;
+    private final StructuredViewer viewer;
 
-	private final ResourceManager resourceManager = new LocalResourceManager(
-			JFaceResources.getResources());
+    private final ResourceManager resourceManager = new LocalResourceManager(
+            JFaceResources.getResources());
 
-	/**
-	 * @param viewer
-	 *            the viewer to use for label updates because of changed
-	 *            resources, or null for none
-	 */
-	public ProblemLabelDecorator(StructuredViewer viewer) {
-		this.viewer = viewer;
-		if (this.viewer != null)
-			ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
-	}
+    /**
+     * @param viewer
+     *            the viewer to use for label updates because of changed resources, or null for none
+     */
+    public ProblemLabelDecorator(StructuredViewer viewer) {
+        this.viewer = viewer;
+        if (this.viewer != null)
+            ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+    }
 
-	@Override
+    @Override
     public void dispose() {
-		resourceManager.dispose();
-		if (this.viewer != null)
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
-		super.dispose();
-	}
+        resourceManager.dispose();
+        if (this.viewer != null)
+            ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        super.dispose();
+    }
 
-	@Override
+    @Override
     public Image decorateImage(Image image, Object element) {
-		IProblemDecoratable decoratable = getProblemDecoratable(element);
-		if (decoratable != null) {
-			int problemSeverity = decoratable.getProblemSeverity();
-			if (problemSeverity == IMarker.SEVERITY_ERROR)
-				return getDecoratedImage(image, ISharedImages.IMG_ERROR_OVR);
-			else if (problemSeverity == IMarker.SEVERITY_WARNING)
-				return getDecoratedImage(image, ISharedImages.IMG_WARNING_OVR);
-		}
-		return null;
-	}
+        IProblemDecoratable decoratable = getProblemDecoratable(element);
+        if (decoratable != null) {
+            int problemSeverity = decoratable.getProblemSeverity();
+            if (problemSeverity == IMarker.SEVERITY_ERROR)
+                return getDecoratedImage(image, ISharedImages.IMG_ERROR_OVR);
+            else if (problemSeverity == IMarker.SEVERITY_WARNING)
+                return getDecoratedImage(image, ISharedImages.IMG_WARNING_OVR);
+        }
+        return null;
+    }
 
-	@Override
+    @Override
     public String decorateText(String text, Object element) {
-		// No decoration
-		return null;
-	}
+        // No decoration
+        return null;
+    }
 
-	private IProblemDecoratable getProblemDecoratable(Object element) {
-		if (element instanceof IProblemDecoratable)
-			return (IProblemDecoratable) element;
-		else
-			return null;
-	}
+    private IProblemDecoratable getProblemDecoratable(Object element) {
+        if (element instanceof IProblemDecoratable)
+            return (IProblemDecoratable) element;
+        else
+            return null;
+    }
 
-	private Image getDecoratedImage(Image base, String teamImageId) {
-		ImageDescriptor overlay = TeamImages.getImageDescriptor(teamImageId);
-		DecorationOverlayIcon decorated = new DecorationOverlayIcon(base,
-				overlay, IDecoration.BOTTOM_LEFT);
-		return (Image) this.resourceManager.get(decorated);
-	}
+    private Image getDecoratedImage(Image base, String teamImageId) {
+        ImageDescriptor overlay = TeamImages.getImageDescriptor(teamImageId);
+        DecorationOverlayIcon decorated = new DecorationOverlayIcon(base,
+                overlay, IDecoration.BOTTOM_LEFT);
+        return (Image) this.resourceManager.get(decorated);
+    }
 
-	@Override
+    @Override
     public void resourceChanged(IResourceChangeEvent event) {
-		Set<IResource> resources = new HashSet<IResource>();
+        Set<IResource> resources = new HashSet<IResource>();
 
-		IMarkerDelta[] markerDeltas = event.findMarkerDeltas(IMarker.PROBLEM,
-				true);
-		for (IMarkerDelta delta : markerDeltas)
-			resources.add(delta.getResource());
+        IMarkerDelta[] markerDeltas = event.findMarkerDeltas(IMarker.PROBLEM,
+                true);
+        for (IMarkerDelta delta : markerDeltas)
+            resources.add(delta.getResource());
 
-		if (!resources.isEmpty())
-		    updateLabels(resources);
-	}
+        if (!resources.isEmpty())
+            updateLabels(resources);
+    }
 
-	private void updateLabels(Set<IResource> changedResources) {
-		List<Object> elements = getAffectedElements(changedResources);
-		if (!elements.isEmpty()) {
-			final Object[] updateElements = elements.toArray(new Object[elements.size()]);
-			Display display = viewer.getControl().getDisplay();
-			display.asyncExec(new Runnable() {
-				@Override
+    private void updateLabels(Set<IResource> changedResources) {
+        List<Object> elements = getAffectedElements(changedResources);
+        if (!elements.isEmpty()) {
+            final Object[] updateElements = elements.toArray(new Object[elements.size()]);
+            Display display = viewer.getControl().getDisplay();
+            display.asyncExec(new Runnable() {
+                @Override
                 public void run() {
-					viewer.update(updateElements, null);
-				}
-			});
-		}
-	}
+                    viewer.update(updateElements, null);
+                }
+            });
+        }
+    }
 
-	private List<Object> getAffectedElements(Set<IResource> resources) {
-		List<Object> result = new ArrayList<Object>();
-		if (viewer.getContentProvider() instanceof IStructuredContentProvider) {
-			IStructuredContentProvider contentProvider = (IStructuredContentProvider) viewer.getContentProvider();
-			Object[] elements = contentProvider.getElements(null);
-			for (Object element : elements) {
-				IResource resource = AdapterUtils.adapt(element, IResource.class);
-				if (resource != null && resources.contains(resource))
-					result.add(element);
-			}
-		}
-		return result;
-	}
+    private List<Object> getAffectedElements(Set<IResource> resources) {
+        List<Object> result = new ArrayList<Object>();
+        if (viewer.getContentProvider() instanceof IStructuredContentProvider) {
+            IStructuredContentProvider contentProvider = (IStructuredContentProvider) viewer.getContentProvider();
+            Object[] elements = contentProvider.getElements(null);
+            for (Object element : elements) {
+                IResource resource = AdapterUtils.adapt(element, IResource.class);
+                if (resource != null && resources.contains(resource))
+                    result.add(element);
+            }
+        }
+        return result;
+    }
 }

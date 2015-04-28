@@ -9,27 +9,27 @@ import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
+ * 
  * @see org.eclipse.core.commands.IHandler
  * @see org.eclipse.core.commands.AbstractHandler
  */
 public class CreateMessageHandler extends AbstractHandler {
-	/**
-	 * The constructor.
-	 */
-	public CreateMessageHandler() {
-	}
+    /**
+     * The constructor.
+     */
+    public CreateMessageHandler() {
+    }
 
-	/**
-	 * the command has been executed, so extract extract the needed information
-	 * from the application context.
-	 */
-	@Override
+    /**
+     * the command has been executed, so extract extract the needed information from the application context.
+     */
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		MessageDialog.openInformation(
-				window.getShell(),
-				"ChangeScribe Core Plugin",
-				"CreateMessage");
-		return null;
-	}
+        IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
+        MessageDialog.openInformation(
+                window.getShell(),
+                "ChangeScribe Core Plugin",
+                "CreateMessage");
+        return null;
+    }
 }

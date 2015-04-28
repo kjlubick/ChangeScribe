@@ -13,175 +13,177 @@ import tyRuBa.modes.TupleType;
 import tyRuBa.modes.TypeModeError;
 
 /**
- * A RuleBase stores a collection of Logic inference rules and facts.
- * It has a dependency tracking mechanism that holds on to its
- * dependents weakly. Dependents are notified of a change to
- * the rulebase by means of an update message.
+ * A RuleBase stores a collection of Logic inference rules and facts. It has a dependency tracking mechanism that holds on to its dependents weakly. Dependents are notified of a
+ * change to the rulebase by means of an update message.
  */
 public abstract class RuleBase {
 
-	private QueryEngine engine;
-	long upToDateWith = -1;
+    private QueryEngine engine;
 
-	private boolean uptodateCheck() {
-		if (upToDateWith < engine.frontend().updateCounter) { 
-			forceRecompilation();
-			return false;
-		} else {
-			return true;
-		}
-	}
+    long upToDateWith = -1;
 
-	private void forceRecompilation() {
-		compiledRules = null;
-		semidetCompiledRules = null;
-	}
+    private boolean uptodateCheck() {
+        if (upToDateWith < engine.frontend().updateCounter) {
+            forceRecompilation();
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-	private Compiled compiledRules = null;
-	private SemiDetCompiled semidetCompiledRules = null;
+    private void forceRecompilation() {
+        compiledRules = null;
+        semidetCompiledRules = null;
+    }
 
-	/** Use a cache which remember query results ? */
-	public static boolean useCache = true;
+    private Compiled compiledRules = null;
 
-	/** If true Cache will use SoftValueMap which allows entries to be reclaimed
-	  * by the garbage collector when low on memory */
-	public static boolean softCache = true;
+    private SemiDetCompiled semidetCompiledRules = null;
 
-	/** Do not print Ho. characters while computing queries */
-	public static boolean silent = false;
+    /** Use a cache which remember query results ? */
+    public static boolean useCache = true;
 
-	/** 
-	 * This flag controls whether the QueryEngine will
-	 * check for Bucket updates before running any query.
-	 */
-	public static boolean autoUpdate = true;
+    /**
+     * If true Cache will use SoftValueMap which allows entries to be reclaimed by the garbage collector when low on memory
+     */
+    public static boolean softCache = true;
 
-	static final public boolean debug_tracing = false;
-	static final public boolean debug_checking = false;
+    /** Do not print Ho. characters while computing queries */
+    public static boolean silent = false;
 
-//	/** A collection of my dependents. They will get an update
-//	 * message whenever my contents changes. The collection is
-//	 * weak so that dependents can be gc-ed */
-//	private WeakCollection dependents = null;
-//
-//	/** Add a dependend to my Weak collection of dependents */
-//	public void addDependent(Dependent d) {
-//		if (dependents == null)
-//			dependents = new WeakCollection();
-//		dependents.add(d);
-//	}
-//
-//	/** Remove a depedent from my Weak collection of dependents */
-//	public void removeDependent(Dependent d) {
-//		if (dependents != null)
-//			dependents.remove(d);
-//	}
+    /**
+     * This flag controls whether the QueryEngine will check for Bucket updates before running any query.
+     */
+    public static boolean autoUpdate = true;
 
-//	/** Ask all my dependents to update themselves */
-//	public void update() {
-//		if (dependents != null) {
-//			Object[] deps = dependents.toArray();
-//			for (int i = 0; i < deps.length; i++) {
-//				((Dependent) deps[i]).update();
-//			}
-//		}
-//	}
+    static final public boolean debug_tracing = false;
 
-	private PredicateMode predMode;
-	
-	/**
-	 * @category preparedSQLQueries
-	 */
-	private boolean isPersistent;
+    static final public boolean debug_checking = false;
 
-	protected RuleBase(QueryEngine engine,PredicateMode predMode,boolean isSQLAble) {
-		this.engine = engine;
-		this.predMode = predMode;
-		this.isPersistent = isSQLAble;
-	}
+    // /** A collection of my dependents. They will get an update
+    // * message whenever my contents changes. The collection is
+    // * weak so that dependents can be gc-ed */
+    // private WeakCollection dependents = null;
+    //
+    // /** Add a dependend to my Weak collection of dependents */
+    // public void addDependent(Dependent d) {
+    // if (dependents == null)
+    // dependents = new WeakCollection();
+    // dependents.add(d);
+    // }
+    //
+    // /** Remove a depedent from my Weak collection of dependents */
+    // public void removeDependent(Dependent d) {
+    // if (dependents != null)
+    // dependents.remove(d);
+    // }
 
-	/** return the predicate mode of this moded rulebase */
-	public PredicateMode getPredMode() {
-		return predMode;
-	}
+    // /** Ask all my dependents to update themselves */
+    // public void update() {
+    // if (dependents != null) {
+    // Object[] deps = dependents.toArray();
+    // for (int i = 0; i < deps.length; i++) {
+    // ((Dependent) deps[i]).update();
+    // }
+    // }
+    // }
 
-	/** return the list of binding modes of the predicate mode */
-	public BindingList getParamModes() {
-		return getPredMode().getParamModes();
-	}
+    private PredicateMode predMode;
 
-	/** return the expected mode of the predicate mode */
-	public Mode getMode() {
-		return getPredMode().getMode();
-	}
+    /**
+     * @category preparedSQLQueries
+     */
+    private boolean isPersistent;
 
-	/**
-	 * Returns true if this rulebase mode is expected to produce fewer results than other
-	 */
-	public boolean isBetterThan(RuleBase other) {
-		return getMode().isBetterThan(other.getMode());
-	}
-	
-	public static BasicModedRuleBaseIndex make(FrontEnd frontEnd) {
-		return new BasicModedRuleBaseIndex(frontEnd, null);
-	}
+    protected RuleBase(QueryEngine engine, PredicateMode predMode, boolean isSQLAble) {
+        this.engine = engine;
+        this.predMode = predMode;
+        this.isPersistent = isSQLAble;
+    }
 
-	/** Factory method for creating RuleBases **/
-	public static BasicModedRuleBaseIndex make(FrontEnd frontEnd, String identifier, boolean temporary) {
-//		if(identifier != null)
-//			engine.addGroup(identifier, temporary);
-			
-		return new BasicModedRuleBaseIndex(frontEnd, identifier);
-	}
+    /** return the predicate mode of this moded rulebase */
+    public PredicateMode getPredMode() {
+        return predMode;
+    }
 
-	/** Add a rule to the rulebase */
-	abstract public void insert(RBComponent r, ModedRuleBaseIndex rulebases, 
-	TupleType resultTypes) throws TypeModeError;
+    /** return the list of binding modes of the predicate mode */
+    public BindingList getParamModes() {
+        return getPredMode().getParamModes();
+    }
 
-	/** Retract a fact from the rulebase. This operation is not supported for
-	all kinds of RBComponents or all configurations of RuleBase implementations.
-	Not all concrete rulebases support the operation */
-	public void retract(RBFact f) {
-		throw new Error("Unsupported operation RETRACT");
-	}
+    /** return the expected mode of the predicate mode */
+    public Mode getMode() {
+        return getPredMode().getMode();
+    }
 
-	/** Don't implement this for most rule bases */
-	public RuleBase addCondition(RBExpression e) {
-		throw new Error("Operation not implemented");
-	}
+    /**
+     * Returns true if this rulebase mode is expected to produce fewer results than other
+     */
+    public boolean isBetterThan(RuleBase other) {
+        return getMode().isBetterThan(other.getMode());
+    }
 
-	public void dumpFacts(PrintStream out) {
-	}
+    public static BasicModedRuleBaseIndex make(FrontEnd frontEnd) {
+        return new BasicModedRuleBaseIndex(frontEnd, null);
+    }
 
-	public Compiled getCompiled() {
-		uptodateCheck();
-		if (compiledRules == null) {
-			compiledRules = compile(new CompilationContext());
-			if (RuleBase.useCache)
-				compiledRules = Compiled.makeCachedRuleBase(compiledRules);
-			upToDateWith = engine.frontend().updateCounter;
-		}
-		return compiledRules;
-	}
+    /** Factory method for creating RuleBases **/
+    public static BasicModedRuleBaseIndex make(FrontEnd frontEnd, String identifier, boolean temporary) {
+        // if(identifier != null)
+        // engine.addGroup(identifier, temporary);
 
-	public SemiDetCompiled getSemiDetCompiledRules() {
-		uptodateCheck();
-		if (semidetCompiledRules == null) {
-			Compiled compiled = getCompiled();
-			if (compiled.getMode().hi.compareTo(Multiplicity.one)>0)
-				semidetCompiledRules = compiled.first();
-			else
-				semidetCompiledRules = (SemiDetCompiled)compiled;
-			upToDateWith = engine.frontend().updateCounter;
-		}
-		return semidetCompiledRules;
-	}
+        return new BasicModedRuleBaseIndex(frontEnd, identifier);
+    }
 
-	protected abstract Compiled compile(CompilationContext context);
+    /** Add a rule to the rulebase */
+    abstract public void insert(RBComponent r, ModedRuleBaseIndex rulebases,
+            TupleType resultTypes) throws TypeModeError;
 
-	/**
-	* @category preparedSQLQueries
-	*/
+    /**
+     * Retract a fact from the rulebase. This operation is not supported for all kinds of RBComponents or all configurations of RuleBase implementations. Not all concrete rulebases
+     * support the operation
+     */
+    public void retract(RBFact f) {
+        throw new Error("Unsupported operation RETRACT");
+    }
+
+    /** Don't implement this for most rule bases */
+    public RuleBase addCondition(RBExpression e) {
+        throw new Error("Operation not implemented");
+    }
+
+    public void dumpFacts(PrintStream out) {
+    }
+
+    public Compiled getCompiled() {
+        uptodateCheck();
+        if (compiledRules == null) {
+            compiledRules = compile(new CompilationContext());
+            if (RuleBase.useCache)
+                compiledRules = Compiled.makeCachedRuleBase(compiledRules);
+            upToDateWith = engine.frontend().updateCounter;
+        }
+        return compiledRules;
+    }
+
+    public SemiDetCompiled getSemiDetCompiledRules() {
+        uptodateCheck();
+        if (semidetCompiledRules == null) {
+            Compiled compiled = getCompiled();
+            if (compiled.getMode().hi.compareTo(Multiplicity.one) > 0)
+                semidetCompiledRules = compiled.first();
+            else
+                semidetCompiledRules = (SemiDetCompiled) compiled;
+            upToDateWith = engine.frontend().updateCounter;
+        }
+        return semidetCompiledRules;
+    }
+
+    protected abstract Compiled compile(CompilationContext context);
+
+    /**
+     * @category preparedSQLQueries
+     */
     public boolean isPersistent() {
         return isPersistent;
     }

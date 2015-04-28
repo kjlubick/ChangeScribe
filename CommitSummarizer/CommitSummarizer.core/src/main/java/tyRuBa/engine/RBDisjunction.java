@@ -14,139 +14,139 @@ import tyRuBa.modes.TypeModeError;
 
 public class RBDisjunction extends RBCompoundExpression {
 
-	public RBDisjunction() {
-		super();
-	}
+    public RBDisjunction() {
+        super();
+    }
 
-	public RBDisjunction(Vector exps) {
-		super(exps);
-	}
+    public RBDisjunction(Vector exps) {
+        super(exps);
+    }
 
-	public RBDisjunction(Object[] exps) {
-		super(exps);
-	}
+    public RBDisjunction(Object[] exps) {
+        super(exps);
+    }
 
-	public RBDisjunction(RBExpression e1, RBExpression e2) {
-		super(e1, e2);
-	}
+    public RBDisjunction(RBExpression e1, RBExpression e2) {
+        super(e1, e2);
+    }
 
-	@Override
+    @Override
     public Compiled compile(CompilationContext c) {
-		Compiled result = Compiled.fail;
-		for (int i = 0; i < getNumSubexps(); i++) {
-			result = result.disjoin(getSubexp(i).compile(c));
-		}
-		return result;
-	}
+        Compiled result = Compiled.fail;
+        for (int i = 0; i < getNumSubexps(); i++) {
+            result = result.disjoin(getSubexp(i).compile(c));
+        }
+        return result;
+    }
 
-	@Override
+    @Override
     protected String separator() {
-		return ";";
-	}
-	
-	public RBExpression crossMultiplyDisjunction(RBDisjunction other) {
-		int numExps = getNumSubexps();
-		int otherNumExps = other.getNumSubexps();
-		RBDisjunction result = new RBDisjunction();
-		for (int pos = 0; pos < numExps; pos++) {
-			for (int otherPos = 0; otherPos < otherNumExps; otherPos++)
-				result.addSubexp(
-					FrontEnd.makeAnd(getSubexp(pos), other.getSubexp(otherPos)));
-		}
-		return result;
-	}
+        return ";";
+    }
 
-	@Override
+    public RBExpression crossMultiplyDisjunction(RBDisjunction other) {
+        int numExps = getNumSubexps();
+        int otherNumExps = other.getNumSubexps();
+        RBDisjunction result = new RBDisjunction();
+        for (int pos = 0; pos < numExps; pos++) {
+            for (int otherPos = 0; otherPos < otherNumExps; otherPos++)
+                result.addSubexp(
+                        FrontEnd.makeAnd(getSubexp(pos), other.getSubexp(otherPos)));
+        }
+        return result;
+    }
+
+    @Override
     public RBExpression crossMultiply(RBExpression other) {
-		if (other instanceof RBDisjunction)
-			return crossMultiplyDisjunction((RBDisjunction)other);
-		int numExps = getNumSubexps();
-		RBDisjunction result = new RBDisjunction();
-		for (int pos = 0; pos < numExps; pos++) {
-			result.addSubexp(FrontEnd.makeAnd(getSubexp(pos), other));
-		}
-		return result;
-	}
+        if (other instanceof RBDisjunction)
+            return crossMultiplyDisjunction((RBDisjunction) other);
+        int numExps = getNumSubexps();
+        RBDisjunction result = new RBDisjunction();
+        for (int pos = 0; pos < numExps; pos++) {
+            result.addSubexp(FrontEnd.makeAnd(getSubexp(pos), other));
+        }
+        return result;
+    }
 
-	@Override
+    @Override
     public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
-		TypeEnv resultEnv = null;
-		try {
-			for (int i = 0; i < getNumSubexps(); i++) {
-				TypeEnv currEnv = getSubexp(i).typecheck(predinfo, startEnv);
-				if (resultEnv == null) {
-					resultEnv = currEnv;
-				} else {
-					resultEnv = resultEnv.union(currEnv);
-				}
-			}
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-		return resultEnv;
-	}
+        TypeEnv resultEnv = null;
+        try {
+            for (int i = 0; i < getNumSubexps(); i++) {
+                TypeEnv currEnv = getSubexp(i).typecheck(predinfo, startEnv);
+                if (resultEnv == null) {
+                    resultEnv = currEnv;
+                } else {
+                    resultEnv = resultEnv.union(currEnv);
+                }
+            }
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+        return resultEnv;
+    }
 
-	@Override
+    @Override
     public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
-	throws TypeModeError {
-		RBDisjunction result = new RBDisjunction();
-		Mode resultMode = Mode.makeFail();
-		ModeCheckContext resultContext = null;
-		for (int i = 0; i < getNumSubexps(); i++) {
-			RBExpression converted = 
-				getSubexp(i).convertToMode(context, rearrange); 
-			if (resultContext == null) {
-				resultContext = converted.getNewContext();
-			} else {
-				resultContext = 
-					resultContext.intersection(converted.getNewContext());
-			}
-			result.addSubexp(converted);
-			resultMode = resultMode.add(converted.getMode());
-		}
-		return Factory.makeModedExpression(result, resultMode, resultContext);
-	}
+            throws TypeModeError {
+        RBDisjunction result = new RBDisjunction();
+        Mode resultMode = Mode.makeFail();
+        ModeCheckContext resultContext = null;
+        for (int i = 0; i < getNumSubexps(); i++) {
+            RBExpression converted =
+                    getSubexp(i).convertToMode(context, rearrange);
+            if (resultContext == null) {
+                resultContext = converted.getNewContext();
+            } else {
+                resultContext =
+                        resultContext.intersection(converted.getNewContext());
+            }
+            result.addSubexp(converted);
+            resultMode = resultMode.add(converted.getMode());
+        }
+        return Factory.makeModedExpression(result, resultMode, resultContext);
+    }
 
-	@Override
+    @Override
     public RBExpression convertToNormalForm(boolean negate) {
-		if (negate) {
-			RBExpression result = null;
-			for (int i = 0; i < getNumSubexps(); i++) {
-				RBExpression converted = 
-					getSubexp(i).convertToNormalForm(true);
-				if (result == null) {
-					result = converted;
-				} else {
-					result = result.crossMultiply(converted);
-				}
-			}
-			return result;
-		} else {
-			RBDisjunction result = new RBDisjunction();
-			for (int i = 0; i < getNumSubexps(); i++) {
-				result.addSubexp(getSubexp(i).convertToNormalForm(false));
-			}
-			return result;
-		}
-	}
+        if (negate) {
+            RBExpression result = null;
+            for (int i = 0; i < getNumSubexps(); i++) {
+                RBExpression converted =
+                        getSubexp(i).convertToNormalForm(true);
+                if (result == null) {
+                    result = converted;
+                } else {
+                    result = result.crossMultiply(converted);
+                }
+            }
+            return result;
+        } else {
+            RBDisjunction result = new RBDisjunction();
+            for (int i = 0; i < getNumSubexps(); i++) {
+                result.addSubexp(getSubexp(i).convertToNormalForm(false));
+            }
+            return result;
+        }
+    }
 
-	@Override
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
-	@Override
+    @Override
     public RBExpression addExistsQuantifier(RBVariable[] newVars, boolean negate) {
-		RBCompoundExpression result;
-		if (negate) {
-			result = new RBConjunction();
-		} else {
-			result = new RBDisjunction();
-		}
-		for (int i = 0; i < getNumSubexps(); i++) {
-			result.addSubexp(getSubexp(i).addExistsQuantifier(newVars, negate));
-		}
-		return result;
-	}
+        RBCompoundExpression result;
+        if (negate) {
+            result = new RBConjunction();
+        } else {
+            result = new RBDisjunction();
+        }
+        for (int i = 0; i < getNumSubexps(); i++) {
+            result.addSubexp(getSubexp(i).addExistsQuantifier(newVars, negate));
+        }
+        return result;
+    }
 
 }

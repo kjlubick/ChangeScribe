@@ -1,38 +1,40 @@
 package tyRuBa.modes;
 
 public class PatiallyBound extends BindingMode {
-	
-	static public PatiallyBound the = new PatiallyBound();
 
-	private PatiallyBound() {}
+    static public PatiallyBound the = new PatiallyBound();
 
-	@Override
+    private PatiallyBound() {
+    }
+
+    @Override
     public int hashCode() {
-		return this.getClass().hashCode();
-	}
+        return this.getClass().hashCode();
+    }
 
-	@Override
+    @Override
     public boolean equals(Object other) {
-		return other instanceof PatiallyBound;
-	}
+        return other instanceof PatiallyBound;
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "BF";
-	}
+        return "BF";
+    }
 
-	/** check that this binding satisfied the binding mode */
-	@Override
+    /** check that this binding satisfied the binding mode */
+    @Override
     public boolean satisfyBinding(BindingMode mode) {
-		return mode instanceof Free;
-	}
+        return mode instanceof Free;
+    }
 
-	@Override
+    @Override
     public boolean isBound() {
-		return false;
-	}
-	@Override
+        return false;
+    }
+
+    @Override
     public boolean isFree() {
-		return false;
-	}
+        return false;
+    }
 }

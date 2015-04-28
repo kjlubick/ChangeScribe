@@ -1,4 +1,5 @@
 package co.edu.unal.colswe.changescribe.core;
+
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -12,88 +13,88 @@ import org.eclipse.swt.widgets.Text;
 
 public class MyTitleAreaDialog extends TitleAreaDialog {
 
-  private Text txtFirstName;
-  private Text lastNameText;
+    private Text txtFirstName;
 
-  private String firstName;
-  private String lastName;
+    private Text lastNameText;
 
-  public MyTitleAreaDialog(Shell parentShell) {
-    super(parentShell);
-  }
+    private String firstName;
 
-  @Override
-  public void create() {
-    super.create();
-    setTitle("This is my first custom dialog");
-    setMessage("This is a TitleAreaDialog", IMessageProvider.INFORMATION);
-  }
+    private String lastName;
 
-  @Override
-  protected Control createDialogArea(Composite parent) {
-    Composite area = (Composite) super.createDialogArea(parent);
-    Composite container = new Composite(area, SWT.NONE);
-    container.setLayoutData(new GridData(GridData.FILL_BOTH));
-    GridLayout layout = new GridLayout(2, false);
-    container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-    container.setLayout(layout);
+    public MyTitleAreaDialog(Shell parentShell) {
+        super(parentShell);
+    }
 
-    createFirstName(container);
-    createLastName(container);
+    @Override
+    public void create() {
+        super.create();
+        setTitle("This is my first custom dialog");
+        setMessage("This is a TitleAreaDialog", IMessageProvider.INFORMATION);
+    }
 
-    return area;
-  }
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Composite area = (Composite) super.createDialogArea(parent);
+        Composite container = new Composite(area, SWT.NONE);
+        container.setLayoutData(new GridData(GridData.FILL_BOTH));
+        GridLayout layout = new GridLayout(2, false);
+        container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        container.setLayout(layout);
 
-  private void createFirstName(Composite container) {
-    Label lbtFirstName = new Label(container, SWT.NONE);
-    lbtFirstName.setText("First Name");
+        createFirstName(container);
+        createLastName(container);
 
-    GridData dataFirstName = new GridData();
-    dataFirstName.grabExcessHorizontalSpace = true;
-    dataFirstName.horizontalAlignment = GridData.FILL;
+        return area;
+    }
 
-    txtFirstName = new Text(container, SWT.BORDER);
-    txtFirstName.setLayoutData(dataFirstName);
-  }
-  
-  private void createLastName(Composite container) {
-    Label lbtLastName = new Label(container, SWT.NONE);
-    lbtLastName.setText("Last Name");
-    
-    GridData dataLastName = new GridData();
-    dataLastName.grabExcessHorizontalSpace = true;
-    dataLastName.horizontalAlignment = GridData.FILL;
-    lastNameText = new Text(container, SWT.BORDER);
-    lastNameText.setLayoutData(dataLastName);
-  }
+    private void createFirstName(Composite container) {
+        Label lbtFirstName = new Label(container, SWT.NONE);
+        lbtFirstName.setText("First Name");
 
+        GridData dataFirstName = new GridData();
+        dataFirstName.grabExcessHorizontalSpace = true;
+        dataFirstName.horizontalAlignment = GridData.FILL;
 
+        txtFirstName = new Text(container, SWT.BORDER);
+        txtFirstName.setLayoutData(dataFirstName);
+    }
 
-  @Override
-  protected boolean isResizable() {
-    return true;
-  }
+    private void createLastName(Composite container) {
+        Label lbtLastName = new Label(container, SWT.NONE);
+        lbtLastName.setText("Last Name");
 
-  // We need to save the values of the Text fields into Strings because the UI
-  // gets disposed
-  // and the Text fields are not accessible any more.
-  private void saveInput() {
-    firstName = txtFirstName.getText();
-    lastName = lastNameText.getText();
+        GridData dataLastName = new GridData();
+        dataLastName.grabExcessHorizontalSpace = true;
+        dataLastName.horizontalAlignment = GridData.FILL;
+        lastNameText = new Text(container, SWT.BORDER);
+        lastNameText.setLayoutData(dataLastName);
+    }
 
-  }
+    @Override
+    protected boolean isResizable() {
+        return true;
+    }
 
-  @Override
-  protected void okPressed() {
-    saveInput();
-    super.okPressed();
-  }
+    // We need to save the values of the Text fields into Strings because the UI
+    // gets disposed
+    // and the Text fields are not accessible any more.
+    private void saveInput() {
+        firstName = txtFirstName.getText();
+        lastName = lastNameText.getText();
 
-  public String getFirstName() {
-    return firstName;
-  }
+    }
 
-  public String getLastName() {
-    return lastName;
-  }
-} 
+    @Override
+    protected void okPressed() {
+        saveInput();
+        super.okPressed();
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+}

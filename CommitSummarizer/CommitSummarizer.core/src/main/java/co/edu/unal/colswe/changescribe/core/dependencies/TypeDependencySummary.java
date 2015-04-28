@@ -23,88 +23,84 @@ import co.edu.unal.colswe.changescribe.core.textgenerator.phrase.util.PhraseUtil
 
 @SuppressWarnings("restriction")
 public class TypeDependencySummary extends DependencySummary {
-	
 
-	public TypeDependencySummary(IJavaElement element, String operation) {
-		setElement(element); 
-		setOperation(operation);
-		this.setDependencies(new ArrayList<SearchMatch>());
-		
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
+    public TypeDependencySummary(IJavaElement element, String operation) {
+        setElement(element);
+        setOperation(operation);
+        this.setDependencies(new ArrayList<SearchMatch>());
+
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
-				setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
-			}
-		});
-	}
+                setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
+            }
+        });
+    }
 
-	@Override
-	public void find() {
-		
+    @Override
+    public void find() {
+
         SearchEngine engine = new SearchEngine();
         IJavaSearchScope workspaceScope = null;
-        
-        if(getProject() != null) {
-        	workspaceScope = SearchEngine.createJavaSearchScope(createSearchScope());
+
+        if (getProject() != null) {
+            workspaceScope = SearchEngine.createJavaSearchScope(createSearchScope());
         } else {
-        	workspaceScope = SearchEngine.createWorkspaceScope();
+            workspaceScope = SearchEngine.createWorkspaceScope();
         }
-        
+
         SearchPattern pattern = SearchPattern.createPattern(
-                		getElement().getPrimaryElement().getElementName().replace(".java", ""),
-                        IJavaSearchConstants.TYPE,
-                        IJavaSearchConstants.REFERENCES,
-                        SearchPattern.R_EXACT_MATCH);
+                getElement().getPrimaryElement().getElementName().replace(".java", ""),
+                IJavaSearchConstants.TYPE,
+                IJavaSearchConstants.REFERENCES,
+                SearchPattern.R_EXACT_MATCH);
         SearchParticipant[] participant = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
         try {
-			engine.search(pattern, participant, workspaceScope, createSearchRequestor(), new NullProgressMonitor());
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	@Override
-	public void generateSummary() {
-		if(getDependencies() != null && getDependencies().size() > 0) {
-			String lead = "";
-			if(getOperation().equals(TypeChange.REMOVED.toString())) {
-				lead = "\nWas referenced by:";
-			} else {
-				lead = "\nReferenced by:";
-			}
-			setBuilder(new StringBuilder(lead +"\n"));
-		}
-		
-		for (SearchMatch match : getDependencies()) {
-			NamedMember type = null;
-        	if(match.getElement() instanceof ResolvedSourceMethod) {
-        		type = ((ResolvedSourceMethod )match.getElement());
-        	} else if(match.getElement() instanceof ResolvedSourceType) {
-        		type = ((ResolvedSourceType )match.getElement());
-        	} else if(match.getElement() instanceof ResolvedSourceField) {
-        		type = ((ResolvedSourceField)match.getElement());
-        	}
+            engine.search(pattern, participant, workspaceScope, createSearchRequestor(), new NullProgressMonitor());
+        } catch (CoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-			if(match.isInsideDocComment()) {
-				getBuilder().append("\t" + " Referenced in comments of " + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n");
-			} else if(match.isImplicit()) {
-				getBuilder().append("\t" + " Implicit reference in " + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n");
-			} else if(!getBuilder().toString().contains("\t" + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n")){
-				getBuilder().append("\t" + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n");
-			}
-		}
-	}
-	
-	@Override
+    @Override
+    public void generateSummary() {
+        if (getDependencies() != null && getDependencies().size() > 0) {
+            String lead = "";
+            if (getOperation().equals(TypeChange.REMOVED.toString())) {
+                lead = "\nWas referenced by:";
+            } else {
+                lead = "\nReferenced by:";
+            }
+            setBuilder(new StringBuilder(lead + "\n"));
+        }
+
+        for (SearchMatch match : getDependencies()) {
+            NamedMember type = null;
+            if (match.getElement() instanceof ResolvedSourceMethod) {
+                type = ((ResolvedSourceMethod) match.getElement());
+            } else if (match.getElement() instanceof ResolvedSourceType) {
+                type = ((ResolvedSourceType) match.getElement());
+            } else if (match.getElement() instanceof ResolvedSourceField) {
+                type = ((ResolvedSourceField) match.getElement());
+            }
+
+            if (match.isInsideDocComment()) {
+                getBuilder().append("\t" + " Referenced in comments of " + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n");
+            } else if (match.isImplicit()) {
+                getBuilder().append("\t" + " Implicit reference in " + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n");
+            } else if (!getBuilder().toString().contains("\t" + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n")) {
+                getBuilder().append("\t" + type.getParent().getElementName() + " " + PhraseUtils.getStringType(type.getDeclaringType()) + "\n");
+            }
+        }
+    }
+
+    @Override
     public String toString() {
-		if(getBuilder() == null) {
-			setBuilder(new StringBuilder());
-		}
-		return getBuilder().toString();
-	}
-	
-	
+        if (getBuilder() == null) {
+            setBuilder(new StringBuilder());
+        }
+        return getBuilder().toString();
+    }
+
 }

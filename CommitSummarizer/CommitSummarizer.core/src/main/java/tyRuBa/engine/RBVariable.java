@@ -11,123 +11,124 @@ import tyRuBa.modes.TypeEnv;
 
 public class RBVariable extends RBSubstitutable {
 
-	static protected int gensymctr = 1;
+    static protected int gensymctr = 1;
 
-	public static RBVariable makeUnique(String id) {
-		return new RBVariable(new String(id));
-	}
+    public static RBVariable makeUnique(String id) {
+        return new RBVariable(new String(id));
+    }
 
-	public static RBVariable make(String id) {
-		return new RBVariable(id.intern());
-	}
+    public static RBVariable make(String id) {
+        return new RBVariable(id.intern());
+    }
 
-	/** Not intended to be called by clients. Must call make or makeUnique
-	instead. */
-	protected RBVariable(String id) {
-		super(id);
-	}
+    /**
+     * Not intended to be called by clients. Must call make or makeUnique instead.
+     */
+    protected RBVariable(String id) {
+        super(id);
+    }
 
-	/** Is called at the time when an attempt is made to bind a previously
-	unbound variabes. Default implementation just binds the variable. But
-	    constrained variable (e.g. a regexp varaible) may perform additional checks. */
-	protected Frame bind(RBTerm val, Frame f) {
-		f.put(this, val);
-		return f;
-	}
+    /**
+     * Is called at the time when an attempt is made to bind a previously unbound variabes. Default implementation just binds the variable. But constrained variable (e.g. a regexp
+     * varaible) may perform additional checks.
+     */
+    protected Frame bind(RBTerm val, Frame f) {
+        f.put(this, val);
+        return f;
+    }
 
-	@Override
+    @Override
     public Frame unify(RBTerm other, Frame f) {
-		//System.err.println("** entering unify " + this + " to: " + other);
-		if (other instanceof RBIgnoredVariable)
-			return f;
-		RBTerm val = f.get(this);
-		if (val == null) {
-			other = other.substitute(f);
-			if (equals(other))
-				return f;
-			else if (other.freefor(this)) {
-				return bind(other, f);
-			} else
-				return null;
-		} else
-			return val.unify(other, f);
-	}
+        // System.err.println("** entering unify " + this + " to: " + other);
+        if (other instanceof RBIgnoredVariable)
+            return f;
+        RBTerm val = f.get(this);
+        if (val == null) {
+            other = other.substitute(f);
+            if (equals(other))
+                return f;
+            else if (other.freefor(this)) {
+                return bind(other, f);
+            } else
+                return null;
+        } else
+            return val.unify(other, f);
+    }
 
-	@Override
+    @Override
     boolean freefor(RBVariable v) {
-		return ! equals(v);
-	}
+        return !equals(v);
+    }
 
-	@Override
+    @Override
     public BindingMode getBindingMode(ModeCheckContext context) {
-		if (context.isBound(this)) {
-			return Factory.makeBound();
-		} else {
-			return Factory.makeFree();
-		}
-	}
-	
-	@Override
+        if (context.isBound(this)) {
+            return Factory.makeBound();
+        } else {
+            return Factory.makeFree();
+        }
+    }
+
+    @Override
     public boolean isGround() {
-		return false;
-	}
+        return false;
+    }
 
-	@Override
+    @Override
     protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
-		if (!(other.getClass() == this.getClass()))
-			return false;
-		else {
-			RBVariable binding = (RBVariable) lr.get(this);
-			if (binding == null) {
-				lr.put(this, other);
-			} else if (!binding.equals(other)) {
-				return false;
-			}
-			binding = (RBVariable) rl.get(other);
-			if (binding == null) {
-				rl.put(other, this);
-				return true;
-			} else {
-				return this.equals(binding);
-			}
-		}
-	}
+        if (!(other.getClass() == this.getClass()))
+            return false;
+        else {
+            RBVariable binding = (RBVariable) lr.get(this);
+            if (binding == null) {
+                lr.put(this, other);
+            } else if (!binding.equals(other)) {
+                return false;
+            }
+            binding = (RBVariable) rl.get(other);
+            if (binding == null) {
+                rl.put(other, this);
+                return true;
+            } else {
+                return this.equals(binding);
+            }
+        }
+    }
 
-	@Override
+    @Override
     public int formHashCode() {
-		return 1;
-	}
+        return 1;
+    }
 
-	@Override
+    @Override
     public Object clone() {
-		return makeUnique(name);
-	}
+        return makeUnique(name);
+    }
 
-	@Override
+    @Override
     protected Type getType(TypeEnv env) {
-		return env.get(this);
-	}
+        return env.get(this);
+    }
 
-	@Override
+    @Override
     public void makeAllBound(ModeCheckContext context) {
-		context.makeBound(this);
-	}
+        context.makeBound(this);
+    }
 
-	@Override
+    @Override
     public Object accept(TermVisitor v) {
-		return v.visit(this);
-	}
-	
-	//TODO: This implementation of readObject only works for
-	//variables created by make, but not by makeUnique (uniqueness will be lost)
-	private void readObject(java.io.ObjectInputStream in)
-	throws IOException, ClassNotFoundException
-	{
-		in.defaultReadObject();
-		name = name.intern();	 
-	}
+        return v.visit(this);
+    }
 
-	
+    // TODO: This implementation of readObject only works for
+    // variables created by make, but not by makeUnique (uniqueness will be lost)
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        name = name.intern();
+    }
+
     @Override
     public String getFirst() {
         throw new Error("Variables cannot be two level keys");
@@ -138,8 +139,8 @@ public class RBVariable extends RBSubstitutable {
         throw new Error("Variables cannot be two level keys");
     }
 
-//    public String getFirstAsString() {
-//        throw new Error("Variables cannot be two level keys");
-//    }
-		 
+    // public String getFirstAsString() {
+    // throw new Error("Variables cannot be two level keys");
+    // }
+
 }

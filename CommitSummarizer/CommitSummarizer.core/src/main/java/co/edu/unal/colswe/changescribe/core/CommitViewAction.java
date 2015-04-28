@@ -21,115 +21,113 @@ import co.edu.unal.colswe.changescribe.core.git.ChangedFile;
 import co.edu.unal.colswe.changescribe.core.git.SCMRepository;
 
 /**
- * Our sample action implements workbench action delegate.
- * The action proxy will be created by the workbench and
- * shown in the UI. When the user tries to use the action,
- * this delegate will be created and execution will be 
- * delegated to it.
+ * Our sample action implements workbench action delegate. The action proxy will be created by the workbench and shown in the UI. When the user tries to use the action, this
+ * delegate will be created and execution will be delegated to it.
+ * 
  * @see IWorkbenchWindowActionDelegate
  */
 public class CommitViewAction implements IViewActionDelegate {
-	//private IWorkbenchWindow window;
-	
-	private IViewPart view;
-	private Git git;
-	private Set<ChangedFile> differences;
-	private SCMRepository repo;
-	/**
-	 * 
-	 * The constructor.
-	 */
-	public CommitViewAction() {
-	}
+    // private IWorkbenchWindow window;
 
-	/**
-	 * The action has been activated. The argument of the
-	 * method represents the 'real' action sitting
-	 * in the workbench UI.
-	 * @see IWorkbenchWindowActionDelegate#run
-	 */
-	@Override
-    public void run(IAction action) {
-		
-		repo = new SCMRepository();
-		initMonitorDialog(action);
-		
-	}
-	
-	private void initMonitorDialog(IAction event) {
-            final Job job = new Job("ChangeScribe - Summarizing types") {
-                @Override
-                protected IStatus run(final IProgressMonitor monitor) {
-                	IStatus status = gettingRepositoryStatus(monitor);
-                	createDialog();
-                	return status;
-                }
-            };
-            job.schedule();
-            
+    private IViewPart view;
+
+    private Git git;
+
+    private Set<ChangedFile> differences;
+
+    private SCMRepository repo;
+
+    /**
+     * 
+     * The constructor.
+     */
+    public CommitViewAction() {
     }
-	
-	private void createDialog() {
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
+
+    /**
+     * The action has been activated. The argument of the method represents the 'real' action sitting in the workbench UI.
+     * 
+     * @see IWorkbenchWindowActionDelegate#run
+     */
+    @Override
+    public void run(IAction action) {
+
+        repo = new SCMRepository();
+        initMonitorDialog(action);
+
+    }
+
+    private void initMonitorDialog(IAction event) {
+        final Job job = new Job("ChangeScribe - Summarizing types") {
+            @Override
+            protected IStatus run(final IProgressMonitor monitor) {
+                IStatus status = gettingRepositoryStatus(monitor);
+                createDialog();
+                return status;
+            }
+        };
+        job.schedule();
+
+    }
+
+    private void createDialog() {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
-				FilesChangedListDialog listDialog = new FilesChangedListDialog(view.getSite().getShell(), differences, git, null);
-				listDialog.create();
-				listDialog.open();
-			}
-		});
-	}
-	
-	private IStatus gettingRepositoryStatus(IProgressMonitor monitor) {
-		if (monitor.isCanceled()) {
+                FilesChangedListDialog listDialog = new FilesChangedListDialog(view.getSite().getShell(), differences, git, null);
+                listDialog.create();
+                listDialog.open();
+            }
+        });
+    }
+
+    private IStatus gettingRepositoryStatus(IProgressMonitor monitor) {
+        if (monitor.isCanceled()) {
             return org.eclipse.core.runtime.Status.CANCEL_STATUS;
         }
-		monitor.beginTask("Getting status for git repository ", 1);
-		
-		
-		git = repo.getGit();
-		Status status = null;
-		try {
-			status = repo.getStatus();
-		} catch (NoWorkTreeException e) {
-			e.printStackTrace();
-		} catch (GitAPIException e) {
-			e.printStackTrace();
-		} 
-		
-		if(git != null) {
-			monitor.beginTask("Extracting source code differences ", 2);
-			this.differences = SCMRepository.getDifferences(status,git.getRepository().getWorkTree().getAbsolutePath());
-			
-		} else {
-			MessageDialog.openInformation(view.getSite().getShell(), "Info", "Git repository not found!");
-		}
-		return org.eclipse.core.runtime.Status.OK_STATUS;
-	}
+        monitor.beginTask("Getting status for git repository ", 1);
 
-	/**
-	 * Selection in the workbench has been changed. We 
-	 * can change the state of the 'real' action here
-	 * if we want, but this can only happen after 
-	 * the delegate has been created.
-	 * @see IWorkbenchWindowActionDelegate#selectionChanged
-	 */
-	@Override
+        git = repo.getGit();
+        Status status = null;
+        try {
+            status = repo.getStatus();
+        } catch (NoWorkTreeException e) {
+            e.printStackTrace();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        }
+
+        if (git != null) {
+            monitor.beginTask("Extracting source code differences ", 2);
+            this.differences = SCMRepository.getDifferences(status, git.getRepository().getWorkTree().getAbsolutePath());
+
+        } else {
+            MessageDialog.openInformation(view.getSite().getShell(), "Info", "Git repository not found!");
+        }
+        return org.eclipse.core.runtime.Status.OK_STATUS;
+    }
+
+    /**
+     * Selection in the workbench has been changed. We can change the state of the 'real' action here if we want, but this can only happen after the delegate has been created.
+     * 
+     * @see IWorkbenchWindowActionDelegate#selectionChanged
+     */
+    @Override
     public void selectionChanged(IAction action, ISelection selection) {
-	}
+    }
 
-	/**
-	 * We can use this method to dispose of any system
-	 * resources we previously allocated.
-	 * @see IWorkbenchWindowActionDelegate#dispose
-	 */
-	public void dispose() {
-	}
+    /**
+     * We can use this method to dispose of any system resources we previously allocated.
+     * 
+     * @see IWorkbenchWindowActionDelegate#dispose
+     */
+    public void dispose() {
+    }
 
-	@Override
+    @Override
     public void init(IViewPart view) {
-		// TODO Auto-generated method stub
-		this.view = view;
-		
-	}
+        // TODO Auto-generated method stub
+        this.view = view;
+
+    }
 }

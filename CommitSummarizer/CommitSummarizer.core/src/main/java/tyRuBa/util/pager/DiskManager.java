@@ -17,9 +17,9 @@ import tyRuBa.util.pager.Pager.ResourceId;
 import tyRuBa.util.pager.Pager.Resource;
 
 /**
- * Manages disk reads and writes. Writes are done in a separate thread as to
- * allow other operations to occur concurrently. A resource cannot be written
- * out if it is currently being read and vice versa.
+ * Manages disk reads and writes. Writes are done in a separate thread as to allow other operations to occur concurrently. A resource cannot be written out if it is currently being
+ * read and vice versa.
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -32,20 +32,17 @@ public class DiskManager extends Thread {
     Semaphore queueMutex;
 
     /**
-     * Semaphore that will block the write operation until there is room in the
-     * queue to add another task.
+     * Semaphore that will block the write operation until there is room in the queue to add another task.
      */
     Semaphore queueAvailable;
 
     /**
-     * Semaphore that will block the writer thread until there is something in
-     * the task queue.
+     * Semaphore that will block the writer thread until there is something in the task queue.
      */
     Semaphore queueSize;
 
     /**
-     * Semaphore to ensure mutual exclusion on operations on the resourceLocks
-     * map.
+     * Semaphore to ensure mutual exclusion on operations on the resourceLocks map.
      */
     Semaphore resourceLocksMutex;
 
@@ -59,8 +56,7 @@ public class DiskManager extends Thread {
     Map resourceLocks = new HashMap();
 
     /**
-     * number of times a read operation occured for a resource that was
-     * currently in the page out queue.
+     * number of times a read operation occured for a resource that was currently in the page out queue.
      */
     public int couldHaveCanceledPageout;
 
@@ -91,7 +87,7 @@ public class DiskManager extends Thread {
         void doIt() {
             try {
                 OutputStream os = resourceID.writeResource();
-                if (os != null) { //does resource support writing out
+                if (os != null) { // does resource support writing out
                     ObjectOutputStream oos = new ObjectOutputStream(os);
                     oos.writeObject(rsrc);
                     oos.close();
@@ -104,7 +100,9 @@ public class DiskManager extends Thread {
 
     /**
      * Creates a new DiskManager.
-     * @param maxQueueSize maximum size of the task queue.
+     * 
+     * @param maxQueueSize
+     *            maximum size of the task queue.
      */
     public DiskManager(int maxQueueSize) {
         maxSize = maxQueueSize;
@@ -114,27 +112,24 @@ public class DiskManager extends Thread {
         queueSize = new Semaphore(0);
         alive = true;
     }
-    
+
     /**
-     * Ask the DiskManager whether it is currently idle. This method is intended
-     * to be used to check whether it might now be a good time to perform some
-     * pro-active saving of dirty resources.
+     * Ask the DiskManager whether it is currently idle. This method is intended to be used to check whether it might now be a good time to perform some pro-active saving of dirty
+     * resources.
      * 
-     * It doesn't make much sense to queue up more work unless the DiskManager is
-     * idle.
+     * It doesn't make much sense to queue up more work unless the DiskManager is idle.
      */
     synchronized public boolean isIdle() {
-    		return this.taskQueue.isEmpty();
+        return this.taskQueue.isEmpty();
     }
-    
+
     /**
-     * Write out thread run method. Pages out everything in the queue. Blocks
-     * until there is something to do.
+     * Write out thread run method. Pages out everything in the queue. Blocks until there is something to do.
      */
     @Override
     public void run() {
         while (alive) {
-            //wait until there is something in the queue
+            // wait until there is something in the queue
             queueSize.down();
             if (!alive) {
                 break;
@@ -142,8 +137,8 @@ public class DiskManager extends Thread {
             queueMutex.down();
             Task nextTask = (Task) taskQueue.dequeue();
             queueMutex.up();
-            //let whoever is waiting on queueAvailable to wake up because
-            //there is room in the queue now
+            // let whoever is waiting on queueAvailable to wake up because
+            // there is room in the queue now
             queueAvailable.up();
 
             nextTask.doIt();
@@ -153,7 +148,9 @@ public class DiskManager extends Thread {
 
     /**
      * Gets a lock on a resource.
-     * @param resID resource to get the lock for.
+     * 
+     * @param resID
+     *            resource to get the lock for.
      */
     void getResourceLock(ResourceId resID) {
         resourceLocksMutex.down();
@@ -168,7 +165,9 @@ public class DiskManager extends Thread {
 
     /**
      * Releases a lock on a resource.
-     * @param resID resource to release the lock for.
+     * 
+     * @param resID
+     *            resource to release the lock for.
      */
     void releaseResourceLock(ResourceId resID) {
         resourceLocksMutex.down();
@@ -181,8 +180,7 @@ public class DiskManager extends Thread {
     }
 
     /**
-     * Write out a resource to disk. Puts the resource on the task queue, then
-     * returns immediately without actually having done the task yet.
+     * Write out a resource to disk. Puts the resource on the task queue, then returns immediately without actually having done the task yet.
      */
     public synchronized void writeOut(ResourceId resourceID, Resource rsrc) {
         Task task = new Task(resourceID, rsrc);
@@ -198,17 +196,15 @@ public class DiskManager extends Thread {
         pageOutRequests++;
     }
 
-	/**
-	 * Check whether a resource exists. Note that if a writeOut task for 
-	 * this resource is in the queue the resource is considered to exist
-	 * even though its actual representation on the storage device may
-	 * not yet have been created.
-	 */
-	public synchronized boolean resourceExists(ResourceId rsrcID) {
-		return (resourceLocks.get(rsrcID) != null) // Resource exists in the writeOut task queue
-			|| rsrcID.resourceExists();
-	}
-	
+    /**
+     * Check whether a resource exists. Note that if a writeOut task for this resource is in the queue the resource is considered to exist even though its actual representation on
+     * the storage device may not yet have been created.
+     */
+    public synchronized boolean resourceExists(ResourceId rsrcID) {
+        return (resourceLocks.get(rsrcID) != null) // Resource exists in the writeOut task queue
+                || rsrcID.resourceExists();
+    }
+
     /** Read in a resource from disk. */
     public synchronized Resource readIn(ResourceId rsrcID) {
         pageInRequests++;
@@ -232,25 +228,24 @@ public class DiskManager extends Thread {
     /** Kill the write out thread */
     public synchronized void killMe() {
         alive = false;
-        queueSize.up(); //make sure that the thread exits
+        queueSize.up(); // make sure that the thread exits
     }
 
-	/**
-	 * Like kill, but more abrupt (used to simulate system crash).
-	 */
-	public void crash() {
-		stop(); // stop thread abrubptly and unsafely
-		taskQueue = null;
-		resourceLocks = null;
-		resourceLocksMutex = null;
-		queueSize = null;
-		queueMutex = null;
-		queueAvailable = null;
-	}
-    
     /**
-     * Forces the pending writeOuts to happen right now and waits for it to
-     * complete.
+     * Like kill, but more abrupt (used to simulate system crash).
+     */
+    public void crash() {
+        stop(); // stop thread abrubptly and unsafely
+        taskQueue = null;
+        resourceLocks = null;
+        resourceLocksMutex = null;
+        queueSize = null;
+        queueMutex = null;
+        queueAvailable = null;
+    }
+
+    /**
+     * Forces the pending writeOuts to happen right now and waits for it to complete.
      */
     public synchronized void flush() {
         while (queueSize.getAvailable() > 0) {
@@ -275,6 +270,5 @@ public class DiskManager extends Thread {
         System.err.println("Diskman.pageInRequests = " + pageInRequests);
         pageInRequests = 0;
     }
-
 
 }

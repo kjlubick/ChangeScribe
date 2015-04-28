@@ -11,19 +11,19 @@ import java.io.PrintWriter;
 import tyRuBa.engine.RBExpression;
 
 public class FileQueryLogger extends QueryLogger {
-	
+
     PrintWriter writer;
-    
+
     @Override
     public void close() {
-    		writer.close();
+        writer.close();
     }
-    
+
     public FileQueryLogger(File logFile, boolean append) throws IOException {
         writer = new PrintWriter(new FileOutputStream(logFile, append));
         writer.println("//SCENARIO");
     }
-    
+
     @Override
     public void logQuery(RBExpression query) {
         writer.println(query.toString());

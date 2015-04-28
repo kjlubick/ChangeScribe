@@ -9,37 +9,37 @@ import co.edu.unal.colswe.changescribe.core.summarizer.SummarizeChangesTMP;
 
 public class SummarizeVersionChangesListener implements SelectionListener {
 
-	private DescribeVersionsDialog changedListDialog;
-	
-	public SummarizeVersionChangesListener(DescribeVersionsDialog changedListDialog) {
-		super();
-		this.changedListDialog = changedListDialog;
-	}
+    private DescribeVersionsDialog changedListDialog;
 
-	@Override
+    public SummarizeVersionChangesListener(DescribeVersionsDialog changedListDialog) {
+        super();
+        this.changedListDialog = changedListDialog;
+    }
+
+    @Override
     public void widgetSelected(SelectionEvent e) {
-		if(changedListDialog.getSelectedFiles() != null && changedListDialog.getSelectedFiles().length > 0) {
-			SummarizeChangesTMP summarizer = new SummarizeChangesTMP(changedListDialog.getGit());
-			summarizer.setChangedListDialog(changedListDialog);
-			
-			summarizer.summarize(changedListDialog.getSelectedFiles());
-		} else {
-			MessageDialog.openInformation(changedListDialog.getShell(), "Information",
-					"You do not select any change");
-			
-		}
-	}
+        if (changedListDialog.getSelectedFiles() != null && changedListDialog.getSelectedFiles().length > 0) {
+            SummarizeChangesTMP summarizer = new SummarizeChangesTMP(changedListDialog.getGit());
+            summarizer.setChangedListDialog(changedListDialog);
 
-	@Override
+            summarizer.summarize(changedListDialog.getSelectedFiles());
+        } else {
+            MessageDialog.openInformation(changedListDialog.getShell(), "Information",
+                    "You do not select any change");
+
+        }
+    }
+
+    @Override
     public void widgetDefaultSelected(SelectionEvent e) {
 
-	}
+    }
 
-	public DescribeVersionsDialog getChangedListDialog() {
-		return changedListDialog;
-	}
+    public DescribeVersionsDialog getChangedListDialog() {
+        return changedListDialog;
+    }
 
-	public void setChangedListDialog(DescribeVersionsDialog changedListDialog) {
-		this.changedListDialog = changedListDialog;
-	}
+    public void setChangedListDialog(DescribeVersionsDialog changedListDialog) {
+        this.changedListDialog = changedListDialog;
+    }
 }

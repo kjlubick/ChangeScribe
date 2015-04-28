@@ -12,26 +12,21 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 
 /**
- * Interface which decoratable element classes must implement to be decorated by
- * the {@link ProblemLabelDecorator}.
+ * Interface which decoratable element classes must implement to be decorated by the {@link ProblemLabelDecorator}.
  */
 public interface IProblemDecoratable {
 
-	/**
-	 * Indication for no problem.
-	 */
-	public static int SEVERITY_NONE = -1;
+    /**
+     * Indication for no problem.
+     */
+    public static int SEVERITY_NONE = -1;
 
-	/**
-	 * Should return the problem severity of the decoratable element, e.g.
-	 * {@link IMarker#SEVERITY_ERROR}. Return
-	 * {@link IProblemDecoratable#SEVERITY_NONE} for no problem.
-	 * <p>
-	 * Implementation can use
-	 * {@link IResource#findMaxProblemSeverity(String, boolean, int)} for
-	 * resources.
-	 *
-	 * @return problem severity
-	 */
-	int getProblemSeverity();
+    /**
+     * Should return the problem severity of the decoratable element, e.g. {@link IMarker#SEVERITY_ERROR}. Return {@link IProblemDecoratable#SEVERITY_NONE} for no problem.
+     * <p>
+     * Implementation can use {@link IResource#findMaxProblemSeverity(String, boolean, int)} for resources.
+     *
+     * @return problem severity
+     */
+    int getProblemSeverity();
 }

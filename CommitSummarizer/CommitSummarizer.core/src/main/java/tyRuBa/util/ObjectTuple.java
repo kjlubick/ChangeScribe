@@ -6,28 +6,29 @@ package tyRuBa.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 /**
  * @author riecken
  */
 public class ObjectTuple implements Serializable {
 
     private boolean isSingleton;
+
     private Object[] objects;
+
     private Object singletonObj;
-    
+
     public static ObjectTuple theEmpty = new ObjectTuple(new Object[0]);
-    
+
     private ObjectTuple(Object[] objects) {
         this.objects = objects;
     }
-    
+
     private ObjectTuple(Object object, boolean isSingleton) {
         singletonObj = object;
         this.isSingleton = isSingleton;
         System.err.println("MAKING A SINGLETON ObjectTuple, something probably isn't right");
     }
-    
+
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.writeBoolean(isSingleton);
         if (isSingleton) {
@@ -39,13 +40,13 @@ public class ObjectTuple implements Serializable {
             }
         }
     }
-    
+
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         isSingleton = in.readBoolean();
         if (isSingleton) {
             singletonObj = in.readObject();
             if (singletonObj instanceof String) {
-                singletonObj = ((String)singletonObj).intern();
+                singletonObj = ((String) singletonObj).intern();
             }
         } else {
             objects = new Object[in.readInt()];
@@ -57,22 +58,22 @@ public class ObjectTuple implements Serializable {
             }
         }
     }
-    
+
     public static ObjectTuple make(Object[] objs) {
         if (objs.length == 0) {
             return theEmpty;
         } else if (objs.length == 1) {
             return new ObjectTuple(objs[0], true);
         } else {
-        
+
             return new ObjectTuple(objs);
         }
     }
-    
+
     public static ObjectTuple makeSingleton(Object o) {
         return new ObjectTuple(o, true);
     }
-    
+
     public int size() {
         if (isSingleton) {
             return 1;
@@ -80,7 +81,7 @@ public class ObjectTuple implements Serializable {
             return objects.length;
         }
     }
-    
+
     public Object get(int i) {
         if (isSingleton) {
             if (i != 0) {
@@ -91,16 +92,16 @@ public class ObjectTuple implements Serializable {
             return objects[i];
         }
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() == this.getClass()) {
             if (this == obj) {
                 return true;
             }
-            
+
             ObjectTuple other = (ObjectTuple) obj;
-            
+
             if (this.isSingleton && other.isSingleton) {
                 return this.singletonObj.equals(other.singletonObj);
             } else if (this.isSingleton != other.isSingleton) {
@@ -110,27 +111,25 @@ public class ObjectTuple implements Serializable {
                     if (!this.objects[i].equals(other.objects[i])) {
                         return false;
                     }
-                }   
+                }
                 return true;
             }
         } else {
             return false;
         }
     }
-   
+
     public static ObjectTuple append(ObjectTuple first, ObjectTuple second) {
-        Object[] result = new Object[first.size()+second.size()];
+        Object[] result = new Object[first.size() + second.size()];
         for (int i = 0; i < first.size(); i++) {
             result[i] = first.get(i);
         }
         for (int i = 0; i < second.size(); i++) {
-            result[first.size()+i] = second.get(i);
+            result[first.size() + i] = second.get(i);
         }
         return ObjectTuple.make(result);
     }
-    
-    
-    
+
     @Override
     public String toString() {
         StringBuffer result = new StringBuffer();
@@ -139,7 +138,7 @@ public class ObjectTuple implements Serializable {
             result.append(singletonObj);
         } else {
             for (int i = 0; i < objects.length; i++) {
-                if (i > 0) 
+                if (i > 0)
                     result.append(", ");
                 result.append(objects[i].toString());
             }
@@ -147,7 +146,7 @@ public class ObjectTuple implements Serializable {
         result.append(">>");
         return result.toString();
     }
-    
+
     /**
      * @see java.lang.Object#hashCode()
      */

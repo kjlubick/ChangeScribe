@@ -5,28 +5,29 @@ import tyRuBa.util.ElementSource;
 
 public class CompiledDisjunction extends Compiled {
 
-	private Compiled right;
-	private Compiled left;
+    private Compiled right;
 
-	public CompiledDisjunction(Compiled left, Compiled right) {
-		super(left.getMode().add(right.getMode()));
-		this.left = left;
-		this.right = right;
-	}
+    private Compiled left;
 
-	@Override
+    public CompiledDisjunction(Compiled left, Compiled right) {
+        super(left.getMode().add(right.getMode()));
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
     public ElementSource runNonDet(Object input, RBContext context) {
-		return left.runNonDet(input, context).append(right.runNonDet(input, context));
-	}
-	
-	@Override
-    public Compiled negate() {
-		return left.negate().conjoin(right.negate());
-	}
+        return left.runNonDet(input, context).append(right.runNonDet(input, context));
+    }
 
-	@Override
+    @Override
+    public Compiled negate() {
+        return left.negate().conjoin(right.negate());
+    }
+
+    @Override
     public String toString() {
-		return "(" + right + " + " + left + ")";
-	}
+        return "(" + right + " + " + left + ")";
+    }
 
 }

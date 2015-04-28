@@ -4,44 +4,44 @@ import java.io.Serializable;
 
 public class JavaTypeConstructor extends TypeConstructor implements Serializable {
 
-	private final Class javaClass;
+    private final Class javaClass;
 
-	/** Constructor */
-	public JavaTypeConstructor(Class javaclass) {
-		if (javaclass.isInterface() || javaclass.isPrimitive()) {
-			throw new Error("no interfaces or primitives types are allowed");
-		} else {
-			this.javaClass = javaclass;
-		}
-	}
-	
-	@Override
+    /** Constructor */
+    public JavaTypeConstructor(Class javaclass) {
+        if (javaclass.isInterface() || javaclass.isPrimitive()) {
+            throw new Error("no interfaces or primitives types are allowed");
+        } else {
+            this.javaClass = javaclass;
+        }
+    }
+
+    @Override
     public String getName() {
-		String name = javaClass.getName();
-		if (name.startsWith("java.lang.")) {
-			return name.substring("java.lang.".length());
-		} else {
-			return name;
-		}
-	}
+        String name = javaClass.getName();
+        if (name.startsWith("java.lang.")) {
+            return name.substring("java.lang.".length());
+        } else {
+            return name;
+        }
+    }
 
-	@Override
+    @Override
     public boolean equals(Object other) {
-		if (other != null && this.getClass().equals(other.getClass())) {
-			return this.getName().equals(((TypeConstructor)other).getName());
-		} else {
-			return false;
-		}
-	}
+        if (other != null && this.getClass().equals(other.getClass())) {
+            return this.getName().equals(((TypeConstructor) other).getName());
+        } else {
+            return false;
+        }
+    }
 
-	@Override
+    @Override
     public int hashCode() {
-		return getName().hashCode();
-	}
+        return getName().hashCode();
+    }
 
-	public void addSuperType(TypeConstructor superType) throws TypeModeError {
-		throw new TypeModeError("Can not add super type for java types " + this);
-	}
+    public void addSuperType(TypeConstructor superType) throws TypeModeError {
+        throw new TypeModeError("Can not add super type for java types " + this);
+    }
 
     @Override
     public TypeConstructor getSuperTypeConstructor() {
@@ -61,7 +61,9 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
         throw new Error("This is not a user defined type");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see tyRuBa.modes.TypeConstructor#isInitialized()
      */
     @Override
@@ -73,7 +75,7 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
     public ConstructorType getConstructorType() {
         return ConstructorType.makeJava(javaClass);
     }
-    
+
     @Override
     public boolean isJavaTypeConstructor() {
         return true;
@@ -81,11 +83,11 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
 
     @Override
     public String toString() {
-    		return "JavaTypeConstructor("+javaClass+")";
+        return "JavaTypeConstructor(" + javaClass + ")";
     }
-    
-	@Override
+
+    @Override
     public Class javaEquivalent() {
-		return javaClass;
-	}
+        return javaClass;
+    }
 }

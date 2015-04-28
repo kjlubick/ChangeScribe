@@ -14,65 +14,65 @@ import tyRuBa.modes.TypeModeError;
 
 public class RBTestFilter extends RBExpression {
 
-	private RBExpression test_q;
+    private RBExpression test_q;
 
-	public RBTestFilter(RBExpression test_query) {
-		test_q = test_query;
-	}
+    public RBTestFilter(RBExpression test_query) {
+        test_q = test_query;
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "TEST(" + getQuery() + ")";
-	}
+        return "TEST(" + getQuery() + ")";
+    }
 
-	@Override
+    @Override
     public Compiled compile(CompilationContext c) {
-		return test_q.compile(c).test();
-	}
+        return test_q.compile(c).test();
+    }
 
-	public RBExpression getQuery() {
-		return test_q;
-	}
-	
-	@Override
+    public RBExpression getQuery() {
+        return test_q;
+    }
+
+    @Override
     public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
-		try {
-			return getQuery().typecheck(predinfo, startEnv);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-	}
+        try {
+            return getQuery().typecheck(predinfo, startEnv);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+    }
 
-	@Override
+    @Override
     public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
-	throws TypeModeError {
-		Collection vars = test_q.getFreeVariables(context);
-		
-		if (vars.isEmpty()) {
-			RBExpression converted = test_q.convertToMode(context, rearrange); 
-			return Factory.makeModedExpression(
-				new RBTestFilter(converted), 
-				converted.getMode().first(),
-				context);
-		} else {
-			return Factory.makeModedExpression(this,
-				new ErrorMode("Variables improperly left unbound in TEST: " + vars),
-				context);
-		}
-	}
+            throws TypeModeError {
+        Collection vars = test_q.getFreeVariables(context);
 
-	@Override
+        if (vars.isEmpty()) {
+            RBExpression converted = test_q.convertToMode(context, rearrange);
+            return Factory.makeModedExpression(
+                    new RBTestFilter(converted),
+                    converted.getMode().first(),
+                    context);
+        } else {
+            return Factory.makeModedExpression(this,
+                    new ErrorMode("Variables improperly left unbound in TEST: " + vars),
+                    context);
+        }
+    }
+
+    @Override
     public RBExpression convertToNormalForm(boolean negate) {
-		if (negate) {
-			return getQuery().convertToNormalForm(true);
-		} else {
-			return new RBTestFilter(getQuery().convertToNormalForm(false));
-		}
-	}
+        if (negate) {
+            return getQuery().convertToNormalForm(true);
+        } else {
+            return new RBTestFilter(getQuery().convertToNormalForm(false));
+        }
+    }
 
-	@Override
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
 }

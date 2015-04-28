@@ -6,38 +6,40 @@
 package tyRuBa.modes;
 
 public class Free extends BindingMode {
-	
-	static public Free the = new Free();
 
-	private Free() {}
+    static public Free the = new Free();
 
-	@Override
+    private Free() {
+    }
+
+    @Override
     public int hashCode() {
-		return this.getClass().hashCode();
-	}
+        return this.getClass().hashCode();
+    }
 
-	@Override
+    @Override
     public boolean equals(Object other) {
-		return other instanceof Free;
-	}
+        return other instanceof Free;
+    }
 
-	@Override
+    @Override
     public String toString() {
-		return "F";
-	}
+        return "F";
+    }
 
-	/** check that this binding satisfied the binding mode */
-	@Override
+    /** check that this binding satisfied the binding mode */
+    @Override
     public boolean satisfyBinding(BindingMode mode) {
-		return this.equals(mode);
-	}
+        return this.equals(mode);
+    }
 
-	@Override
+    @Override
     public boolean isBound() {
-		return false;
-	}
-	@Override
+        return false;
+    }
+
+    @Override
     public boolean isFree() {
-		return true;
-	}
+        return true;
+    }
 }

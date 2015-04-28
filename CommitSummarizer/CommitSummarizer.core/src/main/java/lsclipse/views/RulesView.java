@@ -35,242 +35,265 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 public class RulesView extends ViewPart {
-	Action selectAction, explainAction, englishAction, filterAction, sortAction;
+    Action selectAction, explainAction, englishAction, filterAction, sortAction;
+
     TabFolder tabFolder;
+
     GridData layoutData1;
+
     GridData layoutHidden;
+
     Composite parent;
+
     Table rulesTable;
-	TabItem tabItemExamples;
-	TabItem tabItemExceptions;
-	List examplesList;
-	List exceptionsList;
-	ProgressBarDialog progbar;
-	java.util.List<LSDResult> rules = new ArrayList<LSDResult>();
-	IProject baseproj = null;
-	IProject newproj = null;
 
-	@Override
+    TabItem tabItemExamples;
+
+    TabItem tabItemExceptions;
+
+    List examplesList;
+
+    List exceptionsList;
+
+    ProgressBarDialog progbar;
+
+    java.util.List<LSDResult> rules = new ArrayList<LSDResult>();
+
+    IProject baseproj = null;
+
+    IProject newproj = null;
+
+    @Override
     public void createPartControl(Composite parent) {
-		this.parent = parent;
+        this.parent = parent;
 
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-	    parent.setLayout(layout);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        parent.setLayout(layout);
 
-	    //declare showing layout
-		layoutData1 = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		layoutData1.grabExcessHorizontalSpace = true;
-		layoutData1.grabExcessVerticalSpace = true;
-		layoutData1.horizontalAlignment = GridData.FILL;
-		layoutData1.verticalAlignment = GridData.FILL;
-		layoutData1.exclude = false;
+        // declare showing layout
+        layoutData1 = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        layoutData1.grabExcessHorizontalSpace = true;
+        layoutData1.grabExcessVerticalSpace = true;
+        layoutData1.horizontalAlignment = GridData.FILL;
+        layoutData1.verticalAlignment = GridData.FILL;
+        layoutData1.exclude = false;
 
-	    //declare 'hidden' layout
-		layoutHidden = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		layoutHidden.grabExcessHorizontalSpace = true;
-		layoutHidden.grabExcessVerticalSpace = true;
-		layoutHidden.horizontalAlignment = GridData.FILL;
-		layoutHidden.verticalAlignment = GridData.FILL;
-		layoutHidden.exclude = true;
+        // declare 'hidden' layout
+        layoutHidden = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        layoutHidden.grabExcessHorizontalSpace = true;
+        layoutHidden.grabExcessVerticalSpace = true;
+        layoutHidden.horizontalAlignment = GridData.FILL;
+        layoutHidden.verticalAlignment = GridData.FILL;
+        layoutHidden.exclude = true;
 
-		//make rules table
-	    rulesTable = new Table(parent, SWT.SINGLE | SWT.FULL_SELECTION);
-		TableColumn col1 = new TableColumn(rulesTable, SWT.NULL);
-		rulesTable.setHeaderVisible(true);
-		col1.setText("Accuracy");
-		col1.pack();
-		TableColumn col2 = new TableColumn(rulesTable, SWT.NULL);
-		col2.setText("Rule");
-		col2.setWidth(430);
-		rulesTable.setLayoutData(layoutData1);
-		rulesTable.addListener(SWT.Selection, new Listener() {
-		      @Override
+        // make rules table
+        rulesTable = new Table(parent, SWT.SINGLE | SWT.FULL_SELECTION);
+        TableColumn col1 = new TableColumn(rulesTable, SWT.NULL);
+        rulesTable.setHeaderVisible(true);
+        col1.setText("Accuracy");
+        col1.pack();
+        TableColumn col2 = new TableColumn(rulesTable, SWT.NULL);
+        col2.setText("Rule");
+        col2.setWidth(430);
+        rulesTable.setLayoutData(layoutData1);
+        rulesTable.addListener(SWT.Selection, new Listener() {
+            @Override
             public void handleEvent(Event e) {
-		          refreshExamples();
-		        }
-			});
+                refreshExamples();
+            }
+        });
 
-		//make tabfolder and example lists
-		tabFolder = new TabFolder (parent, 0);
-		tabItemExamples = new TabItem (tabFolder, SWT.NONE);
-		tabItemExamples.setText ("Changes");
-		examplesList = new List(tabFolder, SWT.SINGLE);
-		examplesList.addMouseListener(new MouseListener() {
-			@Override
+        // make tabfolder and example lists
+        tabFolder = new TabFolder(parent, 0);
+        tabItemExamples = new TabItem(tabFolder, SWT.NONE);
+        tabItemExamples.setText("Changes");
+        examplesList = new List(tabFolder, SWT.SINGLE);
+        examplesList.addMouseListener(new MouseListener() {
+            @Override
             public void mouseDoubleClick(MouseEvent arg0) {
-				//IMPT!!! double click listener called AFTER the new line is selected
-				//check if there is a
-				MessageDialog.openError(examplesList.getShell(), "File selection error", examplesList.getSelection()[0]);
-			}
-			@Override
+                // IMPT!!! double click listener called AFTER the new line is selected
+                // check if there is a
+                MessageDialog.openError(examplesList.getShell(), "File selection error", examplesList.getSelection()[0]);
+            }
+
+            @Override
             public void mouseDown(MouseEvent arg0) {
-			}
-			@Override
+            }
+
+            @Override
             public void mouseUp(MouseEvent arg0) {
-			}
-		});
-		tabItemExamples.setControl(examplesList);
-		tabItemExceptions = new TabItem (tabFolder, SWT.NONE);
-		tabItemExceptions.setText ("Exceptions");
-		exceptionsList = new List(tabFolder, SWT.SINGLE);
-		tabItemExceptions.setControl(exceptionsList);
-		tabFolder.setLayoutData(layoutHidden);
+            }
+        });
+        tabItemExamples.setControl(examplesList);
+        tabItemExceptions = new TabItem(tabFolder, SWT.NONE);
+        tabItemExceptions.setText("Exceptions");
+        exceptionsList = new List(tabFolder, SWT.SINGLE);
+        tabItemExceptions.setControl(exceptionsList);
+        tabFolder.setLayoutData(layoutHidden);
 
-		parent.layout();
+        parent.layout();
 
-		createActions();
+        createActions();
         createMenu();
         createToolbar();
-	}
+    }
+
     public void createActions() {
-    	//Select Action
-		selectAction = new Action("Select version...") {
-			@Override
+        // Select Action
+        selectAction = new Action("Select version...") {
+            @Override
             public void run() {
-				
-		    	//collect information from seldiag
-				final SelectProjectDialog seldiag = new SelectProjectDialog(parent.getShell());
-		    	final int returncode = seldiag.open();
-		    	if (returncode>0) return;
 
-		    	//remember base project (and new project)
-				baseproj = ResourcesPlugin.getWorkspace().getRoot().getProject(seldiag.getProj1());
-				newproj = ResourcesPlugin.getWorkspace().getRoot().getProject(seldiag.getProj2());
+                // collect information from seldiag
+                final SelectProjectDialog seldiag = new SelectProjectDialog(parent.getShell());
+                final int returncode = seldiag.open();
+                if (returncode > 0)
+                    return;
 
-		    	//open new log box
-				final ProgressBarDialog pbdiag = new ProgressBarDialog(parent.getShell());
-				pbdiag.open();
-				pbdiag.setStep(0);
+                // remember base project (and new project)
+                baseproj = ResourcesPlugin.getWorkspace().getRoot().getProject(seldiag.getProj1());
+                newproj = ResourcesPlugin.getWorkspace().getRoot().getProject(seldiag.getProj2());
 
-				//do lsdiff
-				rules = (new LSDiffRunner()).doLSDiff(seldiag.getProj1(), seldiag.getProj2(), pbdiag);
+                // open new log box
+                final ProgressBarDialog pbdiag = new ProgressBarDialog(parent.getShell());
+                pbdiag.open();
+                pbdiag.setStep(0);
 
-				//display results on view
-				refreshRules();
-				refreshExamples();
-			}
-		};
-		selectAction.setImageDescriptor(PlatformUI.getWorkbench()
-				.getSharedImages().getImageDescriptor(
-						ISharedImages.IMG_OBJ_FOLDER));
+                // do lsdiff
+                rules = (new LSDiffRunner()).doLSDiff(seldiag.getProj1(), seldiag.getProj2(), pbdiag);
 
-		//Explain Action
-		explainAction = new Action("Explain") {
-			@Override
+                // display results on view
+                refreshRules();
+                refreshExamples();
+            }
+        };
+        selectAction.setImageDescriptor(PlatformUI.getWorkbench()
+                .getSharedImages().getImageDescriptor(
+                        ISharedImages.IMG_OBJ_FOLDER));
+
+        // Explain Action
+        explainAction = new Action("Explain") {
+            @Override
             public void run() {
-				if (tabFolder.getLayoutData().equals(layoutHidden)) {
-					showRulesList();
-				} else {
-					hideRulesList();
-				}
-			}
-		};
-		explainAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/explain.gif"));
+                if (tabFolder.getLayoutData().equals(layoutHidden)) {
+                    showRulesList();
+                } else {
+                    hideRulesList();
+                }
+            }
+        };
+        explainAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/explain.gif"));
 
-		//English Action
-		englishAction = new Action("Translate to English") {
-			@Override
+        // English Action
+        englishAction = new Action("Translate to English") {
+            @Override
             public void run() {
-				//Do something smart here
-			}
-		};
-		englishAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/english.gif"));
+                // Do something smart here
+            }
+        };
+        englishAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/english.gif"));
 
-		//*	TODO: Currently do not have sort and filter functions
-		//Sort Action
-		sortAction = new Action("Sort") {
-			@Override
+        // * TODO: Currently do not have sort and filter functions
+        // Sort Action
+        sortAction = new Action("Sort") {
+            @Override
             public void run() {
-			}
-		};
-		sortAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/sort.gif"));
+            }
+        };
+        sortAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/sort.gif"));
 
-		//Filter Action
-		filterAction = new Action("Filter") {
-			@Override
+        // Filter Action
+        filterAction = new Action("Filter") {
+            @Override
             public void run() {
-			}
-		};
-		filterAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/filter.gif"));
-		//*/
-	}
-	private void createToolbar() {
+            }
+        };
+        filterAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/filter.gif"));
+        // */
+    }
+
+    private void createToolbar() {
         IToolBarManager mgr = getViewSite().getActionBars().getToolBarManager();
         mgr.add(selectAction);
         mgr.add(explainAction);
         mgr.add(englishAction);
         mgr.add(sortAction);
         mgr.add(filterAction);
-	}
-	private void createMenu() {
-//        IMenuManager mgr = getViewSite().getActionBars().getMenuManager();
-//        mgr.add(selectAllAction);
-	}
+    }
 
-	@Override
+    private void createMenu() {
+        // IMenuManager mgr = getViewSite().getActionBars().getMenuManager();
+        // mgr.add(selectAllAction);
+    }
+
+    @Override
     public void setFocus() {
-	}
+    }
 
-	private void showRulesList() {
-		tabFolder.setLayoutData(layoutData1);
-		tabFolder.layout();
-		parent.layout();
-	}
+    private void showRulesList() {
+        tabFolder.setLayoutData(layoutData1);
+        tabFolder.layout();
+        parent.layout();
+    }
+
     private void hideRulesList() {
-		tabFolder.setLayoutData(layoutHidden);
-		tabFolder.layout();
-		parent.layout();
+        tabFolder.setLayoutData(layoutHidden);
+        tabFolder.layout();
+        parent.layout();
     }
 
     private void refreshRules() {
-    	if(rulesTable != null) {
-    		rulesTable.removeAll();
-    	}
-    	for (int i=0; i<rules.size(); ++i) {
-    		LSDResult rule = rules.get(i);
-    		TableItem ti = new TableItem(rulesTable, SWT.NULL);
-    		ti.setText(new String[] { rule.num_matches+"/"+(rule.num_matches+rule.num_counter), rule.desc });
-    	}
-    	rulesTable.layout();
+        if (rulesTable != null) {
+            rulesTable.removeAll();
+        }
+        for (int i = 0; i < rules.size(); ++i) {
+            LSDResult rule = rules.get(i);
+            TableItem ti = new TableItem(rulesTable, SWT.NULL);
+            ti.setText(new String[] { rule.num_matches + "/" + (rule.num_matches + rule.num_counter), rule.desc });
+        }
+        rulesTable.layout();
     }
 
     private void refreshExamples() {
-    	refreshExamples(rulesTable.getSelectionIndex());
+        refreshExamples(rulesTable.getSelectionIndex());
     }
 
     private void refreshExamples(int index) {
 
-    	if (index<0 || index>=rules.size()) return; //array out of bounds
+        if (index < 0 || index >= rules.size())
+            return; // array out of bounds
 
-    	LSDResult rule = rules.get(index);
+        LSDResult rule = rules.get(index);
 
-    	//refresh examples
-    	//tabItemExamples.setText("Changes ("+rule.examples.size()+")");
-    	examplesList.removeAll();
-    	for (String s : rule.getExampleStr()) examplesList.add(s);
+        // refresh examples
+        // tabItemExamples.setText("Changes ("+rule.examples.size()+")");
+        examplesList.removeAll();
+        for (String s : rule.getExampleStr())
+            examplesList.add(s);
 
-    	//refresh exceptions
-    	//tabItemExceptions.setText("Exceptions ("+rule.exceptions.size()+")");
-    	exceptionsList.removeAll();
-    	for (String s : rule.getExceptionsString()) exceptionsList.add(s);
+        // refresh exceptions
+        // tabItemExceptions.setText("Exceptions ("+rule.exceptions.size()+")");
+        exceptionsList.removeAll();
+        for (String s : rule.getExceptionsString())
+            exceptionsList.add(s);
     }
 
     @SuppressWarnings({ "unchecked", "deprecation", "rawtypes" })
-	public static void openInEditor(IFile file, int startpos, int length) {
-		HashMap map = new HashMap();
-		map.put(IMarker.CHAR_START, new Integer(startpos));
-		map.put(IMarker.CHAR_END, new Integer(startpos+length));
-		map.put(IWorkbenchPage.EDITOR_ID_ATTR, 
-				"org.eclipse.ui.DefaultTextEditor");
-		try {
-			IMarker marker = file.createMarker(IMarker.TEXT);
-			marker.setAttributes(map);
+    public static void openInEditor(IFile file, int startpos, int length) {
+        HashMap map = new HashMap();
+        map.put(IMarker.CHAR_START, new Integer(startpos));
+        map.put(IMarker.CHAR_END, new Integer(startpos + length));
+        map.put(IWorkbenchPage.EDITOR_ID_ATTR,
+                "org.eclipse.ui.DefaultTextEditor");
+        try {
+            IMarker marker = file.createMarker(IMarker.TEXT);
+            marker.setAttributes(map);
 
-			//IDE.openEditor(page, marker);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            // IDE.openEditor(page, marker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

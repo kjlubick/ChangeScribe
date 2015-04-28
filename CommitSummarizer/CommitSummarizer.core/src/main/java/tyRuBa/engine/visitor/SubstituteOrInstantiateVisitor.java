@@ -24,136 +24,136 @@ import tyRuBa.modes.ConstructorType;
 
 public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisitor, TermVisitor {
 
-	Frame frame;
+    Frame frame;
 
-	public SubstituteOrInstantiateVisitor(Frame frame) {
-		this.frame = frame;
-	}
-	
-	public Frame getFrame() {
-		return frame;
-	}
+    public SubstituteOrInstantiateVisitor(Frame frame) {
+        this.frame = frame;
+    }
 
-	@Override
+    public Frame getFrame() {
+        return frame;
+    }
+
+    @Override
     public Object visit(RBConjunction conjunction) {
-		RBConjunction result = new RBConjunction();
-		for (int i = 0; i < conjunction.getNumSubexps(); i++) {
-			result.addSubexp(
-				(RBExpression) conjunction.getSubexp(i).accept(this));
-		}
-		return result;
-	}
+        RBConjunction result = new RBConjunction();
+        for (int i = 0; i < conjunction.getNumSubexps(); i++) {
+            result.addSubexp(
+                    (RBExpression) conjunction.getSubexp(i).accept(this));
+        }
+        return result;
+    }
 
-	@Override
+    @Override
     public Object visit(RBDisjunction disjunction) {
-		RBDisjunction result = new RBDisjunction();
-		for (int i = 0; i < disjunction.getNumSubexps(); i++) {
-			result.addSubexp(
-				(RBExpression) disjunction.getSubexp(i).accept(this));
-		}
-		return result;
-	}
+        RBDisjunction result = new RBDisjunction();
+        for (int i = 0; i < disjunction.getNumSubexps(); i++) {
+            result.addSubexp(
+                    (RBExpression) disjunction.getSubexp(i).accept(this));
+        }
+        return result;
+    }
 
-	@Override
+    @Override
     public Object visit(RBExistsQuantifier exists) {
-		RBExpression exp = (RBExpression) exists.getExp().accept(this);
-		Collection vars = new HashSet();
-		for (int i = 0; i < exists.getNumVars(); i++) {
-			vars.add(exists.getVarAt(i).accept(this));
-		}
-		return new RBExistsQuantifier(vars, exp);
-	}
+        RBExpression exp = (RBExpression) exists.getExp().accept(this);
+        Collection vars = new HashSet();
+        for (int i = 0; i < exists.getNumVars(); i++) {
+            vars.add(exists.getVarAt(i).accept(this));
+        }
+        return new RBExistsQuantifier(vars, exp);
+    }
 
-	@Override
+    @Override
     public Object visit(RBFindAll findAll) {
-		RBExpression query = (RBExpression) findAll.getQuery().accept(this);
-		RBTerm extract = (RBTerm) findAll.getExtract().accept(this);
-		RBTerm result = (RBTerm) findAll.getResult().accept(this);
-		return new RBFindAll(query, extract, result);
-	}
+        RBExpression query = (RBExpression) findAll.getQuery().accept(this);
+        RBTerm extract = (RBTerm) findAll.getExtract().accept(this);
+        RBTerm result = (RBTerm) findAll.getResult().accept(this);
+        return new RBFindAll(query, extract, result);
+    }
 
-	@Override
+    @Override
     public Object visit(RBCountAll count) {
-		RBExpression query = (RBExpression) count.getQuery().accept(this);
-		RBTerm extract = (RBTerm) count.getExtract().accept(this);
-		RBTerm result = (RBTerm) count.getResult().accept(this);
-		return new RBCountAll(query, extract, result);
-	}
+        RBExpression query = (RBExpression) count.getQuery().accept(this);
+        RBTerm extract = (RBTerm) count.getExtract().accept(this);
+        RBTerm result = (RBTerm) count.getResult().accept(this);
+        return new RBCountAll(query, extract, result);
+    }
 
-	@Override
+    @Override
     public Object visit(RBModeSwitchExpression modeSwitch) {
-		throw new Error("Should not happen: a mode case should have been selected" +
-			" before any substitution or instantiation is performed");
-	}
+        throw new Error("Should not happen: a mode case should have been selected" +
+                " before any substitution or instantiation is performed");
+    }
 
-	@Override
+    @Override
     public Object visit(RBNotFilter notFilter) {
-		RBExpression negatedQuery = 
-			(RBExpression) notFilter.getNegatedQuery().accept(this);
-		return new RBNotFilter(negatedQuery);
-	}
+        RBExpression negatedQuery =
+                (RBExpression) notFilter.getNegatedQuery().accept(this);
+        return new RBNotFilter(negatedQuery);
+    }
 
-	@Override
+    @Override
     public Object visit(RBPredicateExpression predExp) {
-		return predExp.withNewArgs((RBTuple)predExp.getArgs().accept(this));
-	}
+        return predExp.withNewArgs((RBTuple) predExp.getArgs().accept(this));
+    }
 
-	@Override
+    @Override
     public Object visit(RBTestFilter testFilter) {
-		RBExpression testQuery = 
-			(RBExpression) testFilter.getQuery().accept(this);
-		return new RBTestFilter(testQuery);
-	}
+        RBExpression testQuery =
+                (RBExpression) testFilter.getQuery().accept(this);
+        return new RBTestFilter(testQuery);
+    }
 
-	@Override
+    @Override
     public Object visit(RBCompoundTerm compoundTerm) {
-		ConstructorType typeConst = compoundTerm.getConstructorType();
-		return typeConst.apply(
-			(RBTerm) compoundTerm.getArg().accept(this));
-//		PredicateIdentifier pred = compoundTerm.getPredId();
-//		return RBCompoundTerm.makeForVisitor(pred, (RBTerm)compoundTerm.getArgsForVisitor().accept(this));
-	}
+        ConstructorType typeConst = compoundTerm.getConstructorType();
+        return typeConst.apply(
+                (RBTerm) compoundTerm.getArg().accept(this));
+        // PredicateIdentifier pred = compoundTerm.getPredId();
+        // return RBCompoundTerm.makeForVisitor(pred, (RBTerm)compoundTerm.getArgsForVisitor().accept(this));
+    }
 
-	@Override
+    @Override
     public Object visit(RBTuple tuple) {
-		RBTerm[] subterms = new RBTerm[tuple.getNumSubterms()];
-		for (int i = 0; i < subterms.length; i++) {
-			subterms[i] = (RBTerm) tuple.getSubterm(i).accept(this);
-		}
-		return RBTuple.make(subterms);
-	}
+        RBTerm[] subterms = new RBTerm[tuple.getNumSubterms()];
+        for (int i = 0; i < subterms.length; i++) {
+            subterms[i] = (RBTerm) tuple.getSubterm(i).accept(this);
+        }
+        return RBTuple.make(subterms);
+    }
 
-	@Override
+    @Override
     public Object visit(RBIgnoredVariable ignoredVar) {
-		return ignoredVar;
-	}
+        return ignoredVar;
+    }
 
-	@Override
+    @Override
     public Object visit(RBPair pair) {
-		RBPair head = new RBPair((RBTerm)pair.getCar().accept(this));
-		
-		RBPair next;
-		RBPair prev = head;
-		
-		RBTerm cdr = pair.getCdr();
-		
-		while(cdr instanceof RBPair) {
-			pair = (RBPair)cdr;
-			next = new RBPair((RBTerm)pair.getCar().accept(this));
-			prev.setCdr(next);
-			prev = next;
-			cdr = pair.getCdr();
-		}
-		
-		prev.setCdr((RBTerm)cdr.accept(this));
-		
-		return head;
-	}
+        RBPair head = new RBPair((RBTerm) pair.getCar().accept(this));
 
-	@Override
+        RBPair next;
+        RBPair prev = head;
+
+        RBTerm cdr = pair.getCdr();
+
+        while (cdr instanceof RBPair) {
+            pair = (RBPair) cdr;
+            next = new RBPair((RBTerm) pair.getCar().accept(this));
+            prev.setCdr(next);
+            prev = next;
+            cdr = pair.getCdr();
+        }
+
+        prev.setCdr((RBTerm) cdr.accept(this));
+
+        return head;
+    }
+
+    @Override
     public Object visit(RBQuoted quoted) {
-		return new RBQuoted(
-			(RBTerm)quoted.getQuotedParts().accept(this));
-	}
+        return new RBQuoted(
+                (RBTerm) quoted.getQuotedParts().accept(this));
+    }
 
 }

@@ -14,85 +14,92 @@ import tyRuBa.tdbc.ResultSet;
 import tyRuBa.tdbc.TyrubaException;
 
 public class ReplaceExceptionWithTest implements Rule {
-	private static final String M_BODY = "?mBody";
-	private static final String CONDITION = "?condition";
-	private static final String CATCH_BLOCKS = "?catchBlocks";
-	private static final String ELSE_BLOCK = "?elseBlock";
-	private static final String M_FULL_NAME = "?mFullName";
-	private static final String IF_BLOCK = "?ifBlock";
-	private static final String TRY_BLOCK = "?tryBlock";
-	private String name_;
+    private static final String M_BODY = "?mBody";
 
-	public ReplaceExceptionWithTest() {
-		name_ = "replace_exception_with_test";
-	}
+    private static final String CONDITION = "?condition";
 
-	@Override
-	public String getName() {
-		return name_;
-	}
+    private static final String CATCH_BLOCKS = "?catchBlocks";
 
-	@Override
-	public String getRefactoringString() {
-		return getName() + "(?catchStatement," + CONDITION + "," + M_FULL_NAME
-				+ ")";
-	}
+    private static final String ELSE_BLOCK = "?elseBlock";
 
-	@Override
-	public RefactoringQuery getRefactoringQuery() {
-		return new RefactoringQuery(getName(), getQueryString());
-	}
+    private static final String M_FULL_NAME = "?mFullName";
 
-	private String getQueryString() {
-		return "deleted_trycatch(" + TRY_BLOCK + "," + CATCH_BLOCKS + ",?,"
-				+ M_FULL_NAME + ")," + "added_conditional(" + CONDITION + ","
-				+ IF_BLOCK + "," + ELSE_BLOCK + "," + M_FULL_NAME + "),"
-				+ "NOT(before_conditional(" + CONDITION + ", ?, ?, " + M_FULL_NAME + ")), "
-				+ "added_methodbody(" + M_FULL_NAME + "," + M_BODY + ")";
-	}
+    private static final String IF_BLOCK = "?ifBlock";
 
-	// TODO(kprete):Something here throws an indexOutOfBounds when run on replace cond with polymorphism. Hunt it down.
-	@Override
-	public String checkAdherence(ResultSet rs) throws TyrubaException {
-		String tryBlock = rs.getString(TRY_BLOCK);
-		String condition = rs.getString(CONDITION);
-		String ifBlock = rs.getString(IF_BLOCK);
-		String elseBlock = rs.getString(ELSE_BLOCK);
-		if (elseBlock.equals("")) {
-			String mBody = rs.getString(M_BODY);
-			String firstPart = condition + ")" + ifBlock;
-			// Get the rest of the method instead.
-			elseBlock = mBody.substring(mBody.indexOf(firstPart)
-					+ firstPart.length());
-		}
-		String compareToCatch = null;
+    private static final String TRY_BLOCK = "?tryBlock";
 
-		if (CodeCompare.compare(tryBlock, ifBlock))
-			compareToCatch = elseBlock;
-		else if (CodeCompare.compare(tryBlock, elseBlock))
-			compareToCatch = ifBlock;
-		else
-			return null;
+    private String name_;
 
-		assert compareToCatch != null;
+    public ReplaceExceptionWithTest() {
+        name_ = "replace_exception_with_test";
+    }
 
-		String catchString = rs.getString(CATCH_BLOCKS);
-		String[] catchBlocks = catchString.split(",");
+    @Override
+    public String getName() {
+        return name_;
+    }
 
-		for (String catchBlock : catchBlocks) {
-			if (catchBlock.length() == 0)
-				continue;
-			String exception = catchBlock.substring(0, catchBlock.indexOf(':'));
-			String catchBody = catchBlock
-					.substring(catchBlock.indexOf(':') + 1);
-			if (catchBody.length() > 0
-					&& CodeCompare.compare(compareToCatch, catchBody)) {
-				return getName() + "(\"" + exception + "\",\"" + condition
-						+ "\",\"" + rs.getString(M_FULL_NAME) + "\")";
-			}
-		}
+    @Override
+    public String getRefactoringString() {
+        return getName() + "(?catchStatement," + CONDITION + "," + M_FULL_NAME
+                + ")";
+    }
 
-		return null;
-	}
+    @Override
+    public RefactoringQuery getRefactoringQuery() {
+        return new RefactoringQuery(getName(), getQueryString());
+    }
+
+    private String getQueryString() {
+        return "deleted_trycatch(" + TRY_BLOCK + "," + CATCH_BLOCKS + ",?,"
+                + M_FULL_NAME + ")," + "added_conditional(" + CONDITION + ","
+                + IF_BLOCK + "," + ELSE_BLOCK + "," + M_FULL_NAME + "),"
+                + "NOT(before_conditional(" + CONDITION + ", ?, ?, " + M_FULL_NAME + ")), "
+                + "added_methodbody(" + M_FULL_NAME + "," + M_BODY + ")";
+    }
+
+    // TODO(kprete):Something here throws an indexOutOfBounds when run on replace cond with polymorphism. Hunt it down.
+    @Override
+    public String checkAdherence(ResultSet rs) throws TyrubaException {
+        String tryBlock = rs.getString(TRY_BLOCK);
+        String condition = rs.getString(CONDITION);
+        String ifBlock = rs.getString(IF_BLOCK);
+        String elseBlock = rs.getString(ELSE_BLOCK);
+        if (elseBlock.equals("")) {
+            String mBody = rs.getString(M_BODY);
+            String firstPart = condition + ")" + ifBlock;
+            // Get the rest of the method instead.
+            elseBlock = mBody.substring(mBody.indexOf(firstPart)
+                    + firstPart.length());
+        }
+        String compareToCatch = null;
+
+        if (CodeCompare.compare(tryBlock, ifBlock))
+            compareToCatch = elseBlock;
+        else if (CodeCompare.compare(tryBlock, elseBlock))
+            compareToCatch = ifBlock;
+        else
+            return null;
+
+        assert compareToCatch != null;
+
+        String catchString = rs.getString(CATCH_BLOCKS);
+        String[] catchBlocks = catchString.split(",");
+
+        for (String catchBlock : catchBlocks) {
+            if (catchBlock.length() == 0)
+                continue;
+            String exception = catchBlock.substring(0, catchBlock.indexOf(':'));
+            String catchBody = catchBlock
+                    .substring(catchBlock.indexOf(':') + 1);
+            if (catchBody.length() > 0
+                    && CodeCompare.compare(compareToCatch, catchBody)) {
+                return getName() + "(\"" + exception + "\",\"" + condition
+                        + "\",\"" + rs.getString(M_FULL_NAME) + "\")";
+            }
+        }
+
+        return null;
+    }
 
 }

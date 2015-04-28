@@ -15,119 +15,117 @@ import tyRuBa.modes.TypeEnv;
 import tyRuBa.modes.TypeModeError;
 
 /**
- * An RBUniqueQuantifier succeeds if each quantified variable is bound to
- * exactly one value after evaluating the UNIQUE expression. If the
- * quantified variables are already bound before evaluation of the UNIQUE
- * expression, then the bindings are ignored while evaluating the UNIQUE
- * expression, then the bindings from the evaluation are compared to the
+ * An RBUniqueQuantifier succeeds if each quantified variable is bound to exactly one value after evaluating the UNIQUE expression. If the quantified variables are already bound
+ * before evaluation of the UNIQUE expression, then the bindings are ignored while evaluating the UNIQUE expression, then the bindings from the evaluation are compared to the
  * original bindings.
  */
 public class RBUniqueQuantifier extends RBExpression {
 
-	private RBExpression exp;
-	private RBVariable[] vars;
+    private RBExpression exp;
 
-	public RBUniqueQuantifier(Collection variables, RBExpression exp) {
-		this.exp = exp;
-		vars =(RBVariable[])variables.toArray(new RBVariable[variables.size()]);
-	}
+    private RBVariable[] vars;
 
-	public RBUniqueQuantifier(RBVariable[] vars, RBExpression exp) {
-		this.exp = exp;
-		this.vars = vars;
-	}
+    public RBUniqueQuantifier(Collection variables, RBExpression exp) {
+        this.exp = exp;
+        vars = (RBVariable[]) variables.toArray(new RBVariable[variables.size()]);
+    }
 
-	public RBExpression getExp() {
-		return exp;
-	}
+    public RBUniqueQuantifier(RBVariable[] vars, RBExpression exp) {
+        this.exp = exp;
+        this.vars = vars;
+    }
 
-	public int getNumVars() {
-		return vars.length;
-	}
+    public RBExpression getExp() {
+        return exp;
+    }
 
-	public RBVariable getVarAt(int pos) {
-		return vars[pos];
-	}
-	
-	public RBVariable[] getQuantifiedVars() {
-		return vars;
-	}
+    public int getNumVars() {
+        return vars.length;
+    }
 
-	@Override
+    public RBVariable getVarAt(int pos) {
+        return vars[pos];
+    }
+
+    public RBVariable[] getQuantifiedVars() {
+        return vars;
+    }
+
+    @Override
     public String toString() {
-		StringBuffer result = new StringBuffer("(UNIQUE ");
-		for (int i = 0; i < vars.length; i++) {
-			if (i > 0)
-				result.append(",");
-			result.append(vars[i].toString());
-		}
-		result.append(" : " + getExp() + ")");
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer("(UNIQUE ");
+        for (int i = 0; i < vars.length; i++) {
+            if (i > 0)
+                result.append(",");
+            result.append(vars[i].toString());
+        }
+        result.append(" : " + getExp() + ")");
+        return result.toString();
+    }
 
-	@Override
+    @Override
     public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
-		try {
-			return getExp().typecheck(predinfo, startEnv);
-		} catch (TypeModeError e) {
-			throw new TypeModeError(e, this);
-		}
-	}
+        try {
+            return getExp().typecheck(predinfo, startEnv);
+        } catch (TypeModeError e) {
+            throw new TypeModeError(e, this);
+        }
+    }
 
-	@Override
+    @Override
     public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
-		ModeCheckContext resultContext = (ModeCheckContext)context.clone();
-		Collection boundedVars = exp.getVariables();
-		Collection vars = new HashSet();
-		
-		for (int i = 0; i < getNumVars(); i++) {
-			RBVariable currVar = getVarAt(i);
-			if (!boundedVars.contains(currVar)) {
-				return Factory.makeModedExpression(
-					this,
-					new ErrorMode("UNIQUE variable " + currVar +
-						" must become bound in " + exp),
-					context);
-			} else {
-				vars.add(currVar);
-			}
-		}
-		
-		Collection freeVars = getFreeVariables(resultContext);
-		
-		if (freeVars.isEmpty()) {
-			RBExpression converted = exp.convertToMode(context, rearrange);
-			return Factory.makeModedExpression(
-				new RBUniqueQuantifier(vars, converted), 
-					converted.getMode().unique(), converted.getNewContext());
-		} else {
-			return Factory.makeModedExpression(
-				this,
-				new ErrorMode("Variables improperly left unbound in UNIQUE: " 
-					+ freeVars), 
-				resultContext);
-		}
-	}
-	
-	@Override
+        ModeCheckContext resultContext = (ModeCheckContext) context.clone();
+        Collection boundedVars = exp.getVariables();
+        Collection vars = new HashSet();
+
+        for (int i = 0; i < getNumVars(); i++) {
+            RBVariable currVar = getVarAt(i);
+            if (!boundedVars.contains(currVar)) {
+                return Factory.makeModedExpression(
+                        this,
+                        new ErrorMode("UNIQUE variable " + currVar +
+                                " must become bound in " + exp),
+                        context);
+            } else {
+                vars.add(currVar);
+            }
+        }
+
+        Collection freeVars = getFreeVariables(resultContext);
+
+        if (freeVars.isEmpty()) {
+            RBExpression converted = exp.convertToMode(context, rearrange);
+            return Factory.makeModedExpression(
+                    new RBUniqueQuantifier(vars, converted),
+                    converted.getMode().unique(), converted.getNewContext());
+        } else {
+            return Factory.makeModedExpression(
+                    this,
+                    new ErrorMode("Variables improperly left unbound in UNIQUE: "
+                            + freeVars),
+                    resultContext);
+        }
+    }
+
+    @Override
     public RBExpression convertToNormalForm(boolean negate) {
-		RBExpression result = new RBUniqueQuantifier(
-			vars, exp.convertToNormalForm(false));
-		if (negate) {
-			return new RBNotFilter(result);
-		} else {
-			return result;
-		}
-	}
+        RBExpression result = new RBUniqueQuantifier(
+                vars, exp.convertToNormalForm(false));
+        if (negate) {
+            return new RBNotFilter(result);
+        } else {
+            return result;
+        }
+    }
 
-	@Override
+    @Override
     public Object accept(ExpressionVisitor v) {
-		return v.visit(this);
-	}
+        return v.visit(this);
+    }
 
-	@Override
+    @Override
     public Compiled compile(CompilationContext c) {
-		return new CompiledUnique(vars, exp.compile(c));
-	}
+        return new CompiledUnique(vars, exp.compile(c));
+    }
 
 }

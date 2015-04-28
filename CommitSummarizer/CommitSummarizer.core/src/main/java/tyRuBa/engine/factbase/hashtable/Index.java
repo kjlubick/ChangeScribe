@@ -25,16 +25,15 @@ import tyRuBa.util.pager.Pager.Resource;
 import tyRuBa.util.pager.Pager.ResourceId;
 
 /**
- * An index allows facts to be efficiently looked up for a specific predicate
- * mode.
+ * An index allows facts to be efficiently looked up for a specific predicate mode.
+ * 
  * @category FactBase
  * @author riecken
  */
 public final class Index {
 
     /**
-     * Wraps a HashMap in a Pager resource. This wrapper also knows how to clean
-     * itself.
+     * Wraps a HashMap in a Pager resource. This wrapper also knows how to clean itself.
      */
     static class HashMapResource extends HashMap implements Pager.Resource {
 
@@ -66,7 +65,7 @@ public final class Index {
                         entry.setValue(lstWhatIsThere.get(0));
                     }
 
-                } else { //It's an indexvalue
+                } else { // It's an indexvalue
                     IndexValue idxWhatIsThere = (IndexValue) whatIsThere;
                     if (!idxWhatIsThere.isValid(vm)) {
                         iter.remove();
@@ -105,27 +104,32 @@ public final class Index {
 
     /** Location that this index is located at. */
     private Location storageLocation;
-    
+
     @Override
     public String toString() {
-    		String result = "Index(" + predicateName + " ";
-    		int arity = boundPlaces.length + freePlaces.length;
-    		char[] boundMap = new char[arity];
-    		for (int i = 0; i < boundMap.length; i++) {
-    			boundMap[i] = 'F';
-    		}
-    		for (int i = 0; i < boundPlaces.length; i++) {
-    			boundMap[boundPlaces[i]] = 'B';
-    		}
-    		return result + new String(boundMap) + ")";
+        String result = "Index(" + predicateName + " ";
+        int arity = boundPlaces.length + freePlaces.length;
+        char[] boundMap = new char[arity];
+        for (int i = 0; i < boundMap.length; i++) {
+            boundMap[i] = 'F';
+        }
+        for (int i = 0; i < boundPlaces.length; i++) {
+            boundMap[boundPlaces[i]] = 'B';
+        }
+        return result + new String(boundMap) + ")";
     }
 
     /**
      * Creates a new Index
-     * @param mode mode that the index is for
-     * @param storageLocation location at which the index is stored
-     * @param engine query engine that the index resides in
-     * @param predicateName name of the predicate that the index is for.
+     * 
+     * @param mode
+     *            mode that the index is for
+     * @param storageLocation
+     *            location at which the index is stored
+     * @param engine
+     *            query engine that the index resides in
+     * @param predicateName
+     *            name of the predicate that the index is for.
      */
     Index(PredicateMode mode, Location storageLocation, QueryEngine engine, String predicateName) {
         this.validatorManager = engine.getFrontEndValidatorManager();
@@ -149,8 +153,7 @@ public final class Index {
     }
 
     /**
-     * Creates an Index with a specific NamePersistenceManager and
-     * ValidatorManager (used for fact libraries).
+     * Creates an Index with a specific NamePersistenceManager and ValidatorManager (used for fact libraries).
      */
     Index(PredicateMode mode, Location storageLocation, QueryEngine engine, String predicateName,
             NamePersistenceManager nameManager, ValidatorManager validatorManager) {
@@ -168,8 +171,11 @@ public final class Index {
 
     /**
      * Extracts a subset of an RBTuple into a new RBTuple.
-     * @param toExtract parts of tuple to extract.
-     * @param from tuple to extract from
+     * 
+     * @param toExtract
+     *            parts of tuple to extract.
+     * @param from
+     *            tuple to extract from
      */
     private RBTuple extract(int[] toExtract, RBTuple from) {
         RBTerm[] extracted = new RBTerm[toExtract.length];
@@ -181,7 +187,9 @@ public final class Index {
 
     /**
      * Extract the bound parts.
-     * @param goal RBTuple to extract the bound parts from.
+     * 
+     * @param goal
+     *            RBTuple to extract the bound parts from.
      */
     public RBTuple extractBound(RBTuple goal) {
         return extract(boundPlaces, goal);
@@ -189,7 +197,9 @@ public final class Index {
 
     /**
      * Extract the free parts.
-     * @param goal RBTuple to extract the free parts from.
+     * 
+     * @param goal
+     *            RBTuple to extract the free parts from.
      */
     public RBTuple extractFree(RBTuple goal) {
         return extract(freePlaces, goal);
@@ -197,14 +207,16 @@ public final class Index {
 
     /**
      * Adds a fact into the index.
-     * @param fact fact to insert.
+     * 
+     * @param fact
+     *            fact to insert.
      */
     public void addFact(IndexValue fact) {
         RBTuple parts = fact.getParts();
         RBTuple whole_key = extractBound(parts);
         RBTuple free = extractFree(parts);
 
-        //Special Behaviour for the all free index
+        // Special Behaviour for the all free index
         if (whole_key == RBTuple.theEmpty) {
             whole_key = free;
         }
@@ -223,7 +235,7 @@ public final class Index {
                 }
 
                 if (map == null)
-                    map = new HashMapResource(); //new resource is
+                    map = new HashMapResource(); // new resource is
                 // automatically clean
 
                 Object whatIsThere = map.get(key);
@@ -231,23 +243,23 @@ public final class Index {
                     map.put(key, value);
                 } else if (whatIsThere instanceof ArrayList) {
                     ArrayList lstWhatIsThere = (ArrayList) whatIsThere;
-                    if (checkDet) { //SemiDet/Det uniqueness check
+                    if (checkDet) { // SemiDet/Det uniqueness check
                         for (Iterator iter = lstWhatIsThere.iterator(); iter.hasNext();) {
                             IndexValue element = (IndexValue) iter.next();
                             if (!element.getParts().equals(value.getParts())) {
                                 throw new Error(
-                                        "OOPS!! More than one fact has been inserted into a Det/SemiDet predicate ("+predicateName+") present = "
+                                        "OOPS!! More than one fact has been inserted into a Det/SemiDet predicate (" + predicateName + ") present = "
                                                 + element.getParts() + " ||| new = " + value.getParts() + key);
                             }
                         }
                     }
                     lstWhatIsThere.add(value);
-                } else { //It's an indexValue
+                } else { // It's an indexValue
                     IndexValue idxWhatIsThere = (IndexValue) whatIsThere;
-                    if (checkDet) { //SemiDet/Det uniqueness check
+                    if (checkDet) { // SemiDet/Det uniqueness check
                         if (!idxWhatIsThere.getParts().equals(value.getParts())) {
                             throw new Error(
-                            		"OOPS!! More than one fact has been inserted into a Det/SemiDet predicate ("+predicateName+") present = "
+                                    "OOPS!! More than one fact has been inserted into a Det/SemiDet predicate (" + predicateName + ") present = "
                                             + idxWhatIsThere.getParts() + " ||| new = " + value.getParts() + key);
                         }
                     }
@@ -286,7 +298,7 @@ public final class Index {
     /** Returns a match for a NonDet / Multi exectution. */
     public ElementSource getMatchElementSource(RBTuple inputPars) {
 
-        //special case for all free index
+        // special case for all free index
         if (inputPars == RBTuple.theEmpty) {
             return convertIndexValuesToRBTuples(values());
         }
@@ -327,8 +339,7 @@ public final class Index {
     }
 
     /**
-     * Returns an ElementSource containing all of the top-level keys (as
-     * Strings).
+     * Returns an ElementSource containing all of the top-level keys (as Strings).
      */
     private ElementSource getTopLevelKeys() {
         HashSetResource topLevelKeys = (HashSetResource) getPager().synchDoTask(
@@ -343,8 +354,7 @@ public final class Index {
     }
 
     /**
-     * Returns an ElementSource containing all of the IndexValues for a given
-     * top-level key.
+     * Returns an ElementSource containing all of the IndexValues for a given top-level key.
      */
     private ElementSource getTopKeyValues(String topkey) {
         ElementSource valid_values = (ElementSource) getPager().synchDoTask(
@@ -364,8 +374,7 @@ public final class Index {
     }
 
     /**
-     * When given an ElementSource full of IndexValues, will convert it into an
-     * ElementSource of the RBTuples that are in the IndexValues.
+     * When given an ElementSource full of IndexValues, will convert it into an ElementSource of the RBTuples that are in the IndexValues.
      */
     public ElementSource convertIndexValuesToRBTuples(ElementSource source) {
         return source.map(new Action() {
@@ -377,8 +386,7 @@ public final class Index {
     }
 
     /**
-     * Filters out the invalid values. "values" must either be an IndexValue or
-     * an ArrayList of IndexValues.
+     * Filters out the invalid values. "values" must either be an IndexValue or an ArrayList of IndexValues.
      */
     public ElementSource removeInvalids(Object values) {
         if (values == null)
@@ -406,7 +414,7 @@ public final class Index {
      * Persists the index to disk.
      */
     public void backup() {
-        //this is currently done by the Pager.
+        // this is currently done by the Pager.
     }
 
 }

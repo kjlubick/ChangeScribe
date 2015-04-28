@@ -100,821 +100,833 @@ import co.edu.unal.colswe.changescribe.core.util.UIPreferences;
 import edu.stanford.nlp.util.Sets;
 
 public class DescribeVersionsDialog extends TitleAreaDialog {
-	private StyledText text;
-	private Git git;
-	private IJavaProject selection;
-	private JavaViewer editor;
-	private ListSelectionDialog listSelectionDialog;
-	private FormToolkit toolkit;
-	private Section filesSection;
-	private CachedCheckboxTreeViewer filesViewer;
-	private Set<ChangedFile> items;
-	private TreeMap<MethodStereotype, Integer> signatureMap;
-	private SignatureCanvas signatureCanvas;
-	private Text previousVersionText;
-	private Text currentVersionText;
-	private static final String DIALOG_SETTINGS_SECTION_NAME = Activator.getDefault() + ".COMMIT_DIALOG_SECTION"; //$NON-NLS-1$
-	private SashForm sashForm;
-	private Composite messageAndPersonArea;
-	private String commitCurrentID = "";
-	private String commitPreviousID = "";
-	private Shell shellTmp;
+    private StyledText text;
 
-	public DescribeVersionsDialog(Shell shell, Git git, IJavaProject selection) {
-		super(shell);
-		shellTmp = shell;
+    private Git git;
 
-		this.git = git;
-		this.setSelection(selection);
-		this.setHelpAvailable(false);
-		
-		Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
-		    @Override
-		    public void propertyChange(PropertyChangeEvent event) {
-		      if (event.getProperty().equals(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE)) {
-		        if(getShell() != null) {
-		        	getShell().redraw();
-		        	getShell().layout();
-		        	 refreshView();
-		        }
-		      }
-		    }
-		  }); 
-	}
-	
-	public void refreshView() {
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
+    private IJavaProject selection;
+
+    private JavaViewer editor;
+
+    private ListSelectionDialog listSelectionDialog;
+
+    private FormToolkit toolkit;
+
+    private Section filesSection;
+
+    private CachedCheckboxTreeViewer filesViewer;
+
+    private Set<ChangedFile> items;
+
+    private TreeMap<MethodStereotype, Integer> signatureMap;
+
+    private SignatureCanvas signatureCanvas;
+
+    private Text previousVersionText;
+
+    private Text currentVersionText;
+
+    private static final String DIALOG_SETTINGS_SECTION_NAME = Activator.getDefault() + ".COMMIT_DIALOG_SECTION"; //$NON-NLS-1$
+
+    private SashForm sashForm;
+
+    private Composite messageAndPersonArea;
+
+    private String commitCurrentID = "";
+
+    private String commitPreviousID = "";
+
+    private Shell shellTmp;
+
+    public DescribeVersionsDialog(Shell shell, Git git, IJavaProject selection) {
+        super(shell);
+        shellTmp = shell;
+
+        this.git = git;
+        this.setSelection(selection);
+        this.setHelpAvailable(false);
+
+        Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent event) {
+                if (event.getProperty().equals(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE)) {
+                    if (getShell() != null) {
+                        getShell().redraw();
+                        getShell().layout();
+                        refreshView();
+                    }
+                }
+            }
+        });
+    }
+
+    public void refreshView() {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
-				MessageDialog.openInformation(getShell(), "Information", "You must close the window for the changes to take effect");
-			}});
-	}
-	
-	static class CommitFileContentProvider extends BaseWorkbenchContentProvider {
-		@SuppressWarnings("rawtypes")
-		@Override
-		public Object[] getElements(Object element) {
-			if (element instanceof Object[])
-				return (Object[]) element;
-			if (element instanceof Collection)
-				return ((Collection) element).toArray();
-			return new Object[0];
-		}
+                MessageDialog.openInformation(getShell(), "Information", "You must close the window for the changes to take effect");
+            }
+        });
+    }
 
-		@Override
+    static class CommitFileContentProvider extends BaseWorkbenchContentProvider {
+        @SuppressWarnings("rawtypes")
+        @Override
+        public Object[] getElements(Object element) {
+            if (element instanceof Object[])
+                return (Object[]) element;
+            if (element instanceof Collection)
+                return ((Collection) element).toArray();
+            return new Object[0];
+        }
+
+        @Override
         public Object[] getChildren(Object parentElement) {
-			return new Object[0];
-		}
+            return new Object[0];
+        }
 
-		@Override
+        @Override
         public Object getParent(Object element) {
-			return null;
-		}
+            return null;
+        }
 
-		@Override
+        @Override
         public boolean hasChildren(Object element) {
-			return false;
-		}
-	}
-	
-	static class CommitPathLabelProvider extends ColumnLabelProvider {
+            return false;
+        }
+    }
 
-		@Override
+    static class CommitPathLabelProvider extends ColumnLabelProvider {
+
+        @Override
         public String getText(Object obj) {
-			return ((ChangedFile) obj).getPath();
-		}
+            return ((ChangedFile) obj).getPath();
+        }
 
-		@Override
+        @Override
         public String getToolTipText(Object element) {
-			return ((ChangedFile) element).getPath();
-		}
+            return ((ChangedFile) element).getPath();
+        }
 
-	}
+    }
 
-	static class CommitStatusLabelProvider extends BaseLabelProvider implements
-			IStyledLabelProvider {
+    static class CommitStatusLabelProvider extends BaseLabelProvider implements
+            IStyledLabelProvider {
 
-		private Image DEFAULT = PlatformUI.getWorkbench().getSharedImages()
-				.getImage(ISharedImages.IMG_OBJ_FILE);
+        private Image DEFAULT = PlatformUI.getWorkbench().getSharedImages()
+                .getImage(ISharedImages.IMG_OBJ_FILE);
 
-		private ResourceManager resourceManager = new LocalResourceManager(
-				JFaceResources.getResources());
+        private ResourceManager resourceManager = new LocalResourceManager(
+                JFaceResources.getResources());
 
-		private Image getEditorImage(ChangedFile item) {
-			Image image = DEFAULT;
-			String name = new Path(item.getPath()).lastSegment();
-			if (name != null) {
-				ImageDescriptor descriptor = PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(name);
-				image = (Image) this.resourceManager.get(descriptor);
-			}
-			return image;
-		}
+        private Image getEditorImage(ChangedFile item) {
+            Image image = DEFAULT;
+            String name = new Path(item.getPath()).lastSegment();
+            if (name != null) {
+                ImageDescriptor descriptor = PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(name);
+                image = (Image) this.resourceManager.get(descriptor);
+            }
+            return image;
+        }
 
-		private Image getDecoratedImage(Image base, ImageDescriptor decorator) {
-			DecorationOverlayIcon decorated = new DecorationOverlayIcon(base,
-					decorator, IDecoration.BOTTOM_RIGHT);
-			return (Image) this.resourceManager.get(decorated);
-		}
+        private Image getDecoratedImage(Image base, ImageDescriptor decorator) {
+            DecorationOverlayIcon decorated = new DecorationOverlayIcon(base,
+                    decorator, IDecoration.BOTTOM_RIGHT);
+            return (Image) this.resourceManager.get(decorated);
+        }
 
-		@Override
+        @Override
         public StyledString getStyledText(Object element) {
-			return new StyledString();
-		}
+            return new StyledString();
+        }
 
-		@Override
+        @Override
         public Image getImage(Object element) {
-			ChangedFile item = (ChangedFile) element;
-			ImageDescriptor decorator = null;
-			//Image other = null;
-			Image finalOther = null;
-			switch (item.getTypeChange()) {
-				case UNTRACKED:
-					decorator = UIIcons.OVR_UNTRACKED;
-					break;
-				case ADDED:
-				case ADDED_INDEX_DIFF:
-					decorator = UIIcons.OVR_STAGED_ADD;
-					break;
-				case REMOVED:
-				case REMOVED_NOT_STAGED:
-				case REMOVED_UNTRACKED:
-					decorator = UIIcons.OVR_STAGED_REMOVE;
-					break;
-				/*case UNTRACKED_FOLDERS:
-					other = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
-					DecorationOverlayIcon decorated = new DecorationOverlayIcon(other, UIIcons.OVR_UNTRACKED, IDecoration.BOTTOM_RIGHT);
-					finalOther = (Image) this.resourceManager.get(decorated);
-					break;*/
-				default:
-					break;
-			}
-			
-			if(decorator != null) {
-				finalOther = getDecoratedImage(getEditorImage(item), decorator);
-			} else if(finalOther == null) {
-				finalOther = getEditorImage(item);
-			}
-			return finalOther;
-		}
+            ChangedFile item = (ChangedFile) element;
+            ImageDescriptor decorator = null;
+            // Image other = null;
+            Image finalOther = null;
+            switch (item.getTypeChange()) {
+            case UNTRACKED:
+                decorator = UIIcons.OVR_UNTRACKED;
+                break;
+            case ADDED:
+            case ADDED_INDEX_DIFF:
+                decorator = UIIcons.OVR_STAGED_ADD;
+                break;
+            case REMOVED:
+            case REMOVED_NOT_STAGED:
+            case REMOVED_UNTRACKED:
+                decorator = UIIcons.OVR_STAGED_REMOVE;
+                break;
+            /*
+             * case UNTRACKED_FOLDERS: other = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER); DecorationOverlayIcon decorated = new
+             * DecorationOverlayIcon(other, UIIcons.OVR_UNTRACKED, IDecoration.BOTTOM_RIGHT); finalOther = (Image) this.resourceManager.get(decorated); break;
+             */
+            default:
+                break;
+            }
 
-		@Override
-		public void dispose() {
-			resourceManager.dispose();
-			super.dispose();
-		}
-	}
+            if (decorator != null) {
+                finalOther = getDecoratedImage(getEditorImage(item), decorator);
+            } else if (finalOther == null) {
+                finalOther = getEditorImage(item);
+            }
+            return finalOther;
+        }
 
-	@Override
-	protected Control createContents(Composite parent) {
-		toolkit = new FormToolkit(parent.getDisplay());
-		parent.addDisposeListener(new DisposeListener() {
+        @Override
+        public void dispose() {
+            resourceManager.dispose();
+            super.dispose();
+        }
+    }
 
-			@Override
+    @Override
+    protected Control createContents(Composite parent) {
+        toolkit = new FormToolkit(parent.getDisplay());
+        parent.addDisposeListener(new DisposeListener() {
+
+            @Override
             public void widgetDisposed(DisposeEvent e) {
-				toolkit.dispose();
-			}
-		});
-		return super.createContents(parent);
-	}
-	
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		toolkit.adapt(parent, false, false);
-		
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.OK_LABEL, false);
-		updateMessage();
-	}
-	
-	@Override
-	protected IDialogSettings getDialogBoundsSettings() {
-		IDialogSettings settings = Activator.getDefault().getDialogSettings();
-		IDialogSettings section = settings.getSection(DIALOG_SETTINGS_SECTION_NAME);
-		if (section == null)
-			section = settings.addNewSection(DIALOG_SETTINGS_SECTION_NAME);
-		return section;
-	}
-	
-	@Override
+                toolkit.dispose();
+            }
+        });
+        return super.createContents(parent);
+    }
+
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        toolkit.adapt(parent, false, false);
+
+        createButton(parent, IDialogConstants.CANCEL_ID,
+                IDialogConstants.OK_LABEL, false);
+        updateMessage();
+    }
+
+    @Override
+    protected IDialogSettings getDialogBoundsSettings() {
+        IDialogSettings settings = Activator.getDefault().getDialogSettings();
+        IDialogSettings section = settings.getSection(DIALOG_SETTINGS_SECTION_NAME);
+        if (section == null)
+            section = settings.addNewSection(DIALOG_SETTINGS_SECTION_NAME);
+        return section;
+    }
+
+    @Override
     protected void buttonPressed(int buttonId) {
-		if (IDialogConstants.CANCEL_ID == buttonId)
-			cancelPressed();
-	}
-	
-	/**
-	 * Add message drop down toolbar item
-	 *
-	 * @param parent
-	 * @return toolbar
-	 */
-	protected ToolBar addMessageDropDown(Composite parent) {
-		final ToolBar dropDownBar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
-		final ToolItem dropDownItem = new ToolItem(dropDownBar, SWT.PUSH);
-		dropDownItem.setImage(PlatformUI.getWorkbench().getSharedImages()
-				.getImage("IMG_LCL_RENDERED_VIEW_MENU")); //$NON-NLS-1$
-		final Menu menu = new Menu(dropDownBar);
-		dropDownItem.addDisposeListener(new DisposeListener() {
+        if (IDialogConstants.CANCEL_ID == buttonId)
+            cancelPressed();
+    }
 
-			@Override
+    /**
+     * Add message drop down toolbar item
+     *
+     * @param parent
+     * @return toolbar
+     */
+    protected ToolBar addMessageDropDown(Composite parent) {
+        final ToolBar dropDownBar = new ToolBar(parent, SWT.FLAT | SWT.RIGHT);
+        final ToolItem dropDownItem = new ToolItem(dropDownBar, SWT.PUSH);
+        dropDownItem.setImage(PlatformUI.getWorkbench().getSharedImages()
+                .getImage("IMG_LCL_RENDERED_VIEW_MENU")); //$NON-NLS-1$
+        final Menu menu = new Menu(dropDownBar);
+        dropDownItem.addDisposeListener(new DisposeListener() {
+
+            @Override
             public void widgetDisposed(DisposeEvent e) {
-				menu.dispose();
-			}
-		});
-		MenuItem preferencesItem = new MenuItem(menu, SWT.PUSH);
-		preferencesItem.setText("Configure link");
-		preferencesItem.addSelectionListener(new SelectionAdapter() {
+                menu.dispose();
+            }
+        });
+        MenuItem preferencesItem = new MenuItem(menu, SWT.PUSH);
+        preferencesItem.setText("Configure link");
+        preferencesItem.addSelectionListener(new SelectionAdapter() {
 
-			@Override
+            @Override
             public void widgetSelected(SelectionEvent e) {
-				String[] pages = new String[] { UIPreferences.PAGE_COMMIT_PREFERENCES_SUMMARY };
-				Activator.getDefault().getDialogSettings();
-				PreferencesUtil.createPreferenceDialogOn(getShell(), pages[0],
-						pages, null).open();
-			}
+                String[] pages = new String[] { UIPreferences.PAGE_COMMIT_PREFERENCES_SUMMARY };
+                Activator.getDefault().getDialogSettings();
+                PreferencesUtil.createPreferenceDialogOn(getShell(), pages[0],
+                        pages, null).open();
+            }
 
-		});
-		dropDownItem.addSelectionListener(new SelectionAdapter() {
+        });
+        dropDownItem.addSelectionListener(new SelectionAdapter() {
 
-			@Override
+            @Override
             public void widgetSelected(SelectionEvent e) {
-				Rectangle b = dropDownItem.getBounds();
-				Point p = dropDownItem.getParent().toDisplay(
-						new Point(b.x, b.y + b.height));
-				menu.setLocation(p.x, p.y);
-				menu.setVisible(true);
-			}
+                Rectangle b = dropDownItem.getBounds();
+                Point p = dropDownItem.getParent().toDisplay(
+                        new Point(b.x, b.y + b.height));
+                menu.setLocation(p.x, p.y);
+                menu.setVisible(true);
+            }
 
-		});
-		return dropDownBar;
-	}
-	
-	protected String validateCommit() {
-		if (previousVersionText.getText().length() == 0 ) {
-			return "Empty or invalid older commit id"; 
-		}
+        });
+        return dropDownBar;
+    }
 
-		if (currentVersionText.getText().length() == 0 ) {
-			return "Empty or invalid newer commit id";
-		}
-		
-		return "";
+    protected String validateCommit() {
+        if (previousVersionText.getText().length() == 0) {
+            return "Empty or invalid older commit id";
+        }
 
-	}
-	
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		Composite container = (Composite) super.createDialogArea(parent);
-		parent.getShell().setText("Commit changes");
+        if (currentVersionText.getText().length() == 0) {
+            return "Empty or invalid newer commit id";
+        }
 
-		container = toolkit.createComposite(container);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
-		toolkit.paintBordersFor(container);
-		GridLayoutFactory.swtDefaults().applyTo(container);
+        return "";
 
-		sashForm = new SashForm(container, SWT.VERTICAL | SWT.FILL);
-		toolkit.adapt(sashForm, true, true);
-		sashForm.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		createMessageAndPersonArea(sashForm);
-		filesSection = createFileSection(sashForm);
-		sashForm.setWeights(new int[] { 50, 50 });
+    }
 
-		applyDialogFont(container);
-		container.pack();
-		setTitle("Commit Changes");
-		setMessage("Commit message", IMessageProvider.INFORMATION);
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Composite container = (Composite) super.createDialogArea(parent);
+        parent.getShell().setText("Commit changes");
 
-		filesViewer.addCheckStateListener(new ICheckStateListener() {
+        container = toolkit.createComposite(container);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(container);
+        toolkit.paintBordersFor(container);
+        GridLayoutFactory.swtDefaults().applyTo(container);
 
-			@Override
+        sashForm = new SashForm(container, SWT.VERTICAL | SWT.FILL);
+        toolkit.adapt(sashForm, true, true);
+        sashForm.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        createMessageAndPersonArea(sashForm);
+        filesSection = createFileSection(sashForm);
+        sashForm.setWeights(new int[] { 50, 50 });
+
+        applyDialogFont(container);
+        container.pack();
+        setTitle("Commit Changes");
+        setMessage("Commit message", IMessageProvider.INFORMATION);
+
+        filesViewer.addCheckStateListener(new ICheckStateListener() {
+
+            @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
-				updateMessage();
-			}
-		});
+                updateMessage();
+            }
+        });
 
-		updateFileSectionText();
-		return container;
-	}
-	
-	private Composite createMessageAndPersonArea(Composite container) {
+        updateFileSectionText();
+        return container;
+    }
 
-		messageAndPersonArea = toolkit.createComposite(container);
-		GridDataFactory.fillDefaults().grab(true, true)
-				.applyTo(messageAndPersonArea);
-		GridLayoutFactory.swtDefaults().margins(0, 0).spacing(0, 0)
-				.applyTo(messageAndPersonArea);
+    private Composite createMessageAndPersonArea(Composite container) {
 
-		Section messageSection = toolkit.createSection(messageAndPersonArea, ExpandableComposite.TITLE_BAR | ExpandableComposite.CLIENT_INDENT);
-		messageSection.setText("Commit message");
-		Composite messageArea = toolkit.createComposite(messageSection);
-		GridLayoutFactory.fillDefaults().spacing(0, 0).extendedMargins(2, 2, 2, 2).applyTo(messageArea);
-		toolkit.paintBordersFor(messageArea);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(messageSection);
-		GridLayoutFactory.swtDefaults().applyTo(messageSection);
+        messageAndPersonArea = toolkit.createComposite(container);
+        GridDataFactory.fillDefaults().grab(true, true)
+                .applyTo(messageAndPersonArea);
+        GridLayoutFactory.swtDefaults().margins(0, 0).spacing(0, 0)
+                .applyTo(messageAndPersonArea);
 
-		Composite headerArea = new Composite(messageSection, SWT.NONE);
-		GridLayoutFactory.fillDefaults().spacing(0, 0).numColumns(2).applyTo(headerArea);
+        Section messageSection = toolkit.createSection(messageAndPersonArea, ExpandableComposite.TITLE_BAR | ExpandableComposite.CLIENT_INDENT);
+        messageSection.setText("Commit message");
+        Composite messageArea = toolkit.createComposite(messageSection);
+        GridLayoutFactory.fillDefaults().spacing(0, 0).extendedMargins(2, 2, 2, 2).applyTo(messageArea);
+        toolkit.paintBordersFor(messageArea);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(messageSection);
+        GridLayoutFactory.swtDefaults().applyTo(messageSection);
 
-		ToolBar messageToolbar = new ToolBar(headerArea, SWT.FLAT | SWT.HORIZONTAL);
-		GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).applyTo(messageToolbar);
-		addMessageDropDown(headerArea);
-		
-		messageSection.setTextClient(headerArea);
-		
-		///////////////////
-		
-		Composite personArea = toolkit.createComposite(messageAndPersonArea);
-		toolkit.paintBordersFor(personArea);
-		GridLayoutFactory.swtDefaults().numColumns(2).applyTo(personArea);
-		GridDataFactory.fillDefaults().grab(true, false).applyTo(personArea);
+        Composite headerArea = new Composite(messageSection, SWT.NONE);
+        GridLayoutFactory.fillDefaults().spacing(0, 0).numColumns(2).applyTo(headerArea);
 
-		toolkit.createLabel(personArea, "Older Commit ID: ").setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
-		setAuthorText(toolkit.createText(personArea, null));
-		getAuthorText().setText(commitPreviousID);
-		getAuthorText().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
-		getAuthorText().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		
-		toolkit.createLabel(personArea, "Newer Commit ID: ").setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
-		setCommitterText(toolkit.createText(personArea, null));
-		getCommitterText().setText(commitCurrentID);
-		getCommitterText().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		
-		///////////////////////
-		
-		JavaViewer viewer = new JavaViewer();
-		viewer.setShell(getShell());
-		viewer.setComposite(messageAndPersonArea);
-		viewer.createStyledText();
-		int minHeight = 114;
-		Point size = container.getSize();
-		viewer.getText().setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, true).hint(size).minSize(size.x - 30, minHeight)
-				.align(SWT.FILL, SWT.FILL).create());
-		setEditor(viewer);
-		messageSection.setClient(messageArea);
+        ToolBar messageToolbar = new ToolBar(headerArea, SWT.FLAT | SWT.HORIZONTAL);
+        GridDataFactory.fillDefaults().align(SWT.END, SWT.FILL).grab(true, false).applyTo(messageToolbar);
+        addMessageDropDown(headerArea);
 
-		/////////////////////
-		
-		boolean visible = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE);
-		
-		signatureCanvas = new SignatureCanvas(signatureMap, messageAndPersonArea, getShell());
-		signatureCanvas.createContents();
-		if(visible) {
-			signatureCanvas.getCanvas().setLayoutData(GridDataFactory.fillDefaults()
-					.grab(true, true).hint(size).minSize(size.x, 90)
-					.align(SWT.FILL, SWT.FILL).create());
-		} else {
-			signatureCanvas.getCanvas().setLayoutData(GridDataFactory.fillDefaults()
-					.grab(true, true).hint(size).minSize(size.x, 0)
-					.align(SWT.FILL, SWT.FILL).create());
-		}
-		
-		signatureCanvas.getCanvas().setVisible(visible);
-		
-		return messageAndPersonArea;
-	}
-	
-	
-	
-	public void updateSignatureCanvas() {
-		if(signatureMap != null) {
-			signatureCanvas.setSignatureMap(signatureMap);
-			signatureCanvas.redraw();
-		}
-	}
-	
-	/**
-	 * Create a help button with the help icon on it.
-	 * No action is associated with the button
-	 * @param container parent container
-	 * @return created button
-	 */
-	private ToolItem createHelpButton(ToolBar filesToolbar) {
-		ToolItem help = new ToolItem(filesToolbar,SWT.PUSH);
-	    Image img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_LCL_LINKTO_HELP);
-	    help.setImage(img);
-	    help.setToolTipText("Help");
-	    return help;
-	}
-	
-	private Section createFileSection(Composite container) {
-		Section filesSection = toolkit.createSection(container,
-				ExpandableComposite.TITLE_BAR
-						| ExpandableComposite.CLIENT_INDENT);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(filesSection);
-		Composite filesArea = toolkit.createComposite(filesSection);
-		filesSection.setClient(filesArea);
-		toolkit.paintBordersFor(filesArea);
-		GridLayoutFactory.fillDefaults().extendedMargins(2, 2, 2, 2).applyTo(filesArea);
+        messageSection.setTextClient(headerArea);
 
-		ToolBar filesToolbar = new ToolBar(filesSection, SWT.FLAT);
+        // /////////////////
 
-		filesSection.setTextClient(filesToolbar);
+        Composite personArea = toolkit.createComposite(messageAndPersonArea);
+        toolkit.paintBordersFor(personArea);
+        GridLayoutFactory.swtDefaults().numColumns(2).applyTo(personArea);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(personArea);
 
-		PatternFilter patternFilter = new PatternFilter() {
-			@Override
-			protected boolean isLeafMatch(Viewer viewer, Object element) {
-				if(element instanceof ChangedFile) {
-					ChangedFile commitItem = (ChangedFile) element;
-					return wordMatches(commitItem.getPath());
-				}
-				return super.isLeafMatch(viewer, element);
-			}
-		};
-		patternFilter.setIncludeLeadingWildcard(true);
-		FilteredCheckboxTree resourcesTreeComposite = new FilteredCheckboxTree(filesArea, toolkit, SWT.FULL_SELECTION, patternFilter);
-		Tree resourcesTree = resourcesTreeComposite.getViewer().getTree();
-		resourcesTree.setData(FormToolkit.KEY_DRAW_BORDER,FormToolkit.TREE_BORDER);
-		resourcesTreeComposite.setLayoutData(GridDataFactory.fillDefaults().hint(600, 230).grab(true, true).create());
+        toolkit.createLabel(personArea, "Older Commit ID: ").setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+        setAuthorText(toolkit.createText(personArea, null));
+        getAuthorText().setText(commitPreviousID);
+        getAuthorText().setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+        getAuthorText().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		resourcesTree.setHeaderVisible(true);
-		TreeColumn statCol = new TreeColumn(resourcesTree, SWT.LEFT);
-		statCol.setText("Status");
-		statCol.setWidth(150);
+        toolkit.createLabel(personArea, "Newer Commit ID: ").setForeground(toolkit.getColors().getColor(IFormColors.TB_TOGGLE));
+        setCommitterText(toolkit.createText(personArea, null));
+        getCommitterText().setText(commitCurrentID);
+        getCommitterText().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		TreeColumn resourceCol = new TreeColumn(resourcesTree, SWT.LEFT);
-		resourceCol.setText("Path");
-		resourceCol.setWidth(415);
+        // /////////////////////
 
-		filesViewer = resourcesTreeComposite.getCheckboxTreeViewer();
-		new TreeViewerColumn(filesViewer, statCol).setLabelProvider(createStatusLabelProvider());
-		new TreeViewerColumn(filesViewer, resourceCol).setLabelProvider(new CommitPathLabelProvider());
-		ColumnViewerToolTipSupport.enableFor(filesViewer);
-		filesViewer.setContentProvider(new CommitFileContentProvider());
-		filesViewer.setUseHashlookup(true);
-		if(items != null) {
-			filesViewer.setInput(items.toArray());
-		}
-		
-		filesViewer.addCheckStateListener(new ICheckStateListener() {
+        JavaViewer viewer = new JavaViewer();
+        viewer.setShell(getShell());
+        viewer.setComposite(messageAndPersonArea);
+        viewer.createStyledText();
+        int minHeight = 114;
+        Point size = container.getSize();
+        viewer.getText().setLayoutData(GridDataFactory.fillDefaults()
+                .grab(true, true).hint(size).minSize(size.x - 30, minHeight)
+                .align(SWT.FILL, SWT.FILL).create());
+        setEditor(viewer);
+        messageSection.setClient(messageArea);
 
-			@Override
+        // ///////////////////
+
+        boolean visible = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE);
+
+        signatureCanvas = new SignatureCanvas(signatureMap, messageAndPersonArea, getShell());
+        signatureCanvas.createContents();
+        if (visible) {
+            signatureCanvas.getCanvas().setLayoutData(GridDataFactory.fillDefaults()
+                    .grab(true, true).hint(size).minSize(size.x, 90)
+                    .align(SWT.FILL, SWT.FILL).create());
+        } else {
+            signatureCanvas.getCanvas().setLayoutData(GridDataFactory.fillDefaults()
+                    .grab(true, true).hint(size).minSize(size.x, 0)
+                    .align(SWT.FILL, SWT.FILL).create());
+        }
+
+        signatureCanvas.getCanvas().setVisible(visible);
+
+        return messageAndPersonArea;
+    }
+
+    public void updateSignatureCanvas() {
+        if (signatureMap != null) {
+            signatureCanvas.setSignatureMap(signatureMap);
+            signatureCanvas.redraw();
+        }
+    }
+
+    /**
+     * Create a help button with the help icon on it. No action is associated with the button
+     * 
+     * @param container
+     *            parent container
+     * @return created button
+     */
+    private ToolItem createHelpButton(ToolBar filesToolbar) {
+        ToolItem help = new ToolItem(filesToolbar, SWT.PUSH);
+        Image img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_LCL_LINKTO_HELP);
+        help.setImage(img);
+        help.setToolTipText("Help");
+        return help;
+    }
+
+    private Section createFileSection(Composite container) {
+        Section filesSection = toolkit.createSection(container,
+                ExpandableComposite.TITLE_BAR
+                        | ExpandableComposite.CLIENT_INDENT);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(filesSection);
+        Composite filesArea = toolkit.createComposite(filesSection);
+        filesSection.setClient(filesArea);
+        toolkit.paintBordersFor(filesArea);
+        GridLayoutFactory.fillDefaults().extendedMargins(2, 2, 2, 2).applyTo(filesArea);
+
+        ToolBar filesToolbar = new ToolBar(filesSection, SWT.FLAT);
+
+        filesSection.setTextClient(filesToolbar);
+
+        PatternFilter patternFilter = new PatternFilter() {
+            @Override
+            protected boolean isLeafMatch(Viewer viewer, Object element) {
+                if (element instanceof ChangedFile) {
+                    ChangedFile commitItem = (ChangedFile) element;
+                    return wordMatches(commitItem.getPath());
+                }
+                return super.isLeafMatch(viewer, element);
+            }
+        };
+        patternFilter.setIncludeLeadingWildcard(true);
+        FilteredCheckboxTree resourcesTreeComposite = new FilteredCheckboxTree(filesArea, toolkit, SWT.FULL_SELECTION, patternFilter);
+        Tree resourcesTree = resourcesTreeComposite.getViewer().getTree();
+        resourcesTree.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TREE_BORDER);
+        resourcesTreeComposite.setLayoutData(GridDataFactory.fillDefaults().hint(600, 230).grab(true, true).create());
+
+        resourcesTree.setHeaderVisible(true);
+        TreeColumn statCol = new TreeColumn(resourcesTree, SWT.LEFT);
+        statCol.setText("Status");
+        statCol.setWidth(150);
+
+        TreeColumn resourceCol = new TreeColumn(resourcesTree, SWT.LEFT);
+        resourceCol.setText("Path");
+        resourceCol.setWidth(415);
+
+        filesViewer = resourcesTreeComposite.getCheckboxTreeViewer();
+        new TreeViewerColumn(filesViewer, statCol).setLabelProvider(createStatusLabelProvider());
+        new TreeViewerColumn(filesViewer, resourceCol).setLabelProvider(new CommitPathLabelProvider());
+        ColumnViewerToolTipSupport.enableFor(filesViewer);
+        filesViewer.setContentProvider(new CommitFileContentProvider());
+        filesViewer.setUseHashlookup(true);
+        if (items != null) {
+            filesViewer.setInput(items.toArray());
+        }
+
+        filesViewer.addCheckStateListener(new ICheckStateListener() {
+
+            @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
-				updateFileSectionText();
-			}
-		});
-		
-		ToolItem help = createHelpButton(filesToolbar);
-		help.addSelectionListener(new SelectionAdapter() {
-		    @Override
-		    public void widgetSelected(SelectionEvent e) {
-		    	InformationDialog dialog = new InformationDialog(getShell());
-		    	dialog.create();
-		    	dialog.open();
-		    }
-		});
-		
-		ToolItem computeModificationsItem = new ToolItem(filesToolbar, SWT.PUSH);
-		Image describeImage2 = UIIcons.ANNOTATE.createImage();
-		computeModificationsItem.setImage(describeImage2);
-		computeModificationsItem.setToolTipText("Compute modifications");
-		computeModificationsItem.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				if(!validateCommit().equals("")) {
-					MessageDialog.openWarning(getShell(), "Error", validateCommit());
-				} else {
-					computeModifications();
-				}
-			}
+                updateFileSectionText();
+            }
+        });
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				
-				
-			}
-		});
-		
-		ToolItem describeChangesItem = new ToolItem(filesToolbar, SWT.PUSH);
-		Image describeImage = UIIcons.ANNOTATE.createImage();
-		describeChangesItem.setImage(describeImage);
-		describeChangesItem.setToolTipText("Describe changes");
-		describeChangesItem.addSelectionListener(new SummarizeVersionChangesListener(this));
-
-		ToolItem checkAllItem = new ToolItem(filesToolbar, SWT.PUSH);
-		Image checkImage = UIIcons.CHECK_ALL.createImage();
-		checkAllItem.setImage(checkImage);
-		checkAllItem.setToolTipText("Select All");
-		checkAllItem.addSelectionListener(new SelectionAdapter() {
-
-			@Override
+        ToolItem help = createHelpButton(filesToolbar);
+        help.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
-				filesViewer.setAllChecked(true);
-				updateFileSectionText();
-				updateMessage();
-			}
+                InformationDialog dialog = new InformationDialog(getShell());
+                dialog.create();
+                dialog.open();
+            }
+        });
 
-		});
+        ToolItem computeModificationsItem = new ToolItem(filesToolbar, SWT.PUSH);
+        Image describeImage2 = UIIcons.ANNOTATE.createImage();
+        computeModificationsItem.setImage(describeImage2);
+        computeModificationsItem.setToolTipText("Compute modifications");
+        computeModificationsItem.addSelectionListener(new SelectionListener() {
 
-		ToolItem uncheckAllItem = new ToolItem(filesToolbar, SWT.PUSH);
-		Image uncheckImage = UIIcons.UNCHECK_ALL.createImage();
-		uncheckAllItem.setImage(uncheckImage);
-		uncheckAllItem.setToolTipText("Deselect All");
-		uncheckAllItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                if (!validateCommit().equals("")) {
+                    MessageDialog.openWarning(getShell(), "Error", validateCommit());
+                } else {
+                    computeModifications();
+                }
+            }
 
-			@Override
+            @Override
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+
+            }
+        });
+
+        ToolItem describeChangesItem = new ToolItem(filesToolbar, SWT.PUSH);
+        Image describeImage = UIIcons.ANNOTATE.createImage();
+        describeChangesItem.setImage(describeImage);
+        describeChangesItem.setToolTipText("Describe changes");
+        describeChangesItem.addSelectionListener(new SummarizeVersionChangesListener(this));
+
+        ToolItem checkAllItem = new ToolItem(filesToolbar, SWT.PUSH);
+        Image checkImage = UIIcons.CHECK_ALL.createImage();
+        checkAllItem.setImage(checkImage);
+        checkAllItem.setToolTipText("Select All");
+        checkAllItem.addSelectionListener(new SelectionAdapter() {
+
+            @Override
             public void widgetSelected(SelectionEvent e) {
-				filesViewer.setAllChecked(false);
-				updateFileSectionText();
-				updateMessage();
-			}
+                filesViewer.setAllChecked(true);
+                updateFileSectionText();
+                updateMessage();
+            }
 
-		});
+        });
 
-		statCol.pack();
-		resourceCol.pack();
-		return filesSection;
-	}
-	
-	private void computeModifications() {
-		ObjectId currentId = null;
-		try {
-			currentId = git.getRepository()
-					.resolve(getCommitterText().getText() + "^{tree}");
+        ToolItem uncheckAllItem = new ToolItem(filesToolbar, SWT.PUSH);
+        Image uncheckImage = UIIcons.UNCHECK_ALL.createImage();
+        uncheckAllItem.setImage(uncheckImage);
+        uncheckAllItem.setToolTipText("Deselect All");
+        uncheckAllItem.addSelectionListener(new SelectionAdapter() {
 
-			ObjectId oldId = git.getRepository().resolve(
-					getAuthorText().getText() + "^{tree}");
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                filesViewer.setAllChecked(false);
+                updateFileSectionText();
+                updateMessage();
+            }
 
-			ObjectReader reader = git.getRepository().newObjectReader(); 
+        });
 
-			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-			
-			if(oldId != null || currentId != null) {
-				oldTreeIter.reset(reader, oldId);
-				CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-				newTreeIter.reset(reader, currentId);
-	
-				List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
-				Set<ChangedFile> differences = new TreeSet<ChangedFile>();
-				String projectName = ProjectInformation.getProject(ProjectInformation.getSelectedProject()).getName();
-				
-	
-				//rename detector
-				TreeWalk tw = new TreeWalk(git.getRepository());
-				tw.setRecursive(true);
-				tw.addTree(oldTreeIter);
-				tw.addTree(newTreeIter);
-	
-				RenameDetector rd = new RenameDetector(git.getRepository());
-				rd.addAll(diffs);
-	
-				List<DiffEntry> lde = rd.compute(tw.getObjectReader(), null);
-				
-				List<DiffEntry> finalChanges = cleanRenamed(diffs, lde);
-				
-				for (DiffEntry diffEntry : finalChanges) {
-					
-					ChangedFile changedFile = new ChangedFile();
-					
-					String name = (diffEntry.getNewPath() != null) ? getFileName(diffEntry.getNewPath()) : getFileName(diffEntry.getOldPath());
-					
-					
-					changedFile.setName(name);
-					changedFile.setAbsolutePath(diffEntry.getNewPath() != null ? projectName + "/" + diffEntry.getNewPath() : projectName + "/" + diffEntry.getOldPath());
-					changedFile.setPath(changedFile.getAbsolutePath());
-					if(diffEntry.getChangeType().name().equals("RENAME")) {
-						changedFile.setRenamedPath(diffEntry.getOldPath());
-						changedFile.setRenamed(true);
-						changedFile.setChangeType(TypeChange.ADDED.name());
-						changedFile.setTypeChange(TypeChange.ADDED);
-					} else	if(diffEntry.getChangeType().name().equals("MODIFY")) {
-						changedFile.setRenamed(false);
-						changedFile.setChangeType(TypeChange.MODIFIED.name());
-						changedFile.setTypeChange(TypeChange.MODIFIED);
-					} else if(diffEntry.getChangeType().name().equals("ADD")) {
-						changedFile.setRenamed(false);
-						changedFile.setChangeType(TypeChange.ADDED.name());
-						changedFile.setTypeChange(TypeChange.ADDED);
-					} else if(diffEntry.getChangeType().name().equals("REMOVE") || diffEntry.getChangeType().name().equals("DELETE")) {
-						changedFile.setRenamed(false);
-						changedFile.setChangeType(TypeChange.REMOVED.name());
-						changedFile.setTypeChange(TypeChange.REMOVED);
-						
-						changedFile.setAbsolutePath(projectName + "/" + diffEntry.getOldPath());
-						changedFile.setPath(changedFile.getAbsolutePath());
-					} 
-					
-					if(changedFile.getTypeChange() != null) {
-						differences.add(changedFile);
-					}
-					
-					System.out.println(changedFile.toString());
-				}
-				
-				
-				for (DiffEntry de : lde) {
-				    if (de.getScore() >= rd.getRenameScore()) {
-				        System.out.println("file: " + de.getOldPath() + " copied/moved to: " + de.getNewPath());
-				    }
-				}
-				Sets.intersection(new HashSet<DiffEntry>(diffs), new HashSet<DiffEntry>(lde));
-				
-				listSelectionDialog = new ListSelectionDialog(this.shellTmp.getShell(), differences,
-						new ArrayContentProvider(),
-						new LabelProvider(), "Changes");
-				
-				items = differences;
-				
-				if(items != null) {
-					filesViewer.setInput(items.toArray());
-				}
-			} else {
-				MessageDialog.openWarning(getShell(), "Error", "The older or newer commit id is not valid!");
-			}
-				
-			} catch (RevisionSyntaxException | IOException | GitAPIException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
-	}
-	
-	private List<DiffEntry> cleanRenamed(List<DiffEntry> diffs, List<DiffEntry> lde) {
-		List<DiffEntry> finalList = new ArrayList<>(diffs);
-		int i = 0;
-		for (DiffEntry diffEntry : diffs) {
-			DiffEntry verifyRenamed = verifyRenamed(diffEntry, lde) ;
-			if(verifyRenamed != null) {
-				if(!finalList.contains(verifyRenamed)) {
-					diffEntry = verifyRenamed;
-					finalList.set(i, verifyRenamed);
-				} else {
-					//finalList.remove(diffEntry);
-				}
-				
-			}
-			i++;
-		}
-		
-		return finalList;
-	}
-	
-	private DiffEntry verifyRenamed(DiffEntry diffEntry, List<DiffEntry> lde) {
-		DiffEntry renamedEntry = null;
-		for (DiffEntry diffEntryRenamed : lde) {
-			if(diffEntryRenamed.getScore() >= 90) {
-				if(diffEntry.getChangeType().name().equals("ADD")) {
-					if(diffEntry.getNewPath().equals(diffEntryRenamed.getNewPath())) {
-						renamedEntry = diffEntryRenamed;
-						break;
-					}
-				} else if(diffEntry.getChangeType().name().equals("REMOVE")) {
-					if(diffEntry.getOldPath().equals(diffEntryRenamed.getOldPath())) {
-						renamedEntry = diffEntryRenamed;
-						break;
-					}
-				} else if(diffEntry.getChangeType().name().equals("RENAME")) {
-					if(diffEntry.getOldPath().equals(diffEntryRenamed.getOldPath())) {
-						renamedEntry = diffEntryRenamed;
-						break;
-					}
-				}
-			}
-			
-		}
-		return renamedEntry;
-	}
+        statCol.pack();
+        resourceCol.pack();
+        return filesSection;
+    }
 
-	public static String getFileName(String absolutePath) {
-		return absolutePath.substring(absolutePath.lastIndexOf("/") + 1, absolutePath.length());
-	}
-	
-	private void updateFileSectionText() {
-		filesSection.setText(MessageFormat.format("Modified files (selected {0} of {1})",
-				Integer.valueOf(filesViewer.getCheckedElements().length),
-				Integer.valueOf(filesViewer.getTree().getItemCount())));
-	}
-	
-	private static CellLabelProvider createStatusLabelProvider() {
-		CommitStatusLabelProvider baseProvider = new CommitStatusLabelProvider();
-		ProblemLabelDecorator decorator = new ProblemLabelDecorator(null);
-		return new DecoratingStyledCellLabelProvider(baseProvider, decorator, null) {
-			@Override
-			public String getToolTipText(Object element) {
-				return ((ChangedFile) element).getChangeType();
-			}
-		};
-	}
-	
-	public void updateMessage() {
+    private void computeModifications() {
+        ObjectId currentId = null;
+        try {
+            currentId = git.getRepository()
+                    .resolve(getCommitterText().getText() + "^{tree}");
 
-		String message = null;
-		int type = IMessageProvider.NONE;
+            ObjectId oldId = git.getRepository().resolve(
+                    getAuthorText().getText() + "^{tree}");
 
-		String commitMsg = getEditor().getText().getText().toString();
-		if (commitMsg == null || commitMsg.trim().length() == 0) {
-			message = "Empty message";
-			type = IMessageProvider.INFORMATION;
-		} else if (!isCommitWithoutFilesAllowed()) {
-			message = "No files selected";
-			type = IMessageProvider.INFORMATION;
-		} else {
-			//CommitStatus status = commitMessageComponent.getStatus();
-			//message = status.getMessage();
-			//type = status.getMessageType();
-		}
+            ObjectReader reader = git.getRepository().newObjectReader();
 
-		setMessage(message, type);
-	}
-	
-	private boolean isCommitWithoutFilesAllowed() {
-		if (filesViewer.getCheckedElements().length > 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public ChangedFile[] getSelectedFiles() {
-		return Arrays.copyOf(filesViewer.getCheckedElements(), filesViewer.getCheckedElements().length, ChangedFile[].class);
-	}
-	
-	public void initStyles() {
-		Color orange, blue;
-		orange = new Color(getShell().getDisplay(), 255, 127, 0);
-		blue = getShell().getDisplay().getSystemColor(SWT.COLOR_BLUE);
-		
-		Font font = new Font(getShell().getDisplay(), "Courier", 10, SWT.NORMAL);
-		getText().setFont(font);
+            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
 
-		StyleRange range1 = new StyleRange(0, 4, orange, null);
-		range1.fontStyle = SWT.BOLD;
-		getText().setStyleRange(range1);
+            if (oldId != null || currentId != null) {
+                oldTreeIter.reset(reader, oldId);
+                CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+                newTreeIter.reset(reader, currentId);
 
-		StyleRange range2 = new StyleRange(5, 2, blue, null);
-		range2.background = getShell().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+                List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
+                Set<ChangedFile> differences = new TreeSet<ChangedFile>();
+                String projectName = ProjectInformation.getProject(ProjectInformation.getSelectedProject()).getName();
 
-		getText().setStyleRange(range2);
-		
-		
-	}
+                // rename detector
+                TreeWalk tw = new TreeWalk(git.getRepository());
+                tw.setRecursive(true);
+                tw.addTree(oldTreeIter);
+                tw.addTree(newTreeIter);
 
-	@Override
-	protected boolean isResizable() {
-		return true;
-	}
+                RenameDetector rd = new RenameDetector(git.getRepository());
+                rd.addAll(diffs);
 
-	public Git getGit() {
-		return git;
-	}
+                List<DiffEntry> lde = rd.compute(tw.getObjectReader(), null);
 
-	public void setGit(Git git) {
-		this.git = git;
-	}
+                List<DiffEntry> finalChanges = cleanRenamed(diffs, lde);
 
-	public StyledText getText() {
-		return text;
-	}
+                for (DiffEntry diffEntry : finalChanges) {
 
-	public void setText(StyledText text) {
-		this.text = text;
-	}
+                    ChangedFile changedFile = new ChangedFile();
 
-	public IJavaProject getSelection() {
-		return selection;
-	}
+                    String name = (diffEntry.getNewPath() != null) ? getFileName(diffEntry.getNewPath()) : getFileName(diffEntry.getOldPath());
 
-	public void setSelection(IJavaProject selection) {
-		this.selection = selection;
-	}
+                    changedFile.setName(name);
+                    changedFile.setAbsolutePath(diffEntry.getNewPath() != null ? projectName + "/" + diffEntry.getNewPath() : projectName + "/" + diffEntry.getOldPath());
+                    changedFile.setPath(changedFile.getAbsolutePath());
+                    if (diffEntry.getChangeType().name().equals("RENAME")) {
+                        changedFile.setRenamedPath(diffEntry.getOldPath());
+                        changedFile.setRenamed(true);
+                        changedFile.setChangeType(TypeChange.ADDED.name());
+                        changedFile.setTypeChange(TypeChange.ADDED);
+                    } else if (diffEntry.getChangeType().name().equals("MODIFY")) {
+                        changedFile.setRenamed(false);
+                        changedFile.setChangeType(TypeChange.MODIFIED.name());
+                        changedFile.setTypeChange(TypeChange.MODIFIED);
+                    } else if (diffEntry.getChangeType().name().equals("ADD")) {
+                        changedFile.setRenamed(false);
+                        changedFile.setChangeType(TypeChange.ADDED.name());
+                        changedFile.setTypeChange(TypeChange.ADDED);
+                    } else if (diffEntry.getChangeType().name().equals("REMOVE") || diffEntry.getChangeType().name().equals("DELETE")) {
+                        changedFile.setRenamed(false);
+                        changedFile.setChangeType(TypeChange.REMOVED.name());
+                        changedFile.setTypeChange(TypeChange.REMOVED);
 
-	public JavaViewer getEditor() {
-		return editor;
-	}
+                        changedFile.setAbsolutePath(projectName + "/" + diffEntry.getOldPath());
+                        changedFile.setPath(changedFile.getAbsolutePath());
+                    }
 
-	public void setEditor(JavaViewer editor) {
-		this.editor = editor;
-	}
+                    if (changedFile.getTypeChange() != null) {
+                        differences.add(changedFile);
+                    }
 
-	public ListSelectionDialog getListSelectionDialog() {
-		return listSelectionDialog;
-	}
+                    System.out.println(changedFile.toString());
+                }
 
-	public void setListSelectionDialog(ListSelectionDialog listSelectionDialog) {
-		this.listSelectionDialog = listSelectionDialog;
-	}
+                for (DiffEntry de : lde) {
+                    if (de.getScore() >= rd.getRenameScore()) {
+                        System.out.println("file: " + de.getOldPath() + " copied/moved to: " + de.getNewPath());
+                    }
+                }
+                Sets.intersection(new HashSet<DiffEntry>(diffs), new HashSet<DiffEntry>(lde));
 
-	public TreeMap<MethodStereotype, Integer> getSignatureMap() {
-		return signatureMap;
-	}
+                listSelectionDialog = new ListSelectionDialog(this.shellTmp.getShell(), differences,
+                        new ArrayContentProvider(),
+                        new LabelProvider(), "Changes");
 
-	public void setSignatureMap(TreeMap<MethodStereotype, Integer> signatureMap) {
-		this.signatureMap = signatureMap;
-	}
+                items = differences;
 
-	public Text getAuthorText() {
-		return previousVersionText;
-	}
+                if (items != null) {
+                    filesViewer.setInput(items.toArray());
+                }
+            } else {
+                MessageDialog.openWarning(getShell(), "Error", "The older or newer commit id is not valid!");
+            }
 
-	public void setAuthorText(Text authorText) {
-		this.previousVersionText = authorText;
-	}
+        } catch (RevisionSyntaxException | IOException | GitAPIException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-	public Text getCommitterText() {
-		return currentVersionText;
-	}
+    }
 
-	public void setCommitterText(Text committerText) {
-		this.currentVersionText = committerText;
-	}
+    private List<DiffEntry> cleanRenamed(List<DiffEntry> diffs, List<DiffEntry> lde) {
+        List<DiffEntry> finalList = new ArrayList<>(diffs);
+        int i = 0;
+        for (DiffEntry diffEntry : diffs) {
+            DiffEntry verifyRenamed = verifyRenamed(diffEntry, lde);
+            if (verifyRenamed != null) {
+                if (!finalList.contains(verifyRenamed)) {
+                    diffEntry = verifyRenamed;
+                    finalList.set(i, verifyRenamed);
+                } else {
+                    // finalList.remove(diffEntry);
+                }
+
+            }
+            i++;
+        }
+
+        return finalList;
+    }
+
+    private DiffEntry verifyRenamed(DiffEntry diffEntry, List<DiffEntry> lde) {
+        DiffEntry renamedEntry = null;
+        for (DiffEntry diffEntryRenamed : lde) {
+            if (diffEntryRenamed.getScore() >= 90) {
+                if (diffEntry.getChangeType().name().equals("ADD")) {
+                    if (diffEntry.getNewPath().equals(diffEntryRenamed.getNewPath())) {
+                        renamedEntry = diffEntryRenamed;
+                        break;
+                    }
+                } else if (diffEntry.getChangeType().name().equals("REMOVE")) {
+                    if (diffEntry.getOldPath().equals(diffEntryRenamed.getOldPath())) {
+                        renamedEntry = diffEntryRenamed;
+                        break;
+                    }
+                } else if (diffEntry.getChangeType().name().equals("RENAME")) {
+                    if (diffEntry.getOldPath().equals(diffEntryRenamed.getOldPath())) {
+                        renamedEntry = diffEntryRenamed;
+                        break;
+                    }
+                }
+            }
+
+        }
+        return renamedEntry;
+    }
+
+    public static String getFileName(String absolutePath) {
+        return absolutePath.substring(absolutePath.lastIndexOf("/") + 1, absolutePath.length());
+    }
+
+    private void updateFileSectionText() {
+        filesSection.setText(MessageFormat.format("Modified files (selected {0} of {1})",
+                Integer.valueOf(filesViewer.getCheckedElements().length),
+                Integer.valueOf(filesViewer.getTree().getItemCount())));
+    }
+
+    private static CellLabelProvider createStatusLabelProvider() {
+        CommitStatusLabelProvider baseProvider = new CommitStatusLabelProvider();
+        ProblemLabelDecorator decorator = new ProblemLabelDecorator(null);
+        return new DecoratingStyledCellLabelProvider(baseProvider, decorator, null) {
+            @Override
+            public String getToolTipText(Object element) {
+                return ((ChangedFile) element).getChangeType();
+            }
+        };
+    }
+
+    public void updateMessage() {
+
+        String message = null;
+        int type = IMessageProvider.NONE;
+
+        String commitMsg = getEditor().getText().getText().toString();
+        if (commitMsg == null || commitMsg.trim().length() == 0) {
+            message = "Empty message";
+            type = IMessageProvider.INFORMATION;
+        } else if (!isCommitWithoutFilesAllowed()) {
+            message = "No files selected";
+            type = IMessageProvider.INFORMATION;
+        } else {
+            // CommitStatus status = commitMessageComponent.getStatus();
+            // message = status.getMessage();
+            // type = status.getMessageType();
+        }
+
+        setMessage(message, type);
+    }
+
+    private boolean isCommitWithoutFilesAllowed() {
+        if (filesViewer.getCheckedElements().length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public ChangedFile[] getSelectedFiles() {
+        return Arrays.copyOf(filesViewer.getCheckedElements(), filesViewer.getCheckedElements().length, ChangedFile[].class);
+    }
+
+    public void initStyles() {
+        Color orange, blue;
+        orange = new Color(getShell().getDisplay(), 255, 127, 0);
+        blue = getShell().getDisplay().getSystemColor(SWT.COLOR_BLUE);
+
+        Font font = new Font(getShell().getDisplay(), "Courier", 10, SWT.NORMAL);
+        getText().setFont(font);
+
+        StyleRange range1 = new StyleRange(0, 4, orange, null);
+        range1.fontStyle = SWT.BOLD;
+        getText().setStyleRange(range1);
+
+        StyleRange range2 = new StyleRange(5, 2, blue, null);
+        range2.background = getShell().getDisplay().getSystemColor(SWT.COLOR_YELLOW);
+
+        getText().setStyleRange(range2);
+
+    }
+
+    @Override
+    protected boolean isResizable() {
+        return true;
+    }
+
+    public Git getGit() {
+        return git;
+    }
+
+    public void setGit(Git git) {
+        this.git = git;
+    }
+
+    public StyledText getText() {
+        return text;
+    }
+
+    public void setText(StyledText text) {
+        this.text = text;
+    }
+
+    public IJavaProject getSelection() {
+        return selection;
+    }
+
+    public void setSelection(IJavaProject selection) {
+        this.selection = selection;
+    }
+
+    public JavaViewer getEditor() {
+        return editor;
+    }
+
+    public void setEditor(JavaViewer editor) {
+        this.editor = editor;
+    }
+
+    public ListSelectionDialog getListSelectionDialog() {
+        return listSelectionDialog;
+    }
+
+    public void setListSelectionDialog(ListSelectionDialog listSelectionDialog) {
+        this.listSelectionDialog = listSelectionDialog;
+    }
+
+    public TreeMap<MethodStereotype, Integer> getSignatureMap() {
+        return signatureMap;
+    }
+
+    public void setSignatureMap(TreeMap<MethodStereotype, Integer> signatureMap) {
+        this.signatureMap = signatureMap;
+    }
+
+    public Text getAuthorText() {
+        return previousVersionText;
+    }
+
+    public void setAuthorText(Text authorText) {
+        this.previousVersionText = authorText;
+    }
+
+    public Text getCommitterText() {
+        return currentVersionText;
+    }
+
+    public void setCommitterText(Text committerText) {
+        this.currentVersionText = committerText;
+    }
 }

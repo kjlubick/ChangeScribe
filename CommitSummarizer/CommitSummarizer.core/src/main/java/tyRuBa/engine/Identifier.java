@@ -5,47 +5,46 @@ package tyRuBa.engine;
 
 import java.io.Serializable;
 
-
 /**
- * Subclasses of Identifier stores a name and an arity. These objects are used to identify 
- * functors, predicates, etc.
+ * Subclasses of Identifier stores a name and an arity. These objects are used to identify functors, predicates, etc.
  */
 public abstract class Identifier implements Serializable {
 
     protected String name;
+
     protected int arity;
 
-    public Identifier(String name,int arity) {
+    public Identifier(String name, int arity) {
         this.name = name;
         this.arity = arity;
     }
 
     @Override
     public boolean equals(Object arg) {
-    	if (arg.getClass().equals(this.getClass())) {
-    	    Identifier other = (Identifier) arg;
-    		return name.equals(other.name) && arity == other.arity;
-    	} else {
-    		return false;
-    	}
+        if (arg.getClass().equals(this.getClass())) {
+            Identifier other = (Identifier) arg;
+            return name.equals(other.name) && arity == other.arity;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int hashCode() {
-    	return getClass().hashCode() * arity + name.hashCode();
+        return getClass().hashCode() * arity + name.hashCode();
     }
 
     @Override
     public String toString() {
-    	return name + "/" + arity;
+        return name + "/" + arity;
     }
 
     public int getArity() {
-    	return arity;
+        return arity;
     }
 
     public String getName() {
-    	return name;
+        return name;
     }
 
 }

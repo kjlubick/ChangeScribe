@@ -6,10 +6,11 @@
 package tyRuBa.modes;
 
 abstract public class BindingMode {
-	
-	public abstract boolean isBound();
-	public abstract boolean isFree();
 
-	public abstract boolean satisfyBinding(BindingMode mode);
-	
+    public abstract boolean isBound();
+
+    public abstract boolean isFree();
+
+    public abstract boolean satisfyBinding(BindingMode mode);
+
 }

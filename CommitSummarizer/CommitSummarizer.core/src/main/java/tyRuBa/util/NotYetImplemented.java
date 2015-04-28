@@ -11,8 +11,8 @@ package tyRuBa.util;
  */
 public class NotYetImplemented extends Error {
 
-	public NotYetImplemented(String s) {
-		super("Not yet implemented:"+s);
-	}
+    public NotYetImplemented(String s) {
+        super("Not yet implemented:" + s);
+    }
 
 }

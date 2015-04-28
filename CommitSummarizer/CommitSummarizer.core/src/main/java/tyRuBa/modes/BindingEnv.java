@@ -14,36 +14,37 @@ import tyRuBa.engine.RBVariable;
 
 public class BindingEnv extends Hashtable implements Cloneable {
 
-	public BindingMode getBindingMode(RBVariable var) {
-		return (BindingMode)get(var);
-	}
-	
-	public BindingMode putBindingMode(RBVariable var, BindingMode bindingmode) {
-		return (BindingMode)put(var, bindingmode);
-	}
-	
-	@Override
-    public Object clone() {
-		BindingEnv cl = (BindingEnv) super.clone();
-		return cl;
-	}
+    public BindingMode getBindingMode(RBVariable var) {
+        return (BindingMode) get(var);
+    }
 
-	/** return a BindingEnv containing only RBVariables that are bound in
-	 *  both this and other */
-	public BindingEnv intersection(BindingEnv other) {
-		BindingEnv result = (BindingEnv) this.clone();
-		for (Iterator iter = result.keySet().iterator(); iter.hasNext();) {
-			RBVariable var = (RBVariable) iter.next();
-			if (!other.isBound(var)) {
-				iter.remove();
-			}
-		}
-		return result;
-	}
-	
-	public boolean isBound(RBVariable var) {
-		BindingMode result = getBindingMode(var);
-		return (result != null);
-	}
-	
+    public BindingMode putBindingMode(RBVariable var, BindingMode bindingmode) {
+        return (BindingMode) put(var, bindingmode);
+    }
+
+    @Override
+    public Object clone() {
+        BindingEnv cl = (BindingEnv) super.clone();
+        return cl;
+    }
+
+    /**
+     * return a BindingEnv containing only RBVariables that are bound in both this and other
+     */
+    public BindingEnv intersection(BindingEnv other) {
+        BindingEnv result = (BindingEnv) this.clone();
+        for (Iterator iter = result.keySet().iterator(); iter.hasNext();) {
+            RBVariable var = (RBVariable) iter.next();
+            if (!other.isBound(var)) {
+                iter.remove();
+            }
+        }
+        return result;
+    }
+
+    public boolean isBound(RBVariable var) {
+        BindingMode result = getBindingMode(var);
+        return (result != null);
+    }
+
 }

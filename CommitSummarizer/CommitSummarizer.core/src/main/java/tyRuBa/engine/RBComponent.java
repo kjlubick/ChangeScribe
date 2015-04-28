@@ -9,71 +9,64 @@ import tyRuBa.modes.PredicateMode;
 import tyRuBa.modes.TupleType;
 import tyRuBa.modes.TypeModeError;
 
-/** 
- * Anything which can be inserted into a rulebase must be a
-  RB component. Basically this is anything which knows how to unify itself
-  with RBTerms.
-
-  An RBComponent is something which is interpretable as a set of propositions
-  in some or other way.
-  */
+/**
+ * Anything which can be inserted into a rulebase must be a RB component. Basically this is anything which knows how to unify itself with RBTerms.
+ * 
+ * An RBComponent is something which is interpretable as a set of propositions in some or other way.
+ */
 
 public abstract class RBComponent {
-	
-	/** This method may return null for components (like rules)
-	 * that have not yet been mode converted.
-	 */
-	public abstract Mode getMode();
-	
-	/** Functional (side effect free) append of two RBComponents 
-	public RBComponent append(RBComponent other,RuleBase parent) {
-		RBComponentVector result = new RBComponentVector(parent);
-		result.insert(this);
-		result.insert(other);
-		return result.simplify();
-	}
-	*/
 
-	/** make the union of two components (concatenate them) */
-//	public RBComponent union(RBComponent other) {
-//		return RBUnion.make(this,other);
-//	}
+    /**
+     * This method may return null for components (like rules) that have not yet been mode converted.
+     */
+    public abstract Mode getMode();
 
-//	/** Is this a null component ? */
-//	public boolean isNull() {
-//		return false;
-//	}
+    /**
+     * Functional (side effect free) append of two RBComponents public RBComponent append(RBComponent other,RuleBase parent) { RBComponentVector result = new
+     * RBComponentVector(parent); result.insert(this); result.insert(other); return result.simplify(); }
+     */
 
-	public abstract TupleType typecheck(PredInfoProvider predinfos) throws TypeModeError;
-	
-	public abstract RBComponent convertToMode(PredicateMode mode,
-	ModeCheckContext context) throws TypeModeError;
+    /** make the union of two components (concatenate them) */
+    // public RBComponent union(RBComponent other) {
+    // return RBUnion.make(this,other);
+    // }
 
-	public abstract PredicateIdentifier getPredId();
+    // /** Is this a null component ? */
+    // public boolean isNull() {
+    // return false;
+    // }
 
-	public String getPredName() {
-		return getPredId().getName();
-	}
+    public abstract TupleType typecheck(PredInfoProvider predinfos) throws TypeModeError;
 
-	public abstract RBTuple getArgs();
+    public abstract RBComponent convertToMode(PredicateMode mode,
+            ModeCheckContext context) throws TypeModeError;
 
-	public RBComponent convertToNormalForm() {
-		return this;
-	}
+    public abstract PredicateIdentifier getPredId();
 
-	public boolean isGroundFact() {
-		return false; // must be overriden by RBFact!
-	}
+    public String getPredName() {
+        return getPredId().getName();
+    }
 
-	public boolean isValid() {
-		// All components are always valid... except for ValidatorComponents.
-		return true;
-	}
-	
-	public abstract Compiled compile(CompilationContext c);
+    public abstract RBTuple getArgs();
+
+    public RBComponent convertToNormalForm() {
+        return this;
+    }
+
+    public boolean isGroundFact() {
+        return false; // must be overriden by RBFact!
+    }
+
+    public boolean isValid() {
+        // All components are always valid... except for ValidatorComponents.
+        return true;
+    }
+
+    public abstract Compiled compile(CompilationContext c);
 
     public Validator getValidator() {
         return null;
     }
-	
+
 }

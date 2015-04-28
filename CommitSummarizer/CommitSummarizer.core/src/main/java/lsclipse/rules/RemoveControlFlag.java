@@ -13,48 +13,52 @@ import tyRuBa.tdbc.ResultSet;
 import tyRuBa.tdbc.TyrubaException;
 
 public class RemoveControlFlag implements Rule {
-	private static final String CONDITION = "?condition";
-	private static final String EXPRESSION = "?expression";
-	private static final String IDENTIFIER = "?identifier";
-	private static final String M_FULL_NAME = "?mFullName";
-	private String name_;
+    private static final String CONDITION = "?condition";
 
-	public RemoveControlFlag() {
-		name_ = "remove_control_flag";
-	}
+    private static final String EXPRESSION = "?expression";
 
-	@Override
-	public String getName() {
-		return name_;
-	}
+    private static final String IDENTIFIER = "?identifier";
 
-	@Override
-	public String getRefactoringString() {
-		return getName() + "(" + IDENTIFIER + "," + M_FULL_NAME + ")";
-	}
+    private static final String M_FULL_NAME = "?mFullName";
 
-	@Override
-	public RefactoringQuery getRefactoringQuery() {
-		return new RefactoringQuery(getName(), getQueryString());
-	}
+    private String name_;
 
-	private String getQueryString() {
-		return "deleted_localvar(" + M_FULL_NAME + ",\"boolean\"," + IDENTIFIER
-				+ "," + EXPRESSION + "),deleted_conditional(" + CONDITION
-				+ ",?,?," + M_FULL_NAME + "),NOT(added_conditional("
-				+ CONDITION + ",?,?," + M_FULL_NAME + "))";
-	}
+    public RemoveControlFlag() {
+        name_ = "remove_control_flag";
+    }
 
-	@Override
-	public String checkAdherence(ResultSet rs) throws TyrubaException {
-		String condition = rs.getString(CONDITION);
-		String identifier = rs.getString(IDENTIFIER);
+    @Override
+    public String getName() {
+        return name_;
+    }
 
-		if (!condition.contains(identifier))
-			return null;
+    @Override
+    public String getRefactoringString() {
+        return getName() + "(" + IDENTIFIER + "," + M_FULL_NAME + ")";
+    }
 
-		return getName() + "(\"" + identifier + "\",\""
-				+ rs.getString(M_FULL_NAME) + "\")";
-	}
+    @Override
+    public RefactoringQuery getRefactoringQuery() {
+        return new RefactoringQuery(getName(), getQueryString());
+    }
+
+    private String getQueryString() {
+        return "deleted_localvar(" + M_FULL_NAME + ",\"boolean\"," + IDENTIFIER
+                + "," + EXPRESSION + "),deleted_conditional(" + CONDITION
+                + ",?,?," + M_FULL_NAME + "),NOT(added_conditional("
+                + CONDITION + ",?,?," + M_FULL_NAME + "))";
+    }
+
+    @Override
+    public String checkAdherence(ResultSet rs) throws TyrubaException {
+        String condition = rs.getString(CONDITION);
+        String identifier = rs.getString(IDENTIFIER);
+
+        if (!condition.contains(identifier))
+            return null;
+
+        return getName() + "(\"" + identifier + "\",\""
+                + rs.getString(M_FULL_NAME) + "\")";
+    }
 
 }

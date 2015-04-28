@@ -10,8 +10,8 @@ import tyRuBa.engine.Validator;
 import tyRuBa.engine.factbase.ValidatorManager;
 
 /**
- * A part of a fact that resides in an Index. Has two parts, a RBTuple and a
- * validatorHandle
+ * A part of a fact that resides in an Index. Has two parts, a RBTuple and a validatorHandle
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -55,7 +55,9 @@ public class IndexValue implements Serializable {
 
     /**
      * Checks whether this value is valid.
-     * @param vm ValidatorManager that to use to validate.
+     * 
+     * @param vm
+     *            ValidatorManager that to use to validate.
      */
     public boolean isValid(ValidatorManager vm) {
         if (validatorHandle == 0) {
@@ -70,9 +72,10 @@ public class IndexValue implements Serializable {
     }
 
     /**
-     * Prepends the specified tuple to the tuple that is stored in the
-     * IndexValue.
-     * @param tuple RBTuple to prepend.
+     * Prepends the specified tuple to the tuple that is stored in the IndexValue.
+     * 
+     * @param tuple
+     *            RBTuple to prepend.
      */
     public IndexValue prepend(RBTuple tuple) {
         return new IndexValue(validatorHandle, tuple.append(parts));
@@ -80,7 +83,7 @@ public class IndexValue implements Serializable {
 
     @Override
     public String toString() {
-    		return parts.toString();
+        return parts.toString();
     }
-    
+
 }

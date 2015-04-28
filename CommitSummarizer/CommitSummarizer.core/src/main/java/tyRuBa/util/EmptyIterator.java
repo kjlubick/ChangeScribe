@@ -6,28 +6,28 @@ import java.util.NoSuchElementException;
 /**
  * @author wannop
  *
- * An empty iterator. Now uses the standardized Iterator exceptions.
+ *         An empty iterator. Now uses the standardized Iterator exceptions.
  */
 public class EmptyIterator implements Iterator {
 
-	public static final EmptyIterator the = new EmptyIterator();
+    public static final EmptyIterator the = new EmptyIterator();
 
-	private EmptyIterator() {
-		super();
-	}
+    private EmptyIterator() {
+        super();
+    }
 
-	@Override
+    @Override
     public boolean hasNext() {
-		return false;
-	}
+        return false;
+    }
 
-	@Override
+    @Override
     public Object next() {
-		throw new NoSuchElementException();
-	}
+        throw new NoSuchElementException();
+    }
 
-	@Override
+    @Override
     public void remove() {
-		throw new IllegalStateException();
-	}
+        throw new IllegalStateException();
+    }
 }

@@ -9,6 +9,7 @@ import tyRuBa.util.pager.Pager.ResourceId;
 
 /**
  * Represents a location on disk
+ * 
  * @category FactBase
  * @author riecken
  */
@@ -64,10 +65,10 @@ public class FileLocation extends Location {
     public ResourceId getResourceID(String relativeID) {
         return new FileResourceID(this, relativeID);
     }
-    
+
     @Override
     public String toString() {
-    		return base.toString();
+        return base.toString();
     }
 
 }

@@ -15,88 +15,89 @@ import co.edu.unal.colswe.changescribe.core.ast.ProjectInformation;
 import co.edu.unal.colswe.changescribe.core.git.ChangedFile.TypeChange;
 
 public class SCMRepository {
-	
-	private Git git;
-	private Repository repository;
 
-	public SCMRepository() throws RuntimeException {
-		super();
-		
-		if(ProjectInformation.getSelectedProject() !=  null) {
-			File file = new File(ProjectInformation.getSelectedProject()
-					.getProject().getLocationURI().getPath().toString());
-			try {
-				git = Git.open(file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				if(null == git) {
-					try {
-						git = Git.open(file.getParentFile());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		} else {
-			throw new RuntimeException("You did not select a Java project");
-		}
-	}
-	
-	public Repository getRepository() {
-		return repository;
-	}
-	
-	public Git getGit() {
-		return git;
-	}
-	
-	public Status getStatus() throws NoWorkTreeException, GitAPIException {
-		if(git == null) {
-			throw new GitException("No share this project with Git");
-		}
-		return git.status().call();
-	}
-	
-	public static Set<ChangedFile> getDifferences(Status repositoryStatus, String rootPath) {
-		Set<ChangedFile> differences = new TreeSet<ChangedFile>();
-		
-		for (String string : repositoryStatus.getModified()) {
-			ChangedFile changedFile = new ChangedFile(string, TypeChange.MODIFIED.name(), rootPath);
-			differences.add(changedFile);
-			changedFile.setTypeChange(TypeChange.MODIFIED);
-		}
-		
-		for (String string : repositoryStatus.getAdded()) {
-			ChangedFile changedFile = new ChangedFile(string, TypeChange.ADDED.name(), rootPath);
-			differences.add(changedFile);
-			changedFile.setTypeChange(TypeChange.ADDED);
-		}
-		
-		for (String string : repositoryStatus.getUntracked()) {
-			ChangedFile changedFile = new ChangedFile(string, TypeChange.UNTRACKED.name(), rootPath);
-			differences.add(changedFile);
-			System.out.println("path: " + changedFile.getPath());
-			changedFile.setTypeChange(TypeChange.UNTRACKED);
-		}
-		
-		for	(String string : repositoryStatus.getRemoved()) {
-			ChangedFile changedFile = new ChangedFile(string, TypeChange.REMOVED.name(), rootPath);
-			differences.add(changedFile);
-			changedFile.setTypeChange(TypeChange.REMOVED);
-		}
-		
-		return differences;
-	}
-	
-	public static Set<ChangedFile> getRemovedFiles(Status repositoryStatus, String rootPath) {
-		Set<ChangedFile> differences = new TreeSet<ChangedFile>();
-		for	(String string : repositoryStatus.getRemoved()) {
-			ChangedFile changedFile = new ChangedFile(string, TypeChange.REMOVED.name(), rootPath);
-			differences.add(changedFile);
-			changedFile.setTypeChange(TypeChange.REMOVED);
-		}
-		return differences;
-	}
-	
+    private Git git;
+
+    private Repository repository;
+
+    public SCMRepository() throws RuntimeException {
+        super();
+
+        if (ProjectInformation.getSelectedProject() != null) {
+            File file = new File(ProjectInformation.getSelectedProject()
+                    .getProject().getLocationURI().getPath().toString());
+            try {
+                git = Git.open(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (null == git) {
+                    try {
+                        git = Git.open(file.getParentFile());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            throw new RuntimeException("You did not select a Java project");
+        }
+    }
+
+    public Repository getRepository() {
+        return repository;
+    }
+
+    public Git getGit() {
+        return git;
+    }
+
+    public Status getStatus() throws NoWorkTreeException, GitAPIException {
+        if (git == null) {
+            throw new GitException("No share this project with Git");
+        }
+        return git.status().call();
+    }
+
+    public static Set<ChangedFile> getDifferences(Status repositoryStatus, String rootPath) {
+        Set<ChangedFile> differences = new TreeSet<ChangedFile>();
+
+        for (String string : repositoryStatus.getModified()) {
+            ChangedFile changedFile = new ChangedFile(string, TypeChange.MODIFIED.name(), rootPath);
+            differences.add(changedFile);
+            changedFile.setTypeChange(TypeChange.MODIFIED);
+        }
+
+        for (String string : repositoryStatus.getAdded()) {
+            ChangedFile changedFile = new ChangedFile(string, TypeChange.ADDED.name(), rootPath);
+            differences.add(changedFile);
+            changedFile.setTypeChange(TypeChange.ADDED);
+        }
+
+        for (String string : repositoryStatus.getUntracked()) {
+            ChangedFile changedFile = new ChangedFile(string, TypeChange.UNTRACKED.name(), rootPath);
+            differences.add(changedFile);
+            System.out.println("path: " + changedFile.getPath());
+            changedFile.setTypeChange(TypeChange.UNTRACKED);
+        }
+
+        for (String string : repositoryStatus.getRemoved()) {
+            ChangedFile changedFile = new ChangedFile(string, TypeChange.REMOVED.name(), rootPath);
+            differences.add(changedFile);
+            changedFile.setTypeChange(TypeChange.REMOVED);
+        }
+
+        return differences;
+    }
+
+    public static Set<ChangedFile> getRemovedFiles(Status repositoryStatus, String rootPath) {
+        Set<ChangedFile> differences = new TreeSet<ChangedFile>();
+        for (String string : repositoryStatus.getRemoved()) {
+            ChangedFile changedFile = new ChangedFile(string, TypeChange.REMOVED.name(), rootPath);
+            differences.add(changedFile);
+            changedFile.setTypeChange(TypeChange.REMOVED);
+        }
+        return differences;
+    }
+
 }

@@ -8,86 +8,88 @@ import tyRuBa.engine.SimpleRuleBaseBucket;
 
 public class ProgressMonitorTest extends TyrubaTest {
 
-	SimpleRuleBaseBucket bucket;
-	SimpleRuleBaseBucket otherBucket;
+    SimpleRuleBaseBucket bucket;
 
-	@Override
+    SimpleRuleBaseBucket otherBucket;
+
+    @Override
     public void setUp() throws Exception {
-		super.setUp(mon);
-		bucket = new SimpleRuleBaseBucket(frontend);
-		otherBucket = new SimpleRuleBaseBucket(frontend);
-	}
+        super.setUp(mon);
+        bucket = new SimpleRuleBaseBucket(frontend);
+        otherBucket = new SimpleRuleBaseBucket(frontend);
+    }
 
-	MyProgressMonitor mon = new MyProgressMonitor();
+    MyProgressMonitor mon = new MyProgressMonitor();
 
-	static class MyProgressMonitor implements ProgressMonitor {
+    static class MyProgressMonitor implements ProgressMonitor {
 
-		private boolean isDone = true;
+        private boolean isDone = true;
 
-		int updates = -99;
-		int expectedWork;
+        int updates = -99;
 
-		@Override
+        int expectedWork;
+
+        @Override
         public void beginTask(String name, int totalWork) {
-			updates = 0;
-			expectedWork = totalWork;
-			if (!isDone)
-				fail("No multi tasking/progressing!");
-			isDone = false;
-			assertTrue(totalWork > 0);
-		}
+            updates = 0;
+            expectedWork = totalWork;
+            if (!isDone)
+                fail("No multi tasking/progressing!");
+            isDone = false;
+            assertTrue(totalWork > 0);
+        }
 
-		@Override
+        @Override
         public void worked(int units) {
-			updates += units;
-		}
+            updates += units;
+        }
 
-		@Override
+        @Override
         public void done() {
-			isDone = true;
-		}
+            isDone = true;
+        }
 
-		public int workDone() {
-			if (!isDone)
-				fail("Hey... the work is not done!");
-			return updates;
-		}
+        public int workDone() {
+            if (!isDone)
+                fail("Hey... the work is not done!");
+            return updates;
+        }
 
-	};
+    };
 
-	public ProgressMonitorTest(String arg0) {
-		super(arg0);
-	}
+    public ProgressMonitorTest(String arg0) {
+        super(arg0);
+    }
 
-	public void testProgressMonitor() throws ParseException, TypeModeError {
-		// This test assumes that buckets are autoUpdated.
-		RuleBase.autoUpdate = true;
+    public void testProgressMonitor() throws ParseException, TypeModeError {
+        // This test assumes that buckets are autoUpdated.
+        RuleBase.autoUpdate = true;
 
-		frontend.parse("foo :: String");
+        frontend.parse("foo :: String");
 
-		frontend.parse("foo(frontend).");
-		otherBucket.addStuff("foo(otherBucket).");
-		bucket.addStuff("foo(bucket).");
+        frontend.parse("foo(frontend).");
+        otherBucket.addStuff("foo(otherBucket).");
+        bucket.addStuff("foo(bucket).");
 
-		test_must_succeed("foo(frontend)");
+        test_must_succeed("foo(frontend)");
 
-		assertEquals(mon.expectedWork, mon.workDone());
+        assertEquals(mon.expectedWork, mon.workDone());
 
-		test_must_succeed("foo(frontend)", otherBucket);
+        test_must_succeed("foo(frontend)", otherBucket);
 
-		otherBucket.clearStuff();
+        otherBucket.clearStuff();
 
-		test_must_succeed("foo(frontend)");
+        test_must_succeed("foo(frontend)");
 
-		assertEquals(mon.expectedWork, mon.workDone());
+        assertEquals(mon.expectedWork, mon.workDone());
 
-		mon.updates = -999;
+        mon.updates = -999;
 
-		test_must_succeed("foo(frontend)", otherBucket);
+        test_must_succeed("foo(frontend)", otherBucket);
 
-		assertEquals(-999, mon.workDone());
-		// monitor should not have been touched!
+        assertEquals(-999, mon.workDone());
+        // monitor should not have been touched!
 
-	}
+    }
 
 }
