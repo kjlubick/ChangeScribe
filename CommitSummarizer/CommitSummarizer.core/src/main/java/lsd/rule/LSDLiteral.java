@@ -276,29 +276,29 @@ public class LSDLiteral {
 
     public int getBindingScore(LSDBinding binding) {
         int i = 0;
-        if (predicate.getSuffix().equalsIgnoreCase("type")) {
+        if ("type".equalsIgnoreCase(predicate.getSuffix())) {
             if (getLocation(binding) == 3)
                 i++;
         }
-        else if (predicate.getSuffix().equalsIgnoreCase("field")) {
+        else if ("field".equalsIgnoreCase(predicate.getSuffix())) {
             if (getLocation(binding) == 3)
                 i++;
         }
-        else if (predicate.getSuffix().equalsIgnoreCase("method")) {
+        else if ("method".equalsIgnoreCase(predicate.getSuffix())) {
             if (getLocation(binding) == 3)
                 i++;
         }
-        else if (predicate.getSuffix().equalsIgnoreCase("subtype"))
+        else if ("subtype".equalsIgnoreCase(predicate.getSuffix()))
         {
             i += 2;
             if (getLocation(binding) == 1)
                 i++;
         }
-        else if (predicate.getSuffix().equalsIgnoreCase("accesses"))
+        else if ("accesses".equalsIgnoreCase(predicate.getSuffix()))
             i++;
-        else if (predicate.getSuffix().equalsIgnoreCase("calls"))
+        else if ("calls".equalsIgnoreCase(predicate.getSuffix()))
             i++;
-        else if (predicate.getSuffix().equalsIgnoreCase("dependency"))
+        else if ("dependency".equalsIgnoreCase(predicate.getSuffix()))
             i += 2;
         return i;
     }

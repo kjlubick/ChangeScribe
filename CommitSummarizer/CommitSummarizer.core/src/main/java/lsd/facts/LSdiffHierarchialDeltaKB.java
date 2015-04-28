@@ -389,11 +389,11 @@ public class LSdiffHierarchialDeltaKB {
                 if (fact != null && fact.getPredicate() != null) {
                     predName = fact.getPredicate().getName();
                 }
-                if (predName.equals("added_field")) {
+                if ("added_field".equals(predName)) {
                     // for all added_field (fieldFullName, ... ,...) => added_field
                     // (fieldFullName)
                     addedField.add(fact);
-                } else if (predName.equals("deleted_field")) {
+                } else if ("deleted_field".equals(predName)) {
                     // for all deleted_field (fieldFullName, ..., ...) =>
                     // deleted_field (fieldFullName)
                     deletedField.add(fact);
@@ -409,8 +409,8 @@ public class LSdiffHierarchialDeltaKB {
                 }
                 counter++;
                 System.out.println(counter + ". \"" + predName + "\":" + fact);
-                if (predName.equals("added_fieldoftype")
-                        || predName.equals("deleted_fieldoftype")) {
+                if ("added_fieldoftype".equals(predName)
+                        || "deleted_fieldoftype".equals(predName)) {
                     // for all fieldoftype (fieldFullName, ..., ...) =>
                     // changed_field (fieldFullName)
                     List<LSDBinding> bindings = fact.getBindings();
@@ -439,10 +439,10 @@ public class LSdiffHierarchialDeltaKB {
             if (fact != null && fact.getPredicate() != null) {
                 predName = fact.getPredicate().getName();
             }
-            if (predName.equals("added_method")) {
+            if ("added_method".equals(predName)) {
                 // for all added_method => added_method
                 addedMethod.add(fact);
-            } else if (predName.equals("deleted_method")) {
+            } else if ("deleted_method".equals(predName)) {
                 // for all deleted_method => deleted_method
                 deletedMethod.add(fact);
             }
@@ -452,8 +452,8 @@ public class LSdiffHierarchialDeltaKB {
             if (fact != null && fact.getPredicate() != null) {
                 predName = fact.getPredicate().getName();
             }
-            if (predName.equals("added_return")
-                    || predName.equals("deleted_return")) {
+            if ("added_return".equals(predName)
+                    || "deleted_return".equals(predName)) {
                 List<LSDBinding> bindings = fact.getBindings();
                 LSDBinding firstBinding = bindings.get(0);
                 LSDFact mmethod = LSDConst.createModifiedMethod(firstBinding
@@ -461,8 +461,8 @@ public class LSdiffHierarchialDeltaKB {
                 if (!containsTheSameFact(addedMethod, deletedMethod, mmethod))
                     modifiedMethod.add(mmethod);
 
-            } else if (predName.equals("deleted_calls")
-                    || predName.equals("added_calls")) {
+            } else if ("deleted_calls".equals(predName)
+                    || "added_calls".equals(predName)) {
                 // for all added_/deleted_calls(caller, calllee) =>
                 // changed_method (caller)
                 List<LSDBinding> bindings = fact.getBindings();
@@ -471,8 +471,8 @@ public class LSdiffHierarchialDeltaKB {
                         .getGroundConst());
                 if (!containsTheSameFact(addedMethod, deletedMethod, mmethod))
                     modifiedMethod.add(mmethod);
-            } else if (predName.equals("added_accesses")
-                    || predName.equals("deleted_accesses")) {
+            } else if ("added_accesses".equals(predName)
+                    || "deleted_accesses".equals(predName)) {
                 // for all added_/deleted_accesses( field, accessor) =>
                 // changed_method
                 // (accessor)
@@ -501,10 +501,10 @@ public class LSdiffHierarchialDeltaKB {
             if (fact != null && fact.getPredicate() != null) {
                 predName = fact.getPredicate().getName();
             }
-            if (predName.equals("added_type")) {
+            if ("added_type".equals(predName)) {
                 // for all added_type => added_type
                 addedType.add(fact);
-            } else if (predName.equals("deleted_type")) {
+            } else if ("deleted_type".equals(predName)) {
                 // for all deleted_type => deleted_type
                 deletedType.add(fact);
             }
@@ -515,7 +515,7 @@ public class LSdiffHierarchialDeltaKB {
             if (fact != null && fact.getPredicate() != null) {
                 predName = fact.getPredicate().getName();
             }
-            if (!predName.equals("")) {
+            if (!"".equals(predName)) {
                 if (predName.endsWith("_typeintype")) {
                     // for all *typeintype(A,B) => changed_type(B)
                     List<LSDBinding> bindings = fact.getBindings();
@@ -602,10 +602,10 @@ public class LSdiffHierarchialDeltaKB {
             if (fact != null && fact.getPredicate() != null) {
                 predName = fact.getPredicate().getName();
             }
-            if (predName.equals("added_package")) {
+            if ("added_package".equals(predName)) {
                 // for all added_package => added_package
                 addedPackage.add(fact);
-            } else if (predName.equals("deleted_package")) {
+            } else if ("deleted_package".equals(predName)) {
                 // for all deleted_package => deleted_package
                 deletedPackage.add(fact);
             }

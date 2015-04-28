@@ -54,30 +54,30 @@ public class CommandLine {
             int start = 0;
             for (int i = start; i < args.length; i++) {
                 if (args[i].charAt(0) == '-') {
-                    if (args[i].equals("-noinit")) {
+                    if ("-noinit".equals(args[i])) {
                         System.err.println("Option -noinit seen...");
                         if (frontend != null)
                             throw new Error("The -noinit option must occur before any file names");
                         loadInitFile = false;
-                    } else if (args[i].equals("-bgpager")) {
+                    } else if ("-bgpager".equals(args[i])) {
                         if (frontend != null)
                             throw new Error("The -bgpager option must occur before any file names");
                         this.backgroundPageCleaning = true;
-                    } else if (args[i].equals("-cachesize")) {
+                    } else if ("-cachesize".equals(args[i])) {
                         this.cachesize = Integer.parseInt(args[++i]);
                         if (frontend != null)
                             frontend.setCacheSize(this.cachesize);
-                    } else if (args[i].equals("-dbdir")) {
+                    } else if ("-dbdir".equals(args[i])) {
                         if (frontend != null)
                             throw new Error("The -dbdir option must occur before any file names");
                         if (dbDir != null)
                             throw new Error("The -dbdir option can only be set once");
                         this.dbDir = new File(args[++i]);
-                    } else if (args[i].equals("-o")) {
+                    } else if ("-o".equals(args[i])) {
                         ensureFrontEnd();
                         frontend.redirectOutput(
                                 new PrintStream(new FileOutputStream(args[++i])));
-                    } else if (args[i].equals("-i")) {
+                    } else if ("-i".equals(args[i])) {
                         System.err.println("Option -i seen...");
                         ensureFrontEnd();
                         boolean keepGoing = false;
@@ -98,29 +98,29 @@ public class CommandLine {
                                         "Type or Mode Error: " + e.getMessage());
                             }
                         } while (keepGoing);
-                    } else if (args[i].equals("-silent")) {
+                    } else if ("-silent".equals(args[i])) {
                         RuleBase.silent = true;
-                    } else if (args[i].equals("-nocache")) {
+                    } else if ("-nocache".equals(args[i])) {
                         if (frontend != null)
                             throw new Error("The -nocache option must occur before any file names");
                         RuleBase.useCache = false;
-                    } else if (args[i].equals("-classpath")) {
+                    } else if ("-classpath".equals(args[i])) {
                         ensureFrontEnd();
                         frontend.parse("classpath(\"" + args[++i] + "\").");
-                    } else if (args[i].equals("-parse")) {
+                    } else if ("-parse".equals(args[i])) {
                         String command = args[++i];
                         while (!(args[i].endsWith(".")))
                             command += " " + args[++i];
                         System.err.println("-parse " + command);
                         frontend.parse(command);
-                    } else if (args[i].equals("-benchmark")) {
+                    } else if ("-benchmark".equals(args[i])) {
                         ensureFrontEnd();
                         String queryfile = args[++i];
                         PerformanceTest test = PerformanceTest.make(frontend, queryfile);
                         frontend.output().println("----- results for tests in " + queryfile + " -------");
                         frontend.output().println(test);
                         // frontend.output().println(PoormansProfiler.profile());
-                    } else if (args[i].equals("-metadata")) {
+                    } else if ("-metadata".equals(args[i])) {
                         ensureFrontEnd();
                         frontend.enableMetaData();
                     } else {

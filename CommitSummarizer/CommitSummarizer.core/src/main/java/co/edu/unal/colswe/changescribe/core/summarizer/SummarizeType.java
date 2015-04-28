@@ -32,7 +32,7 @@ public class SummarizeType {
         localBuilder.append(StereotypeMethodDescriptor.describe(getElement().getStereoSubElements()));
         localBuilder.append(ImpactSetDescriptor.describe(identifier.getCompilationUnit(), getDifferences(), identifier.getScmOperation()) + "\n");
 
-        if (!localBuilder.toString().trim().equals("")) {
+        if (!"".equals(localBuilder.toString().trim())) {
             if (getElement().getStereoSubElements() != null && getElement().getStereoSubElements().size() > 0) {
                 builder.append(". It allows to: \n\n");
             } else {

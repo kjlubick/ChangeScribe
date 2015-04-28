@@ -645,12 +645,12 @@ public class TyRuBaParser implements TyRuBaParserConstants {
         switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk) {
         case IDENTIFIER:
             t = jj_consume_token(IDENTIFIER);
-            if (t.image.equals("B"))
+            if ("B".equals(t.image))
             {
                 if (true)
                     return Factory.makeBound();
             }
-            else if (t.image.equals("F") || t.image.equals("FREE"))
+            else if ("F".equals(t.image) || "FREE".equals(t.image))
             {
                 if (true)
                     return Factory.makeFree();

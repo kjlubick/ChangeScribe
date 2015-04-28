@@ -65,7 +65,7 @@ public class ReplaceExceptionWithTest implements Rule {
         String condition = rs.getString(CONDITION);
         String ifBlock = rs.getString(IF_BLOCK);
         String elseBlock = rs.getString(ELSE_BLOCK);
-        if (elseBlock.equals("")) {
+        if ("".equals(elseBlock)) {
             String mBody = rs.getString(M_BODY);
             String firstPart = condition + ")" + ifBlock;
             // Get the rest of the method instead.

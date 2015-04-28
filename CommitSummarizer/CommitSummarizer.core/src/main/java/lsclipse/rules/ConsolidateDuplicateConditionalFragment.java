@@ -30,7 +30,7 @@ public class ConsolidateDuplicateConditionalFragment implements Rule {
         String new_ifPart = rs.getString("?new_ifPart");
         String body = rs.getString("?mbody");
 
-        if (old_elsePart.equals(""))
+        if ("".equals(old_elsePart))
             return null;
         if (similar_fragments(old_elsePart, new_elsePart, body)
                 && similar_fragments(old_ifPart, new_ifPart, body)) {

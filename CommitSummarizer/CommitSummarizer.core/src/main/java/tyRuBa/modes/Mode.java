@@ -104,17 +104,17 @@ public class Mode implements Cloneable {
     }
 
     public static Mode convertFromString(String modeString) {
-        if (modeString.equals("DET")) {
+        if ("DET".equals(modeString)) {
             return makeDet();
-        } else if (modeString.equals("SEMIDET")) {
+        } else if ("SEMIDET".equals(modeString)) {
             return makeSemidet();
-        } else if (modeString.equals("NONDET")) {
+        } else if ("NONDET".equals(modeString)) {
             return makeNondet();
-        } else if (modeString.equals("MULTI")) {
+        } else if ("MULTI".equals(modeString)) {
             return makeMulti();
-        } else if (modeString.equals("FAIL")) {
+        } else if ("FAIL".equals(modeString)) {
             return makeFail();
-        } else if (modeString.equals("ERROR")) {
+        } else if ("ERROR".equals(modeString)) {
             return new ErrorMode("");
         } else {
             throw new Error("unknown mode " + modeString);

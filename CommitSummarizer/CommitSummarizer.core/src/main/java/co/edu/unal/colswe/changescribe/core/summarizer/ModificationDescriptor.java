@@ -143,7 +143,7 @@ public class ModificationDescriptor {
                 } else if (change instanceof Move) {
                 }
 
-                if (!descTmp.toString().equals("") && (change instanceof Update || change instanceof Insert || change instanceof Delete)) {
+                if (!"".equals(descTmp.toString()) && (change instanceof Update || change instanceof Insert || change instanceof Delete)) {
 
                     if (!localDescription.toString().toLowerCase().contains(descTmp.toString().toLowerCase())) {
                         desc.append("\t");
@@ -151,7 +151,7 @@ public class ModificationDescriptor {
                         desc.append(descTmp.toString());
                         localDescription.append(descTmp.toString());
 
-                        if (!descTmp.toString().equals("") && (change instanceof Update || change instanceof Insert || change instanceof Delete)) {
+                        if (!"".equals(descTmp.toString()) && (change instanceof Update || change instanceof Insert || change instanceof Delete)) {
                             desc.append("\n");
                         }
                     }
@@ -160,7 +160,7 @@ public class ModificationDescriptor {
             if (addedRemovedFunctionalities != null && addedRemovedFunctionalities.size() > 0) {
                 describeCollateralChanges(desc);
             }
-            if (!localDescription.toString().equals("")) {
+            if (!"".equals(localDescription.toString())) {
                 if (changes != null && changes.size() > 0) {
                     desc.insert(0, "Modifications to " + file.getName() + ":  \n\n");
                 }
@@ -229,7 +229,7 @@ public class ModificationDescriptor {
                 desc.append(" at " + delete.getRootEntity().getJavaStructureNode().getName() + " " + delete.getRootEntity().getJavaStructureNode().getType().name().toLowerCase());
             } else if (delete.getChangedEntity().getAstNode() != null && delete.getChangedEntity().getAstNode() instanceof IfStatement) {
                 desc.append(" statement ");
-                if (!delete.getRootEntity().getJavaStructureNode().getName().equals("")) {
+                if (!"".equals(delete.getRootEntity().getJavaStructureNode().getName())) {
                     desc.append(" at " + delete.getRootEntity().getJavaStructureNode().getName() + " "
                             + delete.getRootEntity().getJavaStructureNode().getType().name().toLowerCase());
                 }
@@ -300,7 +300,7 @@ public class ModificationDescriptor {
             MessageSend methodC = (MessageSend) insert.getChangedEntity().getAstNode();
             String referencedObject = "";
             String object = "";
-            if (methodC.receiver.toString().equals("")) {
+            if ("".equals(methodC.receiver.toString())) {
                 referencedObject = " to local method ";
             } else {
                 referencedObject = " to method ";
@@ -375,7 +375,7 @@ public class ModificationDescriptor {
             hasLeadingVerb = PhraseUtils.hasLeadingVerb(tags.get(0));
         }
 
-        if (method != null && method.returnType != null && !method.returnType.toString().equals("") && !method.returnType.toString().equals("void") && !hasLeadingVerb) {
+        if (method != null && method.returnType != null && !"".equals(method.returnType.toString()) && !"void".equals(method.returnType.toString()) && !hasLeadingVerb) {
             verb = "get";
             NounPhrase nounPhrase = new NounPhrase(Tokenizer.split(functionality));
             phrase = new VerbPhrase(verb, nounPhrase);
@@ -390,16 +390,16 @@ public class ModificationDescriptor {
                 localDescriptor.append(" private ");
             }
             if (change.getChangedEntity() != null && change.getChangedEntity().isPrivate() &&
-                    operation.equals("Remove") && isUnUsedMethod(change)) {
+                    "Remove".equals(operation) && isUnUsedMethod(change)) {
                 localDescriptor.append("and ");
             }
-            if (operation.equals("Remove") && isUnUsedMethod(change)) {
+            if ("Remove".equals(operation) && isUnUsedMethod(change)) {
                 localDescriptor.append(" unused ");
             }
             localDescriptor.insert(0, " " + PhraseUtils.getIndefiniteArticle(localDescriptor.toString().trim()));
             localDescriptor.insert(0, operation);
             localDescriptor.append(" functionality to " + phrase.toString());
-            if (method.returnType != null && !method.returnType.toString().equals("") && !method.returnType.toString().equals("void") && !hasLeadingVerb) {
+            if (method.returnType != null && !"".equals(method.returnType.toString()) && !"void".equals(method.returnType.toString()) && !hasLeadingVerb) {
                 localDescriptor.append(" (");
                 localDescriptor.append("" + method.returnType.toString());
                 localDescriptor.append(")");
@@ -417,7 +417,7 @@ public class ModificationDescriptor {
     public void describeUpdate(StringBuilder desc,
             SourceCodeChange change, Update update) {
         String fType = "Modify " + update.getChangedEntity().getType().name().toLowerCase().replace("_", " ");
-        if (fType.equals("Modify variable declaration statement")) {
+        if ("Modify variable declaration statement".equals(fType)) {
             fType = "Modify variable declaration ";
         }
         if (update.getChangeType() == ChangeType.STATEMENT_UPDATE) {
@@ -428,13 +428,13 @@ public class ModificationDescriptor {
                 MessageSend methodN = (MessageSend) update.getNewEntity().getAstNode();
 
                 if (!methodC.receiver.toString().equals(methodN.receiver.toString())) {
-                    String receiverA = (!methodC.receiver.toString().equals("")) ? new String(methodC.receiver.toString()) : new String(methodC.selector);
+                    String receiverA = (!"".equals(methodC.receiver.toString())) ? new String(methodC.receiver.toString()) : new String(methodC.selector);
                     // String receiverB = (!methodN.receiver.toString().equals("")) ? new String(methodN.receiver.toString()) : new String(methodN.selector);
                     desc.append(" " + receiverA + " at " + update.getRootEntity().getJavaStructureNode().getName() + " method");
                 } else if (!(new String(methodC.selector)).equals((new String(methodN.selector)))) {
                     desc.append(new String(methodC.selector) + " at " + update.getParentEntity().getName() + " method");
                 } else if (!methodC.arguments.equals(methodN.arguments)) {
-                    String name = !(new String(methodC.selector)).equals("") ? (new String(methodC.selector)) : methodC.receiver.toString();
+                    String name = !"".equals((new String(methodC.selector))) ? (new String(methodC.selector)) : methodC.receiver.toString();
                     String methodName = update.getRootEntity().getUniqueName()
                             .substring(update.getRootEntity().getUniqueName().lastIndexOf(".") + 1, update.getRootEntity().getUniqueName().length());
                     desc.replace(desc.lastIndexOf(fType), desc.lastIndexOf(fType) + fType.length(), "");
@@ -447,12 +447,12 @@ public class ModificationDescriptor {
 
                 if (asC.lhs != asN.lhs) {
                     desc.append(" of " + new String(asC.lhs.toString()) + " type");
-                    if (!update.getParentEntity().getName().equals("")) {
+                    if (!"".equals(update.getParentEntity().getName())) {
                         desc.append(" at " + update.getParentEntity().getName() + " method");
                     }
                 } else if (asC.expression != asN.expression) {
                     desc.append(" of " + new String(asC.expression.toString()) + " to " + new String(asN.expression.toString()));
-                    if (!update.getParentEntity().getName().equals("")) {
+                    if (!"".equals(update.getParentEntity().getName())) {
                         desc.append(" at " + update.getParentEntity().getName() + " method");
                     }
 
@@ -482,7 +482,7 @@ public class ModificationDescriptor {
                     name = update.getChangedEntity().getName();
                 }
                 desc.append(StringUtils.capitalize(fType) + " " + name);
-                if (!update.getParentEntity().getName().equals("")) {
+                if (!"".equals(update.getParentEntity().getName())) {
                     desc.append(" at " + update.getParentEntity().getName() + " method");
                 }
             }
@@ -502,7 +502,7 @@ public class ModificationDescriptor {
                     System.out.println("hola");
                 }
             } else {
-                String name = (!update.getChangedEntity().getName().equals("")) ? update.getChangedEntity().getName() : update.getChangedEntity().getAstNode().toString();
+                String name = (!"".equals(update.getChangedEntity().getName())) ? update.getChangedEntity().getName() : update.getChangedEntity().getAstNode().toString();
                 desc.append("Change attribute type " + name + " with " + update.getNewEntity().getUniqueName().toString());
             }
         } else if (update.getChangeType() == ChangeType.CONDITION_EXPRESSION_CHANGE) {
@@ -592,7 +592,7 @@ public class ModificationDescriptor {
             Annotation[] annotations = ((ConstructorDeclaration) insert.getChangedEntity().getAstNode()).annotations;
             if (annotations != null && annotations.length > 0) {
                 for (Annotation annotation : annotations) {
-                    if (annotation.type.toString().equals("Deprecated")) {
+                    if ("Deprecated".equals(annotation.type.toString())) {
                         desc.append("deprecated ");
                         break;
                     }

@@ -56,7 +56,7 @@ public class LSD2KBMatches {
                 String line = null;
                 while ((line = in.readLine()) != null) {
 
-                    if (line.trim().equals(""))
+                    if ("".equals(line.trim()))
                         continue;
                     else if (line.trim().charAt(0) == '#') {
                         continue;

@@ -149,7 +149,7 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent event) {
-                if (event.getProperty().equals(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE)) {
+                if (PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE.equals(event.getProperty())) {
                     if (getShell() != null) {
                         getShell().redraw();
                         getShell().layout();
@@ -588,7 +588,7 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 
             @Override
             public void widgetSelected(SelectionEvent arg0) {
-                if (!validateCommit().equals("")) {
+                if (!"".equals(validateCommit())) {
                     MessageDialog.openWarning(getShell(), "Error", validateCommit());
                 } else {
                     computeModifications();
@@ -686,20 +686,20 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
                     changedFile.setName(name);
                     changedFile.setAbsolutePath(diffEntry.getNewPath() != null ? projectName + "/" + diffEntry.getNewPath() : projectName + "/" + diffEntry.getOldPath());
                     changedFile.setPath(changedFile.getAbsolutePath());
-                    if (diffEntry.getChangeType().name().equals("RENAME")) {
+                    if ("RENAME".equals(diffEntry.getChangeType().name())) {
                         changedFile.setRenamedPath(diffEntry.getOldPath());
                         changedFile.setRenamed(true);
                         changedFile.setChangeType(TypeChange.ADDED.name());
                         changedFile.setTypeChange(TypeChange.ADDED);
-                    } else if (diffEntry.getChangeType().name().equals("MODIFY")) {
+                    } else if ("MODIFY".equals(diffEntry.getChangeType().name())) {
                         changedFile.setRenamed(false);
                         changedFile.setChangeType(TypeChange.MODIFIED.name());
                         changedFile.setTypeChange(TypeChange.MODIFIED);
-                    } else if (diffEntry.getChangeType().name().equals("ADD")) {
+                    } else if ("ADD".equals(diffEntry.getChangeType().name())) {
                         changedFile.setRenamed(false);
                         changedFile.setChangeType(TypeChange.ADDED.name());
                         changedFile.setTypeChange(TypeChange.ADDED);
-                    } else if (diffEntry.getChangeType().name().equals("REMOVE") || diffEntry.getChangeType().name().equals("DELETE")) {
+                    } else if ("REMOVE".equals(diffEntry.getChangeType().name()) || "DELETE".equals(diffEntry.getChangeType().name())) {
                         changedFile.setRenamed(false);
                         changedFile.setChangeType(TypeChange.REMOVED.name());
                         changedFile.setTypeChange(TypeChange.REMOVED);
@@ -766,17 +766,17 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
         DiffEntry renamedEntry = null;
         for (DiffEntry diffEntryRenamed : lde) {
             if (diffEntryRenamed.getScore() >= 90) {
-                if (diffEntry.getChangeType().name().equals("ADD")) {
+                if ("ADD".equals(diffEntry.getChangeType().name())) {
                     if (diffEntry.getNewPath().equals(diffEntryRenamed.getNewPath())) {
                         renamedEntry = diffEntryRenamed;
                         break;
                     }
-                } else if (diffEntry.getChangeType().name().equals("REMOVE")) {
+                } else if ("REMOVE".equals(diffEntry.getChangeType().name())) {
                     if (diffEntry.getOldPath().equals(diffEntryRenamed.getOldPath())) {
                         renamedEntry = diffEntryRenamed;
                         break;
                     }
-                } else if (diffEntry.getChangeType().name().equals("RENAME")) {
+                } else if ("RENAME".equals(diffEntry.getChangeType().name())) {
                     if (diffEntry.getOldPath().equals(diffEntryRenamed.getOldPath())) {
                         renamedEntry = diffEntryRenamed;
                         break;

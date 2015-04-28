@@ -522,9 +522,9 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
         int dex = nodeStr.indexOf(' ');
         if (dex >= 0) {
             String temp = nodeStr.substring(0, dex);
-            if (temp.equals("public"))
+            if ("public".equals(temp))
                 modifier = "public";
-            else if (temp.equals("private"))
+            else if ("private".equals(temp))
                 modifier = "private";
         }
         // make method fact
@@ -622,7 +622,7 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
         try {
             // special case: if field access is on length field of an array,
             // ignore
-            if (node.getName().toString().equals("length")
+            if ("length".equals(node.getName().toString())
                     && ivb.getDeclaringClass() == null) {
                 // continue
             } else { // otherwise proceed as normal
@@ -659,7 +659,7 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
              * System.err.println("Cannot resolve simple name \"" +node.getFullyQualifiedName().toString()+"\""); return false; }
              */
         } else if (!mtbStack.isEmpty()) {
-            if (node.getIdentifier().equals("length"))
+            if ("length".equals(node.getIdentifier()))
                 return false;
             try {
                 return visitName(node.resolveBinding(), mtbStack.peek());
@@ -677,7 +677,7 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
         if (mtbStack.isEmpty() && !itbStack.isEmpty()) { // not part of a method
             return false;
         } else if (!mtbStack.isEmpty()) {
-            if (node.getName().getIdentifier().equals("length")) {
+            if ("length".equals(node.getName().getIdentifier())) {
                 return true;
             }
             try {

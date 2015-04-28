@@ -55,7 +55,7 @@ public class LSDAlchemyRuleReader {
                 String line = null;
                 while ((line = in.readLine()) != null) {
 
-                    if (line.trim().equals("") || line.trim().charAt(0) == '#')
+                    if ("".equals(line.trim()) || line.trim().charAt(0) == '#')
                         continue;
                     LSDRule rule = parseAlchemyRule(line);
                     rs.add(rule);
@@ -93,7 +93,7 @@ public class LSDAlchemyRuleReader {
         // (2) A v B v C v ...
         String ruleString = line.substring(line.indexOf('\t') + 1).trim(); // Assume '/t' iff it is the 1st char after junk at beginning of rule.
         // [!]predicate '(' args ')' {v,^,=>} (repeat)
-        while (!ruleString.equals(""))
+        while (!"".equals(ruleString))
         {
 
             boolean negated = false;
@@ -120,7 +120,7 @@ public class LSDAlchemyRuleReader {
             }
             String arguments = ruleString.substring(0, endOfArgs).trim();
             ruleString = ruleString.substring(endOfArgs + 1).trim();
-            if (ruleString.equals(""))
+            if ("".equals(ruleString))
             {
                 // We're done, don't need to switch negation.
             }

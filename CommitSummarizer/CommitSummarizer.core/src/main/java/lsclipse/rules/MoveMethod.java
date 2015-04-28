@@ -64,7 +64,7 @@ public class MoveMethod implements Rule {
     @Override
     public String checkAdherence(ResultSet rs) throws TyrubaException {
         String mShortName = rs.getString(M_SHORT_NAME);
-        if (mShortName.equals("<init>()"))
+        if ("<init>()".equals(mShortName))
             return null;
 
         String newmBody_str = rs.getString(M2_BODY);

@@ -155,7 +155,7 @@ public class FilesChangedListDialog extends TitleAreaDialog {
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent event) {
-                if (event.getProperty().equals(PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE)) {
+                if (PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE.equals(event.getProperty())) {
                     if (getShell() != null) {
                         getShell().redraw();
                         getShell().layout();
@@ -385,7 +385,7 @@ public class FilesChangedListDialog extends TitleAreaDialog {
         if (!isCommitWithoutFilesAllowed()) {
             MessageDialog.openWarning(getShell(), "No files selected", "You do not selected files to be commited");
             return;
-        } else if (!validateCommit().equals("")) {
+        } else if (!"".equals(validateCommit())) {
             MessageDialog.openWarning(getShell(), "Error", validateCommit());
             return;
         }

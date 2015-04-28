@@ -187,7 +187,7 @@ public class Utils {
 
     public static String cleanRelativePath(String path) {
         String newPath = path;
-        if (!System.getProperty("path.separator").equals("\\")) {
+        if (!"\\".equals(System.getProperty("path.separator"))) {
             newPath = newPath.replaceAll("/", System.getProperty("file.separator"));
         }
         return newPath;

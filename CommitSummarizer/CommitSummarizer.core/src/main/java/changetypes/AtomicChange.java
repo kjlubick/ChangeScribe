@@ -99,7 +99,7 @@ public class AtomicChange {
             return false;
         for (int i = 0; i < params.size(); ++i) {
             if (!params.get(i).equals(f.params.get(i)) &&
-                    !params.get(i).equals("*") && !f.params.get(i).equals("*"))
+                    !"*".equals(params.get(i)) && !"*".equals(f.params.get(i)))
                 return false;
         }
         return true;

@@ -131,7 +131,7 @@ public class MethodPhraseGenerator implements PhraseGenerator {
             this.phrase = new VerbPhrase("convert", new NounPhrase(dirObj), new NounPhrase(indirObj));
         }
         else if (PhraseUtils.hasLeadingNoun(taggedMethod)) {
-            if (returnType.equals("void") || returnType.equals("boolean")) {
+            if ("void".equals(returnType) || "boolean".equals(returnType)) {
                 this.phrase = new VerbPhrase("handle", new NounPhrase(taggedMethod));
             }
             else {

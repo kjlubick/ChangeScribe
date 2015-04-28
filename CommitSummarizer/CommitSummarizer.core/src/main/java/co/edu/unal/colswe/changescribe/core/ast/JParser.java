@@ -41,9 +41,9 @@ public class JParser {
 
     public JParser(final ICompilationUnit unit) {
         super();
-        final ASTParser parser = ASTParser.newParser(4);
+        final ASTParser parser = ASTParser.newParser(AST.JLS4);
         parser.setResolveBindings(true);
-        parser.setKind(8);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
 
         parser.setSource(unit);
 
@@ -80,7 +80,6 @@ public class JParser {
         this.elements = new ArrayList<ASTNode>();
     }
 
-    @SuppressWarnings("resource")
     private static char[] fileToString(final File file) {
         BufferedReader in = null;
         final StringBuilder buffer = new StringBuilder();
@@ -118,7 +117,7 @@ public class JParser {
                 this.elements.add(this.unit.findDeclaringNode(((IType) this.member).getKey()));
             }
             else if (this.member instanceof IMethod) {
-                final ASTParser parser = ASTParser.newParser(4);
+                final ASTParser parser = ASTParser.newParser(AST.JLS4);
                 parser.setProject(((IMethod) this.member).getJavaProject());
                 parser.setResolveBindings(true);
                 final IBinding binding = parser.createBindings(new IJavaElement[] { (IMethod) this.member }, (IProgressMonitor) null)[0];

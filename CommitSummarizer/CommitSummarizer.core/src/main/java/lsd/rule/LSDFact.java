@@ -114,29 +114,29 @@ public class LSDFact extends LSDLiteral implements Comparable<LSDFact> {
     // FIXME:PREDICATE CONTENT DEPENT
     public String[] getPrimaryConstants() {
         String name = this.getPredicate().getSuffix();
-        if (name.equals("type")) {
+        if ("type".equals(name)) {
             String s[] = { this.bindings.get(0).toString() };
             return s;
-        } else if (name.equals("field")) {
+        } else if ("field".equals(name)) {
             String s[] = { this.bindings.get(0).toString() };
             return s;
-        } else if (name.equals("method")) {
+        } else if ("method".equals(name)) {
             String s[] = { this.bindings.get(0).toString() };
             return s;
-        } else if (name.equals("typeintype")) {
+        } else if ("typeintype".equals(name)) {
             String s[] = { this.bindings.get(0).toString() };
             return s;
-        } else if (name.equals("inheritedmethod")) {
+        } else if ("inheritedmethod".equals(name)) {
             String n = this.bindings.get(0).toString();
             String s[] = { this.bindings.get(1).toString() + "#" + n,
                     this.bindings.get(2).toString() };
             return s;
-        } else if (name.equals("inheritedfield")) {
+        } else if ("inheritedfield".equals(name)) {
             String n = this.bindings.get(0).toString();
             String s[] = { this.bindings.get(1).toString() + "#" + n,
                     this.bindings.get(2).toString() };
             return s;
-        } else if (name.equals("conditional")) {
+        } else if ("conditional".equals(name)) {
             System.out.println("conditional within LSD Fact was called\n");
         }
         String s[] = new String[this.bindings.size()];

@@ -204,7 +204,7 @@ public class PhraseUtils {
     public static int indexOfMiddleTo(LinkedList<TaggedTerm> taggedTerms) {
         for (int i = 0; i < taggedTerms.size(); ++i) {
             final TaggedTerm t = taggedTerms.get(i);
-            if (Tag.isTo(t.getTag()) || t.getTerm().equals("2")) {
+            if (Tag.isTo(t.getTag()) || "2".equals(t.getTerm())) {
                 return i;
             }
         }

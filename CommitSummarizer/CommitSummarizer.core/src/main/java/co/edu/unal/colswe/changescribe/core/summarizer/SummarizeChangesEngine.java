@@ -201,7 +201,7 @@ public class SummarizeChangesEngine {
                         if (i == 1) {
                             desc.append(" This change set is mainly composed of:  \n\n");
                         }
-                        if (currentPackage.trim().equals("")) {
+                        if ("".equals(currentPackage.trim())) {
                             currentPackage = identifier.getValue().getParser().getCompilationUnit().getPackage().getName().getFullyQualifiedName();
                             System.out.println("current 1: " + currentPackage);
                             desc.append(i + ". Changes to package " + currentPackage + ":  \n\n");

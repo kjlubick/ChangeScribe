@@ -135,7 +135,7 @@ public class TestLogger {
 
     public synchronized LogEntry enterLoad(String path) {
         Assert.assertFalse("Reentrant load should not happen", loading);
-        Assert.assertFalse("Load inside storeAll", current.kind.equals("storeAll"));
+        Assert.assertFalse("Load inside storeAll", "storeAll".equals(current.kind));
         loading = true;
         return enter("load", "\"" + path + "\"");
     }

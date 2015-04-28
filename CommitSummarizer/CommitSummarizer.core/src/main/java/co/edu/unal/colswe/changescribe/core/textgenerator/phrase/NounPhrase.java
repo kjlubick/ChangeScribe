@@ -49,7 +49,7 @@ public class NounPhrase extends Phrase {
                 pp.generate();
                 String paramText = pp.toString();
                 if (!argsDescriptor.toLowerCase().contains(paramText.toLowerCase())) {
-                    if (!argsDescriptor.equals("")) {
+                    if (!"".equals(argsDescriptor)) {
                         argsDescriptor += ", ";
                     } else {
                         argsDescriptor = "";
@@ -65,10 +65,10 @@ public class NounPhrase extends Phrase {
     @Override
     public String toString() {
         StringBuilder phrase = new StringBuilder();
-        if (this.phrase != null && !this.phrase.toString().equals("")) {
+        if (this.phrase != null && !"".equals(this.phrase.toString())) {
             phrase.append(this.phrase.toString() + " ");
         }
-        if (this.complementPhrase != null && !this.complementPhrase.toString().equals("")) {
+        if (this.complementPhrase != null && !"".equals(this.complementPhrase.toString())) {
             phrase.append(connector + " " + this.complementPhrase.toString() + " ");
         }
 

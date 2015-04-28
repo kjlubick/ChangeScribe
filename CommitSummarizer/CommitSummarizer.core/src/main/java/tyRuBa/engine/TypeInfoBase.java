@@ -130,13 +130,13 @@ public class TypeInfoBase implements PredInfoProvider {
     }
 
     public TypeConstructor findType(String typeName) {
-        if (typeName.equals("String")
-                || typeName.equals("Integer")
-                || typeName.equals("Number")
-                || typeName.equals("Float"))
+        if ("String".equals(typeName)
+                || "Integer".equals(typeName)
+                || "Number".equals(typeName)
+                || "Float".equals(typeName))
             // ||typeName.equals("Object")) // see TypeConstructor.theAny
             typeName = "java.lang." + typeName;
-        if (typeName.equals("RegExp"))
+        if ("RegExp".equals(typeName))
             typeName = "org.apache.regexp.RE";
         TypeConstructor result = (TypeConstructor) typeConstructorMap.get(typeName + /* arity */"/0");
         if (result == null) {

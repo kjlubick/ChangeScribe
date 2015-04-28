@@ -30,19 +30,19 @@ public class Tag {
     }
 
     public static boolean isThirdPersonVerb(final String tag) {
-        return tag.equals("VBZ");
+        return "VBZ".equals(tag);
     }
 
     public static boolean isPastOrPastPartVerb(final String tag) {
-        return tag.equals("VBD") || tag.equals("VBN");
+        return "VBD".equals(tag) || "VBN".equals(tag);
     }
 
     public static boolean isPrep(final String tag) {
-        return tag.equals("IN") || tag.equals("TO");
+        return "IN".equals(tag) || "TO".equals(tag);
     }
 
     public static boolean isTo(final String tag) {
-        return tag.equals("TO");
+        return "TO".equals(tag);
     }
 
     public static boolean isNoun(final String tag) {
@@ -58,6 +58,6 @@ public class Tag {
     }
 
     public static boolean isPluralNoun(final String tag) {
-        return tag.equals("NNS") || tag.equals("NNPS");
+        return "NNS".equals(tag) || "NNPS".equals(tag);
     }
 }

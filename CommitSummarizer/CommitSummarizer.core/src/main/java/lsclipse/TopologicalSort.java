@@ -713,8 +713,7 @@ public class TopologicalSort {
                 if (currentRule != null) {
                     String result = currentRule.checkAdherence(rs);
                     storeResult(fileName, curr, rs, result);
-                } else if (refactoring.getName().equals(
-                        "self_encapsulate_field")) {
+                } else if ("self_encapsulate_field".equals(refactoring.getName())) {
                     String fieldName = rs.getString("?fFullName");
                     String checkForStragglers = "before_accesses(\""
                             + fieldName + "\", ?mFullName), after_accesses(\""
@@ -913,9 +912,9 @@ public class TopologicalSort {
         for (String q : queries) {
             // This is a paren or punctuation
             if (q.length() < 4) {
-                if (q.equals(","))
+                if (",".equals(q))
                     res.add("AND");
-                else if (q.equals(";"))
+                else if (";".equals(q))
                     res.add("OR");
                 else
                     res.add(q); // paren or NOT
@@ -939,7 +938,7 @@ public class TopologicalSort {
                 if (end < 0)
                     break;
                 String var = q.substring(begin, end);
-                if (var.equals("?")) {
+                if ("?".equals(var)) {
                     // TODO(kprete): replace with "dont care"?
                     // this doesnt work:
                     // newq.replaceFirst("\\?", "X");

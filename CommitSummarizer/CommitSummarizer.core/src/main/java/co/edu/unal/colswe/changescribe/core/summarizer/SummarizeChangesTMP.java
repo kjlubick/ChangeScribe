@@ -230,7 +230,7 @@ public class SummarizeChangesTMP {
                     if (i == 1) {
                         desc.append(" This change set is mainly composed of:  \n\n");
                     }
-                    if (currentPackage.trim().equals("")) {
+                    if ("".equals(currentPackage.trim())) {
                         currentPackage = identifier.getValue().getParser().getCompilationUnit().getPackage().getName().getFullyQualifiedName();
                         System.out.println("current 1: " + currentPackage);
                         desc.append(i + ". Changes to package " + currentPackage + ":  \n\n");
@@ -274,7 +274,7 @@ public class SummarizeChangesTMP {
                                     + identifier.getValue().getChangedFile().getName().replace(".java", "\n\n"));
                         }
                     }
-                    if (!descTmp.toString().equals("")) {
+                    if (!"".equals(descTmp.toString())) {
                         desc.append(descTmp.toString());
                         j++;
                     }
@@ -371,7 +371,7 @@ public class SummarizeChangesTMP {
         File currentType = null;
 
         try {
-            if (changedListDialog.getAuthorText().getText() != null && !changedListDialog.getAuthorText().getText().equals("")) {
+            if (changedListDialog.getAuthorText().getText() != null && !"".equals(changedListDialog.getAuthorText().getText())) {
                 previousType = Utils.getFileContentOfCommitID(file.getPath(), getGit().getRepository(), changedListDialog.getAuthorText().getText());
             } else {
                 previousType = Utils.getFileContentOfLastCommit(file.getPath(), getGit().getRepository());
@@ -592,7 +592,7 @@ public class SummarizeChangesTMP {
     public StereotypeIdentifier getRemovedStereotypeIdentifier(ChangedFile file) {
         try {
             String removedFile = ""; // Utils.getStringContentOfLastCommit(file.getPath(), getGit().getRepository());
-            if (older != null && !older.equals("")) {
+            if (older != null && !"".equals(older)) {
                 removedFile = Utils.getStringContentOfCommitID(file.getPath(), getGit().getRepository(), older);
             } else {
                 removedFile = Utils.getStringContentOfLastCommit(file.getPath(), getGit().getRepository());
@@ -627,7 +627,7 @@ public class SummarizeChangesTMP {
     public StereotypeIdentifier getModifiedStereotypeIdentifier(ChangedFile file) {
         try {
             String removedFile = "";// Utils.getStringContentOfLastCommit(file.getPath(), getGit().getRepository());
-            if (changedListDialog.getAuthorText().getText() != null && !changedListDialog.getAuthorText().getText().equals("")) {
+            if (changedListDialog.getAuthorText().getText() != null && !"".equals(changedListDialog.getAuthorText().getText())) {
                 removedFile = Utils.getStringContentOfCommitID(file.getPath(), getGit().getRepository(), changedListDialog.getAuthorText().getText());
             } else {
                 removedFile = Utils.getStringContentOfLastCommit(file.getPath(), getGit().getRepository());

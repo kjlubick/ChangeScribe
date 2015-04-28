@@ -323,10 +323,10 @@ public class FactBase extends HashSet<Fact> {
                 Set<String> tempOld = new HashSet<String>();
 
                 for (String s : new_params)
-                    if (!s.equals(""))
+                    if (!"".equals(s))
                         tempNew.add(s);
                 for (String s : old_params)
-                    if (!s.equals(""))
+                    if (!"".equals(s))
                         tempOld.add(s);
 
                 if (tempNew.equals(tempOld))
@@ -399,7 +399,7 @@ public class FactBase extends HashSet<Fact> {
         // iterate over types
         for (Fact f : typefacts) {
             boolean found = false;
-            if (f.params.get(3).equals(Fact.INTERFACE))
+            if (Fact.INTERFACE.equals(f.params.get(3)))
                 continue;
             for (Fact f2 : methodfacts) {
                 if (f2.params.get(1).startsWith("<init>(")

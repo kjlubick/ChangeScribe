@@ -21,7 +21,7 @@ public class LSDTyrubaFactReader {
                         new FileReader(inputFile));
                 String line = null;
                 while ((line = in.readLine()) != null) {
-                    if (line.trim().equals("") || line.trim().charAt(0) == '#'
+                    if ("".equals(line.trim()) || line.trim().charAt(0) == '#'
                             || line.trim().startsWith("//"))
                         continue;
                     LSDFact fact = parseTyrubaFact(line);
@@ -68,7 +68,7 @@ public class LSDTyrubaFactReader {
         int endOfArgs = factString.lastIndexOf(')');
         String arguments = factString.substring(0, endOfArgs).trim();
         factString = factString.substring(endOfArgs + 1).trim();
-        if (!factString.equals(".")) {
+        if (!".".equals(factString)) {
             System.err
                     .println("Facts must be in the form 'predicate(const, const, ...).'");
             System.err.println("Line: " + line);

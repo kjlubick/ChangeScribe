@@ -159,7 +159,7 @@ public class VerbPhrase extends Phrase {
         if (this.indirectObject != null) {
             result.append(this.indirectObject);
         }
-        if (this.verb.equals("instantiate") && parameters != null && parameters.size() > 0) {
+        if ("instantiate".equals(this.verb) && parameters != null && parameters.size() > 0) {
             for (Parameter param : parameters) {
                 ParameterPhrase varGen = new ParameterPhrase(param);
                 varGen.generate();

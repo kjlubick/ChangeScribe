@@ -26,13 +26,13 @@ public class GeneralDescriptor {
         if (type.isInterface()) {
             description.append(describeInterface(type) + " ");
         } else {
-            if (interfaces != null && superclass != null && interfaces.length != 0 && !superclass.getKey().equals("Ljava/lang/Object;")) {
+            if (interfaces != null && superclass != null && interfaces.length != 0 && !"Ljava/lang/Object;".equals(superclass.getKey())) {
                 description.append(PhraseUtils.getImplementationDescription(interfaces));
                 description.append(", and ");
                 description.append(PhraseUtils.getExtensionDescription(superclass));
             } else if (interfaces != null && interfaces.length != 0) {
                 description.append(PhraseUtils.getImplementationDescription(interfaces));
-            } else if (superclass != null && !superclass.getKey().equals("Ljava/lang/Object;")) {
+            } else if (superclass != null && !"Ljava/lang/Object;".equals(superclass.getKey())) {
                 description.append(PhraseUtils.getExtensionDescription(superclass));
             } else if (type.isBoundary()) {
                 description.append("boundary class");

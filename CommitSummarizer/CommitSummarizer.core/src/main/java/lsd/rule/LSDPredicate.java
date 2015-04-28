@@ -421,7 +421,7 @@ public class LSDPredicate {
         binding = new LSDBinding(new LSDVariable("b", 't'));
         bindings.add(binding);
         assert false == foo.typeChecks(bindings);
-        assert foo.toString().equals("added_inheritedmethod(m,t,t)");
+        assert "added_inheritedmethod(m,t,t)".equals(foo.toString());
         System.out.println("Predicate tests succeeded.");
     }
 
@@ -466,19 +466,19 @@ public class LSDPredicate {
         String name = this.getName();
         if (name.indexOf("_") > 0)
             name = name.substring(name.indexOf("_") + 1);
-        if (name.equals("type")) {
+        if ("type".equals(name)) {
             return "t".toCharArray();
-        } else if (name.equals("dependency")) {
+        } else if ("dependency".equals(name)) {
             return "t".toCharArray();
-        } else if (name.equals("field")) {
+        } else if ("field".equals(name)) {
             return "f".toCharArray();
-        } else if (name.equals("method")) {
+        } else if ("method".equals(name)) {
             return "m".toCharArray();
-        } else if (name.equals("typeintype")) {
+        } else if ("typeintype".equals(name)) {
             return "t".toCharArray();
-        } else if (name.equals("inheritedmethod")) {
+        } else if ("inheritedmethod".equals(name)) {
             return "mt".toCharArray();
-        } else if (name.equals("inheritedfield")) {
+        } else if ("inheritedfield".equals(name)) {
             return "ft".toCharArray();
         }
         return this.getTypes();
@@ -501,16 +501,16 @@ public class LSDPredicate {
     // FIXME:PREDICATE CONTENT DEPENT
     public int[][] getPrimaryArguments() {
         String name = this.getSuffix();
-        if (name.equals("type")) {
+        if ("type".equals(name)) {
             int s[][] = { { 0 } };// { 1, 2 } };
             return s;
-        } else if (name.equals("field")) {
+        } else if ("field".equals(name)) {
             int s[][] = { { 0 }, { 1, 2 } };
             return s;
-        } else if (name.equals("method")) {
+        } else if ("method".equals(name)) {
             int s[][] = { { 0 }, { 1, 2 } };
             return s;
-        } else if (name.equals("typeintype")) {
+        } else if ("typeintype".equals(name)) {
             int s[][] = { { 0 } };
             return s;
         }
@@ -525,13 +525,13 @@ public class LSDPredicate {
     // FIXME:PREDICATE CONTENT DEPENT
     public int getReferenceArgument() {
         String name = this.getSuffix();
-        if (name.equals("subtype")) {
+        if ("subtype".equals(name)) {
             return 1;
-        } else if (name.equals("accesses")) {
+        } else if ("accesses".equals(name)) {
             return 1;
-        } else if (name.equals("inheritedfield")) {
+        } else if ("inheritedfield".equals(name)) {
             return 2;
-        } else if (name.equals("inheritedmethod")) {
+        } else if ("inheritedmethod".equals(name)) {
             return 2;
         }
         return 0;
@@ -562,7 +562,7 @@ public class LSDPredicate {
         tokenizer = new StringTokenizer(arg, ",", false);
         if (isConclusionPredicate()) {
             String arg0 = tokenizer.nextToken(), arg1, arg2;
-            if (getSuffix().equalsIgnoreCase("typeintype") || getSuffix().equalsIgnoreCase("accesses"))
+            if ("typeintype".equalsIgnoreCase(getSuffix()) || "accesses".equalsIgnoreCase(getSuffix()))
                 arg0 = tokenizer.nextToken();
             if (getSuffix().contains("inherited"))
             {
@@ -587,7 +587,7 @@ public class LSDPredicate {
             // it's a convertable 2kb
             String arg0 = tokenizer.nextToken();
             String arg1 = tokenizer.nextToken();
-            if (getSuffix().equalsIgnoreCase("accesses"))
+            if ("accesses".equalsIgnoreCase(getSuffix()))
             {
                 String temp = arg1;
                 arg1 = arg0;
@@ -629,7 +629,7 @@ public class LSDPredicate {
     }
 
     public boolean isCompatibleMethodLevel() {
-        if (this.getSuffix().equalsIgnoreCase("dependency"))
+        if ("dependency".equalsIgnoreCase(this.getSuffix()))
             return false;
         return true;
     }
