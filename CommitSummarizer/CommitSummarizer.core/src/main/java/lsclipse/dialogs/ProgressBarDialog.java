@@ -74,9 +74,9 @@ public class ProgressBarDialog {
     }
 
     public synchronized void appendLog(String log) {
-        if (txtLog.getLineCount() > 300) {
-            txtLog.getText().substring(1000);
-        }
+//        if (txtLog.getLineCount() > 300) {
+//            txtLog.getText().substring(1000);
+//        }
         txtLog.append(log);
         System.out.print(log);
     }

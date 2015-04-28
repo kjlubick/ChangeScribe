@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -51,10 +52,11 @@ public class JParser {
 
     }
 
+    @SuppressWarnings("deprecation")
     public JParser(final File file) throws CoreException {
         super();
-        final ASTParser parser = ASTParser.newParser(4);
-        parser.setKind(8);
+        final ASTParser parser = ASTParser.newParser(AST.JLS4);        
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setResolveBindings(true);
         parser.setSource(fileToString(file));
 
@@ -81,7 +83,7 @@ public class JParser {
     @SuppressWarnings("resource")
     private static char[] fileToString(final File file) {
         BufferedReader in = null;
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         try {
             in = new BufferedReader(new FileReader(file));
             String line = null;
@@ -92,6 +94,14 @@ public class JParser {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return buffer.toString().toCharArray();

@@ -105,7 +105,8 @@ public class ModedRuleBaseCollection {
         return result;
     }
 
-    public int HashCode() {
+    @Override
+    public int hashCode() {
         return modedRBs.hashCode() * 17 + 4986;
     }
 
