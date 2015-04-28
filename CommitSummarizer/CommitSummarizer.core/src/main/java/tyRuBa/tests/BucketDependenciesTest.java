@@ -24,7 +24,8 @@ public class BucketDependenciesTest extends TyrubaTest {
 		super(arg0);
 	}
 	
-	public void setUp() throws Exception {
+	@Override
+    public void setUp() throws Exception {
 		RuleBase.silent = true;
 		super.setUp();
 		frontend.parse(
@@ -50,7 +51,8 @@ public class BucketDependenciesTest extends TyrubaTest {
 			myID = bucketID;
 		}
 
-		protected void update() throws TypeModeError, ParseException {
+		@Override
+        protected void update() throws TypeModeError, ParseException {
 			parse("bucket("+myID+").");
 			assertChild(2*myID+1);
 			assertChild(2*myID+2);

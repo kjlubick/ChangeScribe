@@ -28,18 +28,22 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
         this.repAsType = repAs;        
     }
 
+    @Override
     public FunctorIdentifier getFunctorId() {
         return functorId;
     }
 
+    @Override
     public TypeConstructor getTypeConst() {
         return result.getTypeConstructor();
     }
 
+    @Override
     public int getArity() {
         return 1;
     }
 
+    @Override
     public RBTerm apply(RBTerm term) {
         if (term instanceof RBJavaObjectCompoundTerm) {
             return RBCompoundTerm.makeRepAsJava(this,((RBJavaObjectCompoundTerm)term).getObject());
@@ -49,10 +53,12 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
         }
     }
 
+    @Override
     public RBTerm apply(ArrayList terms) {
         throw new Error("RepAsJava Constructors can only be applied a single term");
     }
 
+    @Override
     public Type apply(Type argType) throws TypeModeError {
         Map renamings = new HashMap();
         Type iargs = repAsType.clone(renamings);
@@ -61,6 +67,7 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
         return iresult.getTypeConstructor().apply(iresult.getArgs(), true);
     }
 
+    @Override
     public boolean equals(Object other) {
         if (other.getClass() != this.getClass()) { //TODO: This is probably a very subtle equality bug!
             return false;
@@ -70,6 +77,7 @@ public class RepAsJavaConstructorType extends ConstructorType implements Seriali
         }
     }
 
+    @Override
     public int hashCode() {
     		return repAsType.hashCode() + 13 * functorId.hashCode() + 31*result.hashCode();
     }

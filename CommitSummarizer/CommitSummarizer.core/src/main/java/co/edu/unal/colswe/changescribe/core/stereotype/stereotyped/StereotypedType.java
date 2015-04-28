@@ -54,24 +54,29 @@ public class StereotypedType extends TypeStereotypeRules implements StereotypedE
         }
     }
     
+    @Override
     public TypeDeclaration getElement() {
         return this.type;
     }
     
+    @Override
     public List<StereotypedElement> getStereoSubElements() {
         final List<StereotypedElement> elements = new ArrayList<StereotypedElement>(this.stereotypedMethods);
         elements.addAll(this.stereotypedSubTypes);
         return elements;
     }
     
+    @Override
     public Javadoc getJavadoc() {
         return this.type.getJavadoc();
     }
     
+    @Override
     public ChildPropertyDescriptor getJavadocDescriptor() {
         return TypeDeclaration.JAVADOC_PROPERTY;
     }
     
+    @Override
     public List<CodeStereotype> getStereotypes() {
         final ArrayList<CodeStereotype> stereotypes = new ArrayList<CodeStereotype>();
         if (this.primaryStereotype != null) {
@@ -83,6 +88,7 @@ public class StereotypedType extends TypeStereotypeRules implements StereotypedE
         return stereotypes;
     }
     
+    @Override
     public void findStereotypes() {
         FieldDeclaration[] fields;
         for (int length = (fields = this.type.getFields()).length, i = 0; i < length; ++i) {
@@ -334,6 +340,7 @@ public class StereotypedType extends TypeStereotypeRules implements StereotypedE
         return this.typeIs(TypeStereotype.POOL);
     }
     
+    @Override
     public String getReport() {
         return this.report.toString();
     }
@@ -378,14 +385,17 @@ public class StereotypedType extends TypeStereotypeRules implements StereotypedE
         this.report.insert(0, typeInfo.toString());*/
     }
     
+    @Override
     public String getName() {
         return (this.type != null && this.type.resolveBinding() != null) ? this.type.resolveBinding().getName() : "";
     }
     
+    @Override
     public String getQualifiedName() {
         return (this.type != null && this.type.resolveBinding() != null) ? this.type.resolveBinding().getQualifiedName() : "";
     }
     
+    @Override
     public String getFullyQualifiedName() {
     	StringBuilder fullyQualifiedClassName = new StringBuilder();
     	if(this.type.getParent() instanceof CompilationUnit) {
@@ -400,6 +410,7 @@ public class StereotypedType extends TypeStereotypeRules implements StereotypedE
         return fullyQualifiedClassName.toString();
     }
     
+    @Override
     public String getKey() {
         final StringBuilder parsedKey = new StringBuilder();
         if (this.type != null && this.type.resolveBinding() != null) {

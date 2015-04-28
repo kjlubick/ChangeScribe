@@ -61,7 +61,8 @@ public class TestLogger {
 			info.add(infoArg.toString());
 		}
 		
-		public String toString() {
+		@Override
+        public String toString() {
 			return kind + 
 				"(" +
 					enter + "," + exit + "," + parentID() +

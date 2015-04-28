@@ -34,10 +34,12 @@ public class LSDVariable {
 		return (this.variableName.equals(toBeMatched.variableName) &&
 				!typeChecks(toBeMatched));
 	}
-	public String toString() {return "?"+variableName;}
+	@Override
+    public String toString() {return "?"+variableName;}
 	
 	public boolean equals(LSDVariable other){ return this.variableName.equals(other.variableName) && this.type == other.type;} 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other instanceof LSDVariable)
 			return equals((LSDVariable) other);
 		else

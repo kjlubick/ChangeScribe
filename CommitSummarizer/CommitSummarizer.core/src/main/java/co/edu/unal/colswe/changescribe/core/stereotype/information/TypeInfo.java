@@ -29,7 +29,8 @@ public class TypeInfo {
 		this.frequency += x;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		int result = 1;
 		result = 31
 				* result
@@ -37,7 +38,8 @@ public class TypeInfo {
 		return result;
 	}
 
-	public boolean equals(final Object obj) {
+	@Override
+    public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -52,14 +54,15 @@ public class TypeInfo {
 			if (other.typeBinding != null) {
 				return false;
 			}
-		} else if (!this.typeBinding.equals((Object) other.typeBinding)) {
+		} else if (!this.typeBinding.equals(other.typeBinding)) {
 			return false;
 		}
 		return true;
 	}
 
 	public static class TypeInformationComparator implements Comparator<TypeInfo> {
-		public int compare(final TypeInfo o1, final TypeInfo o2) {
+		@Override
+        public int compare(final TypeInfo o1, final TypeInfo o2) {
 			final Integer freq1 = o1.getFrequency();
 			final Integer freq2 = o2.getFrequency();
 			return freq2.compareTo(freq1);

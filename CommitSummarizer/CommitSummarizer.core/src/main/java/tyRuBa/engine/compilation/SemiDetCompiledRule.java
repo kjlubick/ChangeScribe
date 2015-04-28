@@ -21,7 +21,8 @@ public class SemiDetCompiledRule extends SemiDetCompiled {
 		this.rule = rule;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		RBTerm goaL = (RBTerm) input;
 //		System.err.println("         Goal: " + goaL);
 //		System.err.println("Checking Rule: " + rule);
@@ -46,7 +47,8 @@ public class SemiDetCompiledRule extends SemiDetCompiled {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "RULE(" + args + " :- " + compiledCond + ")";
 	}
 

@@ -13,6 +13,7 @@ public class RBGenericCompoundTerm extends RBCompoundTerm {
     ConstructorType typeTag;
     RBTerm args;
 
+    @Override
     public RBTerm getArg() {
         return args;
     }
@@ -21,6 +22,7 @@ public class RBGenericCompoundTerm extends RBCompoundTerm {
         this.args = args;
     }
     
+    @Override
     public ConstructorType getConstructorType() {
         return typeTag;
     }

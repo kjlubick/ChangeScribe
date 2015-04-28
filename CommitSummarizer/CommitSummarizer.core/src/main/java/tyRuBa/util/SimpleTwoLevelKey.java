@@ -16,7 +16,7 @@ public class SimpleTwoLevelKey implements TwoLevelKey, Serializable {
     public SimpleTwoLevelKey(String first, Object second) {
         this.first = first;
         if (this.first instanceof String) {
-            this.first = ((String) this.first).intern();
+            this.first = this.first.intern();
         }
         this.second = second;
         if (this.second instanceof String) {
@@ -24,10 +24,12 @@ public class SimpleTwoLevelKey implements TwoLevelKey, Serializable {
         }
     }
 
+    @Override
     public String getFirst() {
         return first;
     }
 
+    @Override
     public Object getSecond() {
         return second;
     }

@@ -39,6 +39,7 @@ public class SimpleArrayListFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#isEmpty()
      */
+    @Override
     public boolean isEmpty() {
         return facts.isEmpty();
     }
@@ -46,6 +47,7 @@ public class SimpleArrayListFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#isPersistent()
      */
+    @Override
     public boolean isPersistent() {
         return false;
     }
@@ -53,6 +55,7 @@ public class SimpleArrayListFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#insert(tyRuBa.engine.RBComponent)
      */
+    @Override
     public void insert(RBComponent f) {
         facts.add(f);
     }
@@ -61,10 +64,12 @@ public class SimpleArrayListFactBase extends FactBase {
      * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode,
      * tyRuBa.engine.compilation.CompilationContext)
      */
+    @Override
     public Compiled basicCompile(PredicateMode mode, CompilationContext context) {
         if (mode.getMode().hi.compareTo(Multiplicity.one) <= 0) {
             return new SemiDetCompiled(mode.getMode()) {
 
+                @Override
                 public Frame runSemiDet(Object input, RBContext context) {
                     final RBTuple goal = (RBTuple) input;
                     Frame result = null;
@@ -82,10 +87,12 @@ public class SimpleArrayListFactBase extends FactBase {
         } else {
             return new Compiled(mode.getMode()) {
 
+                @Override
                 public ElementSource runNonDet(Object input, RBContext context) {
                     final RBTuple goal = (RBTuple) input;
                     return new ArrayListSource(facts).map(new Action() {
 
+                        @Override
                         public Object compute(Object arg) {
                             RBComponent fact = (RBComponent) arg;
                             if (!fact.isValid())
@@ -102,6 +109,7 @@ public class SimpleArrayListFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#backup()
      */
+    @Override
     public void backup() {
         //this factbase is not persistent
     }

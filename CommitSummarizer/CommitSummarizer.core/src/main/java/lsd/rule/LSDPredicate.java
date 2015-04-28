@@ -243,7 +243,8 @@ public class LSDPredicate {
 	public String getName() { return predName; }
 	public String getDisplayName() { return (is_pPredicate() ? predName.replaceFirst("_p_", "_") : predName); }
 	public char[] getTypes() {return types;}
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuilder typeString = new StringBuilder();
 		for (int i=0; i< types.length; i++) {
 			if (i>=1) { 
@@ -357,7 +358,8 @@ public class LSDPredicate {
 		return this.getDisplayName().equals(((LSDPredicate)other).getDisplayName()); 
 	}
 	
-	public boolean equals(Object other)
+	@Override
+    public boolean equals(Object other)
 	{
 		if (!(other instanceof LSDPredicate))
 			return false;

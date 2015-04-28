@@ -39,6 +39,7 @@ public class FileLocation extends Location {
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof FileLocation) {
             FileLocation flOther = (FileLocation) other;
@@ -51,6 +52,7 @@ public class FileLocation extends Location {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return myHashCode;
     }
@@ -58,10 +60,12 @@ public class FileLocation extends Location {
     /**
      * Creates a resourceId for the given path relative to the base.
      */
+    @Override
     public ResourceId getResourceID(String relativeID) {
         return new FileResourceID(this, relativeID);
     }
     
+    @Override
     public String toString() {
     		return base.toString();
     }

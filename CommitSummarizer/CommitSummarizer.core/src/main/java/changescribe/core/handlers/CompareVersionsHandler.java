@@ -41,7 +41,8 @@ public class CompareVersionsHandler extends AbstractHandler {
 	 * the command has been executed, so extract extract the needed information
 	 * from the application context.
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
 		IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getActiveMenuSelection(event);
 		window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		
@@ -50,7 +51,8 @@ public class CompareVersionsHandler extends AbstractHandler {
 			initMonitorDialog(selection);
 		} catch (final RuntimeException e) {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					MessageDialog.openInformation(window.getShell(), "Information", e.getMessage());
 				}});
 		}
@@ -59,6 +61,7 @@ public class CompareVersionsHandler extends AbstractHandler {
 	
 	private void initMonitorDialog(final IStructuredSelection selection) {
         final Job job = new Job("ChangeScribe - Summarizing types") {
+            @Override
             protected IStatus run(final IProgressMonitor monitor) {
             	IStatus status = gettingRepositoryStatus(monitor);
             	if(status.equals(org.eclipse.core.runtime.Status.OK_STATUS)) {
@@ -73,7 +76,8 @@ public class CompareVersionsHandler extends AbstractHandler {
 	
 	private void createDialog(final IJavaProject selection) {
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				DescribeVersionsDialog listDialog = new DescribeVersionsDialog(window.getShell(), git, selection);
 				listDialog.create();
 				listDialog.open();
@@ -118,13 +122,15 @@ public class CompareVersionsHandler extends AbstractHandler {
 				e.printStackTrace();
 			} catch (final GitException e) {
 				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
+					@Override
+                    public void run() {
 						MessageDialog.openInformation(window.getShell(), "Information", e.getMessage());
 					}});
 			}
 		} else {
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					MessageDialog.openInformation(window.getShell(), "Information", "Git repository not found!");
 			}});
 			return org.eclipse.core.runtime.Status.CANCEL_STATUS;

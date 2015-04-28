@@ -44,7 +44,8 @@ public class RBExistsQuantifier extends RBExpression {
 		return vars[pos];
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			return getExp().typecheck(predinfo, startEnv);
 		} catch (TypeModeError e) {
@@ -52,7 +53,8 @@ public class RBExistsQuantifier extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
 	throws TypeModeError {
 		ModeCheckContext resultContext = (ModeCheckContext) context.clone();
 		Collection boundedVars = getVariables();
@@ -74,7 +76,8 @@ public class RBExistsQuantifier extends RBExpression {
 			converted.getMode(), resultContext);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("(EXISTS ");
 		for (int i = 0; i < vars.length; i++) {
 			if (i > 0)
@@ -85,11 +88,13 @@ public class RBExistsQuantifier extends RBExpression {
 		return result.toString();
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return getExp().compile(c);
 	}
 
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		Frame varRenaming = new Frame();
 		RBVariable[] newVars = new RBVariable[vars.length];
 		for (int i = 0; i < vars.length; i++) {
@@ -100,7 +105,8 @@ public class RBExistsQuantifier extends RBExpression {
 		
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 	

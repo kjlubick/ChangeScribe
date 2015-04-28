@@ -9,11 +9,13 @@ public class ErrorMode extends Mode {
 		this.msg = msg;
 	}
 			
-	public String toString() {
+	@Override
+    public String toString() {
 		return "ERROR: " + msg;
 	}
 	
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other instanceof ErrorMode) {
 			return msg.equals(((ErrorMode)other).msg);
 		} else {
@@ -21,11 +23,13 @@ public class ErrorMode extends Mode {
 		}
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return 122 + msg.hashCode();
 	}
 
-	public Mode add(Mode other) {
+	@Override
+    public Mode add(Mode other) {
 		return this;
 	}
 

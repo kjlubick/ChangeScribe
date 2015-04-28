@@ -28,7 +28,8 @@ public class CollectVarsVisitor extends AbstractCollectVarsVisitor {
 		super(new HashSet(), null);
 	}
 
-	public Object visit(RBDisjunction disjunction) {
+	@Override
+    public Object visit(RBDisjunction disjunction) {
 		Collection oldVars = getVars();
 		Collection intersection = null;
 		for (int i = 0; i < disjunction.getNumSubexps(); i++) {
@@ -44,41 +45,50 @@ public class CollectVarsVisitor extends AbstractCollectVarsVisitor {
 		return null;
 	}
 
-	public Object visit(RBExistsQuantifier exists) {
+	@Override
+    public Object visit(RBExistsQuantifier exists) {
 		return exists.getExp().accept(this);
 	}
 
-	public Object visit(RBFindAll findAll) {
+	@Override
+    public Object visit(RBFindAll findAll) {
 		return findAll.getResult().accept(this);
 	}
 
-	public Object visit(RBCountAll count) {
+	@Override
+    public Object visit(RBCountAll count) {
 		return count.getResult().accept(this);
 	}
 
-	public Object visit(RBNotFilter notFilter) {
+	@Override
+    public Object visit(RBNotFilter notFilter) {
 		return null;
 	}
 
-	public Object visit(RBTestFilter testFilter) {
+	@Override
+    public Object visit(RBTestFilter testFilter) {
 		return null;
 	}
 
-	public Object visit(RBUniqueQuantifier unique) {
+	@Override
+    public Object visit(RBUniqueQuantifier unique) {
 		return unique.getExp().accept(this);
 	}
 
-	public Object visit(RBVariable var) {
+	@Override
+    public Object visit(RBVariable var) {
 		getVars().add(var);
 		return null;
 	}
 	
-	public Object visit(RBIgnoredVariable ignoredVar) {
+	@Override
+    public Object visit(RBIgnoredVariable ignoredVar) {
 		getVars().add(ignoredVar);
 		return null;
 	}
 
-	public Object visit(RBTemplateVar templVar) {
+	@Override
+    public Object visit(RBTemplateVar templVar) {
 		return null;
 	}
     

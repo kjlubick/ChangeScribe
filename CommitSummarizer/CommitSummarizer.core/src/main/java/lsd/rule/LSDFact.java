@@ -13,7 +13,8 @@ public class LSDFact extends LSDLiteral implements Comparable<LSDFact> {
 		return (super.toString().contains(filter));
 	}
 
-	public boolean equals(Object o) {
+	@Override
+    public boolean equals(Object o) {
 		if (o instanceof LSDFact) {
 			LSDFact of = (LSDFact) o;
 			if (of.toString().equals(this.toString())) {
@@ -35,11 +36,13 @@ public class LSDFact extends LSDLiteral implements Comparable<LSDFact> {
 		return theFact;
 	}
 
-	public int compareTo(LSDFact arg0) {
+	@Override
+    public int compareTo(LSDFact arg0) {
 		return (toString().compareTo(arg0.toString()));
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return toString().hashCode();
 	}
 
@@ -63,7 +66,8 @@ public class LSDFact extends LSDLiteral implements Comparable<LSDFact> {
 		return theFact;
 	}
 
-	public LSDFact nonNegatedCopy() {
+	@Override
+    public LSDFact nonNegatedCopy() {
 		try {
 			return new LSDFact(predicate, bindings, true);
 		} catch (LSDInvalidTypeException e) {

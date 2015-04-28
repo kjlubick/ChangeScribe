@@ -56,7 +56,8 @@ public class CountedHashMap implements Serializable {
 			return data >> 16;
 		}
 		
-		public String toString() {
+		@Override
+        public String toString() {
 			return String.valueOf(key) + "=" + value;
 		}
 	}
@@ -105,7 +106,7 @@ public class CountedHashMap implements Serializable {
 		
 			table = ntable;
 		
-			threshold = (int)(((double)table.length) * loadFactor);
+			threshold = (int)((table.length) * loadFactor);
 		} else
 			synchronized(mutex[obtained++]) { rehash(obtained, grow); }
 	}
@@ -127,7 +128,7 @@ public class CountedHashMap implements Serializable {
 		this.table = new Entry[initialSize];
 		this.size = 0;
 		this.loadFactor = loadFactor;
-		this.threshold = (int)(((double)table.length) * loadFactor);
+		this.threshold = (int)((table.length) * loadFactor);
 	}
 	
 //	public void clear() {

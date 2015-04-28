@@ -19,7 +19,8 @@ public abstract class AbstractPool
 	// comparator that always compares objects equal
 	private static Comparator COMP_TRUE = new Comparator ()
 	{
-		public int compare (Object o1, Object o2)
+		@Override
+        public int compare (Object o1, Object o2)
 		{
 			return 0;
 		}
@@ -29,7 +30,8 @@ public abstract class AbstractPool
 	// to their equals() method
 	private static Comparator COMP_EQUAL = new Comparator ()
 	{
-		public int compare (Object o1, Object o2)
+		@Override
+        public int compare (Object o1, Object o2)
 		{
 			if (o1 == o2 || (o1 != null && o2 != null && o1.equals (o2)))
 				return 0;
@@ -82,13 +84,15 @@ public abstract class AbstractPool
 	}
 
 
-	public int getMaxPool ()
+	@Override
+    public int getMaxPool ()
 	{
 		return _max;
 	}
 
 
-	public void setMaxPool (int max)
+	@Override
+    public void setMaxPool (int max)
 	{
 		if (max < 0 || max < _min)
 			throw new IllegalArgumentException (String.valueOf (max));
@@ -111,13 +115,15 @@ public abstract class AbstractPool
 	}
 
 
-	public int getMinPool ()
+	@Override
+    public int getMinPool ()
 	{
 		return _min;
 	}
 
 
-	public void setMinPool (int min)
+	@Override
+    public void setMinPool (int min)
 	{
 		if (min < 0 || (_max > 0 && min > _max))
 			throw new IllegalArgumentException (String.valueOf (min));
@@ -125,13 +131,15 @@ public abstract class AbstractPool
 	}
 
 
-	public int getWait ()
+	@Override
+    public int getWait ()
 	{
 		return _wait;
 	}
 
 
-	public void setWait (int millis)
+	@Override
+    public void setWait (int millis)
 	{
 		if (millis < 0)
 			throw new IllegalArgumentException (String.valueOf (millis));
@@ -139,13 +147,15 @@ public abstract class AbstractPool
 	}
 
 
-	public int getAutoReturn ()
+	@Override
+    public int getAutoReturn ()
 	{
 		return _autoReturn;
 	}
 
 
-	public void setAutoReturn (int millis)
+	@Override
+    public void setAutoReturn (int millis)
 	{
 		if (millis < 0)
 			throw new IllegalArgumentException (String.valueOf (millis));
@@ -153,26 +163,30 @@ public abstract class AbstractPool
 	}
 
 
-	public Iterator iterator ()
+	@Override
+    public Iterator iterator ()
 	{
 		return new Iterator ()
 		{
 			private Iterator _itr = freeSet ().iterator ();
 
 
-			public boolean hasNext ()
+			@Override
+            public boolean hasNext ()
 			{
 				return _itr.hasNext ();
 			}
 
 
-			public Object next ()
+			@Override
+            public Object next ()
 			{
 				return _itr.next ();
 			}
 
 			
-			public void remove ()
+			@Override
+            public void remove ()
 			{
 				if (size () + takenMap ().size () <= _min)
 					throw new IllegalStateException ();
@@ -187,43 +201,50 @@ public abstract class AbstractPool
 	}
 
 
-	public int size ()
+	@Override
+    public int size ()
 	{
 		return freeSet ().size ();
 	}
 
 
-	public boolean isEmpty ()
+	@Override
+    public boolean isEmpty ()
 	{
 		return size () == 0;
 	}
 
 
-	public boolean contains (Object obj)
+	@Override
+    public boolean contains (Object obj)
 	{
 		return freeSet ().contains (obj);
 	}
 
 
-	public boolean containsAll (Collection c)
+	@Override
+    public boolean containsAll (Collection c)
 	{
 		return freeSet ().containsAll (c);
 	}
 
 
-	public Object[] toArray ()
+	@Override
+    public Object[] toArray ()
 	{
 		return freeSet ().toArray ();
 	}
 
 
-	public Object[] toArray (Object[] fill)
+	@Override
+    public Object[] toArray (Object[] fill)
 	{
 		return freeSet ().toArray (fill);
 	}
 
 
-	public boolean add (Object obj)
+	@Override
+    public boolean add (Object obj)
 	{
 		if (obj == null)
 			return false;
@@ -245,7 +266,8 @@ public abstract class AbstractPool
 	}
 
 
-	public boolean addAll (Collection c)
+	@Override
+    public boolean addAll (Collection c)
 	{
 		boolean ret = false;
 		for (Iterator itr = c.iterator (); itr.hasNext ();)
@@ -255,7 +277,8 @@ public abstract class AbstractPool
 	}
 
 
-	public boolean remove (Object obj)
+	@Override
+    public boolean remove (Object obj)
 	{
 		if (size () + takenMap ().size () <= _min)
 			return false;
@@ -272,7 +295,8 @@ public abstract class AbstractPool
 	}
 
 
-	public boolean removeAll (Collection c)
+	@Override
+    public boolean removeAll (Collection c)
 	{
 		boolean ret = false;
 		for (Iterator itr = c.iterator (); itr.hasNext ();)
@@ -282,7 +306,8 @@ public abstract class AbstractPool
 	}
 
 
-	public boolean retainAll (Collection c)
+	@Override
+    public boolean retainAll (Collection c)
 	{
 		Object next;
 		Collection remove = new LinkedList ();
@@ -296,7 +321,8 @@ public abstract class AbstractPool
 	}
 
 
-	public void clear ()
+	@Override
+    public void clear ()
 	{
 		freeSet ().clear ();
 		takenMap ().clear ();
@@ -307,7 +333,8 @@ public abstract class AbstractPool
 	}
 
 
-	public boolean equals (Object obj)
+	@Override
+    public boolean equals (Object obj)
 	{
 		if (obj == this)
 			return true;
@@ -319,7 +346,8 @@ public abstract class AbstractPool
 	}
 
 
-	public int hashCode ()
+	@Override
+    public int hashCode ()
 	{
 		int sum = 0;
 		Object next;
@@ -338,7 +366,8 @@ public abstract class AbstractPool
  	 *
 	 *	@see	#get(Object,Comparator)
  	 */
-	public Object get ()
+	@Override
+    public Object get ()
 	{
 		return get (null, COMP_TRUE);
 	}
@@ -350,7 +379,8 @@ public abstract class AbstractPool
  	 *
 	 *	@see	#get(Object,Comparator)
  	 */
-	public Object get (Object match)
+	@Override
+    public Object get (Object match)
 	{
 		return get (match, COMP_EQUAL);
 	}
@@ -370,7 +400,8 @@ public abstract class AbstractPool
 	 *	@throws			NoSuchElementException if no matching object can be
 	 *					obtained in the set wait period
  	 */
-	public Object get (Object match, Comparator comp)
+	@Override
+    public Object get (Object match, Comparator comp)
 	{
 		if (comp == null && match == null)
 			comp = COMP_TRUE;
@@ -404,7 +435,8 @@ public abstract class AbstractPool
 	}
 
 
-	public Set takenSet ()
+	@Override
+    public Set takenSet ()
 	{
 		return Collections.unmodifiableSet (takenMap ().keySet ());
 	}

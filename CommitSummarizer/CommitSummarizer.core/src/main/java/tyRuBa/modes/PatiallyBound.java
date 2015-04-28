@@ -6,27 +6,33 @@ public class PatiallyBound extends BindingMode {
 
 	private PatiallyBound() {}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return this.getClass().hashCode();
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		return other instanceof PatiallyBound;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "BF";
 	}
 
 	/** check that this binding satisfied the binding mode */
-	public boolean satisfyBinding(BindingMode mode) {
+	@Override
+    public boolean satisfyBinding(BindingMode mode) {
 		return mode instanceof Free;
 	}
 
-	public boolean isBound() {
+	@Override
+    public boolean isBound() {
 		return false;
 	}
-	public boolean isFree() {
+	@Override
+    public boolean isFree() {
 		return false;
 	}
 }

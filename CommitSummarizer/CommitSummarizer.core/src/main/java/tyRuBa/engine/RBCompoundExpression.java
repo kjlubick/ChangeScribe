@@ -64,7 +64,8 @@ public abstract class RBCompoundExpression extends RBExpression {
 	}
 
 	/**Clone */
-	public Object clone() {
+	@Override
+    public Object clone() {
 		RBCompoundExpression cl;
 		try {
 			cl = (RBCompoundExpression) super.clone();
@@ -75,7 +76,8 @@ public abstract class RBCompoundExpression extends RBExpression {
 		return cl;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return toString(false);
 	}
 

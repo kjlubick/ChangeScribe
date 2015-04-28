@@ -36,6 +36,7 @@ public class URLLocation extends Location {
     /**
      * Creates a resourceId for the given path relative to the base.
      */
+    @Override
     public ResourceId getResourceID(String relativeID) {
         return new URLResourceID(this, relativeID);
     }

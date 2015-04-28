@@ -20,7 +20,8 @@ public abstract class DelayedElementSource extends ElementSource {
 		return delayed;
 	}
 
-	public int status() {
+	@Override
+    public int status() {
 		return delayed().status();
 	}
 
@@ -29,11 +30,13 @@ public abstract class DelayedElementSource extends ElementSource {
 	 */
 	protected abstract ElementSource produce();
 	
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		return delayed().nextElement();
 	}
 
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("Delayed("+produceString());
 		if (delayed!=null) {
 			p.indent();p.newline();
@@ -50,6 +53,7 @@ public abstract class DelayedElementSource extends ElementSource {
     /**
      * @see tyRuBa.util.ElementSource#release()
      */
+    @Override
     public void release() {
         if (delayed != null) {
 //            if (delayed instanceof ResultSetElementSource) {

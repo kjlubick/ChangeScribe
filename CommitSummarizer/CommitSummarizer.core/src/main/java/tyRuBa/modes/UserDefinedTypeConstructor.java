@@ -22,7 +22,8 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
     /**
      * @codegroup metadata
      */
-	public void setMetaBase(MetaBase metaBase) {
+	@Override
+    public void setMetaBase(MetaBase metaBase) {
 		this.metaBase = metaBase;
 		if (superConst!=null) {
 			metaBase.assertSubtype(superConst,this);
@@ -35,7 +36,8 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 		this.parameters = new TVar[arity];
 	}
 	
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (!(other instanceof UserDefinedTypeConstructor)) {
 			return false;
 		} else {
@@ -45,18 +47,21 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 		}
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return name.hashCode()*13+parameters.length;
 	}
 	
-	public void addSubTypeConst(TypeConstructor subConst) throws TypeModeError {
+	@Override
+    public void addSubTypeConst(TypeConstructor subConst) throws TypeModeError {
 		subConst.addSuperTypeConst(this);
 	}
 	
 	/**
 	 * @codegroup metadata
 	 */
-	public void addSuperTypeConst(TypeConstructor superConst) throws TypeModeError {
+	@Override
+    public void addSuperTypeConst(TypeConstructor superConst) throws TypeModeError {
 		if (this.equals(superConst)) {
 			throw new TypeModeError(
 				"Recursion in type inheritance: " + this + " depends on itself");
@@ -74,28 +79,33 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 	/**
 	 * @codegroup metadata
 	 */
-	public void setRepresentationType(Type repType) {
+	@Override
+    public void setRepresentationType(Type repType) {
 		representedBy = repType;
 		if (metaBase!=null) metaBase.assertRepresentation(this,repType);
 	}
 	
-	public TypeConstructor getSuperTypeConstructor() {
+	@Override
+    public TypeConstructor getSuperTypeConstructor() {
         if (superConst!=null)
             return superConst;
         else
             return TypeConstructor.theAny;
 	}
 	
-	public String getName() {
+	@Override
+    public String getName() {
 		return name;
 	}
 
-	public int getTypeArity() {
+	@Override
+    public int getTypeArity() {
 		return parameters.length;
 	}
 
 	/** Argument is assumed to be a tuple of TVars */
-	public void setParameter(TupleType type) {
+	@Override
+    public void setParameter(TupleType type) {
 		if (type.size() != this.getTypeArity())
 			throw new Error("This should not happen");
 		for (int i = 0; i < parameters.length; i++) {
@@ -104,7 +114,8 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 		initialized = true;
 	}
 	
-	public String getParameterName(int i) {
+	@Override
+    public String getParameterName(int i) {
 		if (i < getTypeArity()) {
 			return parameters[i].getName();
 		} else {
@@ -112,7 +123,8 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(name + "(");
 		for (int i = 0; i < getTypeArity(); i++) {
 			if (i > 0) {
@@ -127,18 +139,22 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 		return result.toString();
 	}
 
-	public boolean isInitialized() {
+	@Override
+    public boolean isInitialized() {
 		return initialized;
 	}
 
-	public Type getRepresentation() {
+	@Override
+    public Type getRepresentation() {
 		return representedBy;
 	}
 
-	public boolean hasRepresentation() {
+	@Override
+    public boolean hasRepresentation() {
 		return representedBy != null;
 	}
 
+    @Override
     public void setConstructorType(ConstructorType constrType) {
         if (constructorType!=null) 
         	throw new Error("Should not set twice!");
@@ -147,10 +163,12 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
         this.constructorType = constrType;
     }
     
+    @Override
     public ConstructorType getConstructorType() {
         return constructorType;
     }
 
+    @Override
     public TypeConstructor getSuperestTypeConstructor() {
         TypeConstructor result = super.getSuperestTypeConstructor();
         if (TypeConstructor.theAny.equals(result))
@@ -170,7 +188,8 @@ public class UserDefinedTypeConstructor extends TypeConstructor implements Seria
 			this.mapping = mapping;
 	}
 	
-	public Class javaEquivalent() {
+	@Override
+    public Class javaEquivalent() {
 		if (getMapping()==null)
 			return null;
 		else

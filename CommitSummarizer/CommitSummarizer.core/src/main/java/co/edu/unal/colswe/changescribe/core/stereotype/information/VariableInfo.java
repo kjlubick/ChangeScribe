@@ -67,7 +67,8 @@ public class VariableInfo {
 		return this.isModified;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		int result = 1;
 		result = 31
 				* result
@@ -76,7 +77,8 @@ public class VariableInfo {
 		return result;
 	}
 
-	public boolean equals(final Object obj) {
+	@Override
+    public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -91,7 +93,7 @@ public class VariableInfo {
 			if (other.variableBinding != null) {
 				return false;
 			}
-		} else if (!this.variableBinding.equals((Object) other.variableBinding)) {
+		} else if (!this.variableBinding.equals(other.variableBinding)) {
 			return false;
 		}
 		return true;

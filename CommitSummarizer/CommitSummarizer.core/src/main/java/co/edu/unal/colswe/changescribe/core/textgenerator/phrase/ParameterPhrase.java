@@ -11,7 +11,8 @@ public class ParameterPhrase extends Phrase {
 		this.variable = variable;
 	}
 
-	public void generate() {
+	@Override
+    public void generate() {
 		this.phraseBuilder = new StringBuilder();
 		final String splitType = Tokenizer.split(this.removeGeneric(this.variable.getTypeName()));
 		final String splitVarName = Tokenizer.split(this.variable.getVariableName());
@@ -68,7 +69,8 @@ public class ParameterPhrase extends Phrase {
 		return typeName;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return this.phraseBuilder.toString().trim();
 	}
 }

@@ -33,9 +33,11 @@ public class Pager {
 	/** An Id for a resource */
 	public static abstract class ResourceId {
 		
-		public abstract boolean equals(Object other);
+		@Override
+        public abstract boolean equals(Object other);
 		
-		public abstract int hashCode();
+		@Override
+        public abstract int hashCode();
 		
 		/** Open an input stream to read the resource. */
 		public abstract InputStream readResource() throws IOException;
@@ -219,7 +221,8 @@ public class Pager {
 			}
 		}
 		
-		public String toString() {
+		@Override
+        public String toString() {
 			return "Rsrc("+resId+ (dirty?"=DIRTY":"") +")";
 		}
 	}
@@ -260,7 +263,8 @@ public class Pager {
 			this.setPriority(Thread.MIN_PRIORITY);
 		}
 		
-		public void run() {
+		@Override
+        public void run() {
 			while (true) {
 				boolean cleaningTime;
 				ResourceReferenceInfo toClean = null;

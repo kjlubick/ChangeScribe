@@ -19,7 +19,8 @@ public class CompiledPredicateExpression extends Compiled {
 		this.args = args;	
 	}
 
-	final public ElementSource runNonDet(final Object input, RBContext context) {
+	@Override
+    final public ElementSource runNonDet(final Object input, RBContext context) {
 		RBTuple goal = (RBTuple)args.substitute((Frame)input);
 		ElementSource result = compiledRules().runNonDet(goal, context);
 		if (((Frame)input).isEmpty()) {
@@ -27,10 +28,12 @@ public class CompiledPredicateExpression extends Compiled {
 			return result;
 		} else {
 			return result.map(new Action() {
-				public Object compute(Object resultFrame) {
+				@Override
+                public Object compute(Object resultFrame) {
 					return ((Frame)input).append((Frame)resultFrame);
 				}
-				public String toString() {
+				@Override
+                public String toString() {
 					return "++" + input;
 				}
 			});
@@ -41,7 +44,8 @@ public class CompiledPredicateExpression extends Compiled {
 		return rules.getCompiled();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "PRED(" + args + ")";
 	}
 

@@ -48,7 +48,8 @@ public class CommitViewAction implements IViewActionDelegate {
 	 * in the workbench UI.
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action) {
+	@Override
+    public void run(IAction action) {
 		
 		repo = new SCMRepository();
 		initMonitorDialog(action);
@@ -57,6 +58,7 @@ public class CommitViewAction implements IViewActionDelegate {
 	
 	private void initMonitorDialog(IAction event) {
             final Job job = new Job("ChangeScribe - Summarizing types") {
+                @Override
                 protected IStatus run(final IProgressMonitor monitor) {
                 	IStatus status = gettingRepositoryStatus(monitor);
                 	createDialog();
@@ -69,7 +71,8 @@ public class CommitViewAction implements IViewActionDelegate {
 	
 	private void createDialog() {
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				FilesChangedListDialog listDialog = new FilesChangedListDialog(view.getSite().getShell(), differences, git, null);
 				listDialog.create();
 				listDialog.open();
@@ -111,7 +114,8 @@ public class CommitViewAction implements IViewActionDelegate {
 	 * the delegate has been created.
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
+	@Override
+    public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	/**
@@ -122,7 +126,8 @@ public class CommitViewAction implements IViewActionDelegate {
 	public void dispose() {
 	}
 
-	public void init(IViewPart view) {
+	@Override
+    public void init(IViewPart view) {
 		// TODO Auto-generated method stub
 		this.view = view;
 		

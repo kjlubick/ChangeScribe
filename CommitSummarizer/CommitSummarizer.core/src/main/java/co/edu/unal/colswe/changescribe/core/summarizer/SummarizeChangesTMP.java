@@ -158,7 +158,8 @@ public class SummarizeChangesTMP {
 				}
 			};
 			job.addJobChangeListener(new JobChangeAdapter() {
-				public void done(IJobChangeEvent event) {
+				@Override
+                public void done(IJobChangeEvent event) {
 					updateTextInputDescription();
 				}
 			});
@@ -181,7 +182,8 @@ public class SummarizeChangesTMP {
 	public void updateTextInputDescription() {
 
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				/*if(summarized.size() + modifiedFiles.size() + otherFiles.size() + typesProblem.size() == differences.length
 						|| summarized.size() + modifiedFiles.size() + otherFiles.size() + typesProblem.size() == differences.length) {*/
 					
@@ -335,7 +337,7 @@ public class SummarizeChangesTMP {
 	}
 
 	protected void removeCreatedPackages() {
-		IFolder folder = ((IJavaProject)changedListDialog.getSelection()).getProject().getFolder("src/commsummtmp");
+		IFolder folder = changedListDialog.getSelection().getProject().getFolder("src/commsummtmp");
 		try {
 			folder.delete(true, null);
 		} catch (CoreException e) {
@@ -667,7 +669,7 @@ public class SummarizeChangesTMP {
 			IPackageFragment pack = null;
 			String packageName = "";
 			packageName = "commsummtmp." + CompilationUtils.getPackageNameFromStringClass(removedFile);
-			IFolder folder = ((IJavaProject)changedListDialog.getSelection()).getProject().getFolder("src");
+			IFolder folder = changedListDialog.getSelection().getProject().getFolder("src");
 			pack = changedListDialog.getSelection().getPackageFragmentRoot(folder).createPackageFragment(packageName, true, null);
 			String fileName = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("/") + 1);
 			ICompilationUnit cu = pack.createCompilationUnit(fileName, removedFile,true, null);
@@ -703,7 +705,7 @@ public class SummarizeChangesTMP {
 			IPackageFragment pack = null;
 			String packageName = "";
 			packageName = "commsummtmp." + CompilationUtils.getPackageNameFromStringClass(removedFile);
-			IFolder folder = ((IJavaProject)changedListDialog.getSelection()).getProject().getFolder("src");
+			IFolder folder = changedListDialog.getSelection().getProject().getFolder("src");
 			pack = changedListDialog.getSelection().getPackageFragmentRoot(folder).createPackageFragment(packageName, true, null);
 			ICompilationUnit cu = pack.createCompilationUnit(file.getName(), removedFile,true, null);
 			stereotypeIdentifier = new StereotypeIdentifier(cu, 0, 0);

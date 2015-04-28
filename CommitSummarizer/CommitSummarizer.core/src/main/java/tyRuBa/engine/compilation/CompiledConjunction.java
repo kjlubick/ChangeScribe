@@ -14,15 +14,18 @@ public class CompiledConjunction extends Compiled {
 		this.right = right;
 	}
 
-	public ElementSource run(ElementSource inputs, RBContext context) {
+	@Override
+    public ElementSource run(ElementSource inputs, RBContext context) {
 		return right.run(left.run(inputs, context), context);
 	}
 
-	public ElementSource runNonDet(Object input, RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, RBContext context) {
 		return right.run(left.runNonDet(input, context), context);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "(" + right + "==>" + left + ")";
 	}
 

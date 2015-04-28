@@ -66,7 +66,8 @@ public abstract class Implementation extends RBComponent {
 		return mode;
 	}
 
-	public Mode getMode() {
+	@Override
+    public Mode getMode() {
 		return getPredicateMode().getMode();
 	}
 
@@ -74,11 +75,13 @@ public abstract class Implementation extends RBComponent {
 		return getPredicateMode().getParamModes();
 	}
 	
-	public PredicateIdentifier getPredId() {
+	@Override
+    public PredicateIdentifier getPredId() {
 		throw new Error("This should not happen");
 	}
 	
-	public RBTuple getArgs() {
+	@Override
+    public RBTuple getArgs() {
 		return argsAndResults;
 	}
 	
@@ -102,11 +105,13 @@ public abstract class Implementation extends RBComponent {
 		solutions.add(new RBTerm[] {t1,t2} );
 	}
 		
-	public TupleType typecheck(PredInfoProvider predinfo) throws TypeModeError {
+	@Override
+    public TupleType typecheck(PredInfoProvider predinfo) throws TypeModeError {
 		throw new Error("This should not happen");
 	}
 	
-	public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context)
+	@Override
+    public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context)
 	throws TypeModeError {
 		if (mode.equals(getPredicateMode())) {
 			return this;
@@ -139,14 +144,17 @@ public abstract class Implementation extends RBComponent {
 		return results;
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "Implementation in mode: " + mode;
 	}
 	
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		if (getMode().hi.compareTo(Multiplicity.one) <= 0) {
 			return new SemiDetCompiled() {
-				public Frame runSemiDet(Object input, RBContext context) {
+				@Override
+                public Frame runSemiDet(Object input, RBContext context) {
 					Frame callFrame = new Frame();
 					RBTuple goal = 
 						(RBTuple) ((RBTuple)input).instantiate(callFrame);
@@ -161,7 +169,8 @@ public abstract class Implementation extends RBComponent {
 			};
 		} else {
 			return new Compiled(getMode()) {
-				public ElementSource runNonDet(Object input, RBContext context) {
+				@Override
+                public ElementSource runNonDet(Object input, RBContext context) {
 					final Frame callFrame = new Frame();
 					final RBTuple goal = 
 						(RBTuple) ((RBTuple)input).instantiate(callFrame);

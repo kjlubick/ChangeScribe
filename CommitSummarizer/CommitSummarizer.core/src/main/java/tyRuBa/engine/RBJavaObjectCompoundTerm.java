@@ -35,7 +35,8 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 		try {
 			return new RBJavaObjectCompoundTerm(new RE(re) {
 				private static final long serialVersionUID = 1L;
-				public String toString() {
+				@Override
+                public String toString() {
 					return "/"+re+"/";
 				}
 			});
@@ -45,11 +46,13 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 	} 
 	
 	public static final RBTerm theEmptyList = new RBJavaObjectCompoundTerm("[]") {
-		public String quotedToString() {
+		@Override
+        public String quotedToString() {
 			return "";
 		}
 		
-		protected Type getType(TypeEnv env) {
+		@Override
+        protected Type getType(TypeEnv env) {
 			return Factory.makeEmptyListType();
 		}
 		
@@ -58,15 +61,18 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 		 * a singleton class, we don't know for sure if some deserialization creates
 		 * extra copies of me who should be treated as equal.
 		 */
-		public boolean equals(Object obj) {
+		@Override
+        public boolean equals(Object obj) {
 			return obj != null && obj.getClass() == this.getClass();    
 		}
 		
-		public int hashCode() {
+		@Override
+        public int hashCode() {
 			return getClass().hashCode();
 		}
 		
-		public Object up() {
+		@Override
+        public Object up() {
 			return new Object[0];
 		}
 	};    
@@ -81,50 +87,63 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 		}
 	}
 	
-	public ConstructorType getConstructorType() {
+	@Override
+    public ConstructorType getConstructorType() {
 		return ConstructorType.makeJava(arg.getClass());
 	}
 	
-	public RBTerm getArg() {
+	@Override
+    public RBTerm getArg() {
 		return this;
 	}
 	
-	public RBTerm getArg(int i) {
+	@Override
+    public RBTerm getArg(int i) {
 		if (i == 0) {
 			return this;
 		} else {
 			throw new Error("RBJavaObjectCompoundTerms only have one argument");
 		}
 	}
-	public int getNumArgs() {
+	@Override
+    public int getNumArgs() {
 		return 1;
 	}
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		return true;
 	}
-	public boolean isGround() {
+	@Override
+    public boolean isGround() {
 		return true;
 	}
-	protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
+	@Override
+    protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
 		return equals(other);
 	}
-	protected Type getType(TypeEnv env) throws TypeModeError {
+	@Override
+    protected Type getType(TypeEnv env) throws TypeModeError {
 		return ((JavaConstructorType)getConstructorType()).getType();
 	}
 	
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		return 9595 + arg.hashCode();
 	}
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return 9595 + arg.hashCode();
 	}
 	
-	public BindingMode getBindingMode(ModeCheckContext context) {
+	@Override
+    public BindingMode getBindingMode(ModeCheckContext context) {
 		return Factory.makeBound();
 	}
-	public void makeAllBound(ModeCheckContext context) {
+	@Override
+    public void makeAllBound(ModeCheckContext context) {
 	}
-	public boolean equals(Object x) {
+	@Override
+    public boolean equals(Object x) {
 		if (x.getClass().equals(this.getClass())) {
 			return arg.equals(((RBJavaObjectCompoundTerm)x).arg);
 		} else {
@@ -132,19 +151,23 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 		}
 	}
 	
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return this;
 	}
 	
-	public boolean isOfType(TypeConstructor t) {
+	@Override
+    public boolean isOfType(TypeConstructor t) {
 		return t.isSuperTypeOf(getTypeConstructor());
 	}
 	
-	public Object up() {
+	@Override
+    public Object up() {
 		return arg;
 	}
 	
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 		if (other instanceof RBVariable)
 			return other.unify(this, f);
 		else if (equals(other))
@@ -157,7 +180,8 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 	/**
 	 * @see tyRuBa.util.TwoLevelKey#getFirst()
 	 */
-	public String getFirst() {
+	@Override
+    public String getFirst() {
 		if (arg instanceof String) {
 			String str = (String) arg;
 			int firstindexofhash = str.indexOf('#');
@@ -178,7 +202,8 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 	/**
 	 * @see tyRuBa.util.TwoLevelKey#getSecond()
 	 */
-	public Object getSecond() {
+	@Override
+    public Object getSecond() {
 		if (arg instanceof String) {
 			String str = (String) arg;
 			int firstindexofhash = str.indexOf('#');
@@ -196,7 +221,8 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return arg.toString();
 	}
 	
@@ -207,7 +233,8 @@ public class RBJavaObjectCompoundTerm extends RBCompoundTerm {
 		}
 	}
 	
-	public int intValue() {
+	@Override
+    public int intValue() {
 		if (arg instanceof Integer) {
 			return ((Integer)arg).intValue();
 		} else {

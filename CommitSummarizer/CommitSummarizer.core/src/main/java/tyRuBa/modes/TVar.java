@@ -35,7 +35,8 @@ public class TVar extends Type {
 			return content;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		TVar me = derefTVar();
 		if (me.isFree()) {
 			return "?" + me.getName() + "_" + me.id;
@@ -53,7 +54,8 @@ public class TVar extends Type {
 		content = other;
 	}
 
-	public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
+	@Override
+    public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
 		TVar me = derefTVar();
 		if (me.equals(other)) {
 			return;
@@ -93,7 +95,8 @@ public class TVar extends Type {
 		}
 	}
 	
-	public boolean isSubTypeOf(Type declared, Map renamings) {
+	@Override
+    public boolean isSubTypeOf(Type declared, Map renamings) {
 		TVar me = derefTVar();
 		if (!me.isFree()) {
 			return me.getContents().isSubTypeOf(declared, renamings);
@@ -128,7 +131,8 @@ public class TVar extends Type {
 		return getContents() == null;
 	}
 
-	public boolean isFreeFor(TVar var) {
+	@Override
+    public boolean isFreeFor(TVar var) {
 		TVar me = derefTVar();
 		if (!me.isFree()) {
 			return me.content.isFreeFor(var);
@@ -137,7 +141,8 @@ public class TVar extends Type {
 		}
 	}
 
-	public Type clone(Map varRenamings) {
+	@Override
+    public Type clone(Map varRenamings) {
 		TVar me = derefTVar();
 		TVar clone = (TVar)varRenamings.get(me);
 		if (clone!=null)
@@ -151,7 +156,8 @@ public class TVar extends Type {
 		}
 	}
 
-	public Type union(Type other) throws TypeModeError {
+	@Override
+    public Type union(Type other) throws TypeModeError {
 		TVar me = derefTVar();
 		if (!me.isFree()) {
 			return me.getContents().union(other);
@@ -175,7 +181,8 @@ public class TVar extends Type {
 //	}
 
 	
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (!(other instanceof TVar))
 			return false;
 		else {
@@ -183,7 +190,8 @@ public class TVar extends Type {
 		}
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		TVar aliasOfMe = this.derefTVar();
 		if (aliasOfMe==this) 
 			return super.hashCode();
@@ -191,7 +199,8 @@ public class TVar extends Type {
 			return aliasOfMe.hashCode();		
 	}
 
-	public Type intersect(Type other) throws TypeModeError {
+	@Override
+    public Type intersect(Type other) throws TypeModeError {
 		TVar me = derefTVar();
 		if (me.equals(other)) {
 			return me;
@@ -205,7 +214,8 @@ public class TVar extends Type {
 		}
 	}
 	
-	public Type copyStrictPart() {
+	@Override
+    public Type copyStrictPart() {
 		if (isFree()) {
 			return Factory.makeTVar(getName());
 		} else {
@@ -213,7 +223,8 @@ public class TVar extends Type {
 		}
 	}
 
-	public boolean hasOverlapWith(Type other) {
+	@Override
+    public boolean hasOverlapWith(Type other) {
 		TVar me = derefTVar();
 		if (!me.isFree()) {
 			return me.content.hasOverlapWith(other);
@@ -222,7 +233,8 @@ public class TVar extends Type {
 		}
 	}
 
-	public Type getParamType(String currName, Type repAs) {
+	@Override
+    public Type getParamType(String currName, Type repAs) {
 		if (repAs instanceof TVar) {
 			if (currName.equals(((TVar)repAs).getName())) {
 				return this;
@@ -241,6 +253,7 @@ public class TVar extends Type {
     /* (non-Javadoc)
      * @see tyRuBa.modes.Type#javaEquivalent()
      */
+    @Override
     public Class javaEquivalent() throws TypeModeError {
                 
         Type contents = getContents();

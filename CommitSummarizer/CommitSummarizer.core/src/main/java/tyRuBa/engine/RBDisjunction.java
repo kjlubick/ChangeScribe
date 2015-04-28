@@ -30,7 +30,8 @@ public class RBDisjunction extends RBCompoundExpression {
 		super(e1, e2);
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		Compiled result = Compiled.fail;
 		for (int i = 0; i < getNumSubexps(); i++) {
 			result = result.disjoin(getSubexp(i).compile(c));
@@ -38,7 +39,8 @@ public class RBDisjunction extends RBCompoundExpression {
 		return result;
 	}
 
-	protected String separator() {
+	@Override
+    protected String separator() {
 		return ";";
 	}
 	
@@ -54,7 +56,8 @@ public class RBDisjunction extends RBCompoundExpression {
 		return result;
 	}
 
-	public RBExpression crossMultiply(RBExpression other) {
+	@Override
+    public RBExpression crossMultiply(RBExpression other) {
 		if (other instanceof RBDisjunction)
 			return crossMultiplyDisjunction((RBDisjunction)other);
 		int numExps = getNumSubexps();
@@ -65,7 +68,8 @@ public class RBDisjunction extends RBCompoundExpression {
 		return result;
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		TypeEnv resultEnv = null;
 		try {
 			for (int i = 0; i < getNumSubexps(); i++) {
@@ -82,7 +86,8 @@ public class RBDisjunction extends RBCompoundExpression {
 		return resultEnv;
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
 	throws TypeModeError {
 		RBDisjunction result = new RBDisjunction();
 		Mode resultMode = Mode.makeFail();
@@ -102,7 +107,8 @@ public class RBDisjunction extends RBCompoundExpression {
 		return Factory.makeModedExpression(result, resultMode, resultContext);
 	}
 
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		if (negate) {
 			RBExpression result = null;
 			for (int i = 0; i < getNumSubexps(); i++) {
@@ -124,11 +130,13 @@ public class RBDisjunction extends RBCompoundExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 
-	public RBExpression addExistsQuantifier(RBVariable[] newVars, boolean negate) {
+	@Override
+    public RBExpression addExistsQuantifier(RBVariable[] newVars, boolean negate) {
 		RBCompoundExpression result;
 		if (negate) {
 			result = new RBConjunction();

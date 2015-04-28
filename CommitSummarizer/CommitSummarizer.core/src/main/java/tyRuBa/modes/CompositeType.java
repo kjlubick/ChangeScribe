@@ -19,11 +19,13 @@ public class CompositeType extends BoundaryType {
 		return typeConst;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return getTypeConstructor().hashCode() + 13 * (args.hashCode());
 	}
 
-	public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
+	@Override
+    public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
 		if (other instanceof TVar || other instanceof GrowableType) {
 			other.checkEqualTypes(this, grow);
 		} else {
@@ -41,7 +43,8 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 	
-	public boolean isSubTypeOf(Type other, Map renamings) {
+	@Override
+    public boolean isSubTypeOf(Type other, Map renamings) {
 		if (other instanceof TVar)
 			other = ((TVar)other).getContents();
 		if (other == null) // Was a free TVar
@@ -82,7 +85,8 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (! (other instanceof CompositeType)) {
 			return false;
 		} else {
@@ -93,7 +97,8 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		String constName = typeConst.getName() + args;
 		if (isStrict()) {
 			return "=" + constName;
@@ -102,11 +107,13 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 
-	public boolean isFreeFor(TVar var) {
+	@Override
+    public boolean isFreeFor(TVar var) {
 		return args.isFreeFor(var);
 	}
 
-	public Type clone(Map tfact) {
+	@Override
+    public Type clone(Map tfact) {
 		return new CompositeType(typeConst, strict, (TupleType)args.clone(tfact));
 	}
 
@@ -118,7 +125,8 @@ public class CompositeType extends BoundaryType {
 		return args;
 	}
 
-	public Type union(Type other) throws TypeModeError {
+	@Override
+    public Type union(Type other) throws TypeModeError {
 		if (other instanceof TVar || other instanceof GrowableType) {
 			return other.union(this);
 		} else {
@@ -184,7 +192,8 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 
-	public Type intersect(Type other) throws TypeModeError {
+	@Override
+    public Type intersect(Type other) throws TypeModeError {
 		if (other instanceof TVar || other instanceof GrowableType) {
 			return other.intersect(this);
 		} else {
@@ -222,7 +231,8 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 	
-	public boolean hasOverlapWith(Type other) {
+	@Override
+    public boolean hasOverlapWith(Type other) {
 		if (other instanceof TVar || other instanceof GrowableType) {
 			return other.hasOverlapWith(this);
 		} else if (! (other instanceof CompositeType)) {
@@ -254,11 +264,13 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 	
-	boolean isStrict() {
+	@Override
+    boolean isStrict() {
 		return strict;
 	}
 
-	public Type copyStrictPart() {
+	@Override
+    public Type copyStrictPart() {
 		if (isStrict()) {
 			return typeConst.applyStrict((TupleType)args.copyStrictPart(), false);
 		} else {
@@ -366,7 +378,8 @@ public class CompositeType extends BoundaryType {
 //        }
 //	}
 
-	public Type getParamType(String currName, Type repAs) {
+	@Override
+    public Type getParamType(String currName, Type repAs) {
 		if (repAs instanceof TVar) {
 			if (currName.equals(((TVar)repAs).getName())) {
 				return this;
@@ -385,10 +398,12 @@ public class CompositeType extends BoundaryType {
 		}
 	}
 	
+    @Override
     public Class javaEquivalent() throws TypeModeError {
     		return typeConst.javaEquivalent();
     }
     
+    @Override
     public boolean isJavaType() {
         return getTypeConstructor().isJavaTypeConstructor();
     }

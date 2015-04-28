@@ -41,7 +41,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		this.report = new StringBuilder();
 	}
 
-	public List<CodeStereotype> getStereotypes() {
+	@Override
+    public List<CodeStereotype> getStereotypes() {
 		final ArrayList<CodeStereotype> stereotypes = new ArrayList<CodeStereotype>();
 		if (this.primaryStereotype != null) {
 			stereotypes.add(this.primaryStereotype);
@@ -52,19 +53,23 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		return stereotypes;
 	}
 
-	public List<StereotypedElement> getStereoSubElements() {
+	@Override
+    public List<StereotypedElement> getStereoSubElements() {
 		return new ArrayList<StereotypedElement>();
 	}
 
-	public MethodDeclaration getElement() {
+	@Override
+    public MethodDeclaration getElement() {
 		return this.method;
 	}
 
-	public Javadoc getJavadoc() {
+	@Override
+    public Javadoc getJavadoc() {
 		return this.method.getJavadoc();
 	}
 
-	public ChildPropertyDescriptor getJavadocDescriptor() {
+	@Override
+    public ChildPropertyDescriptor getJavadocDescriptor() {
 		return MethodDeclaration.JAVADOC_PROPERTY;
 	}
 
@@ -96,7 +101,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 				|| this.methodAnalyzer.overridesHashCode();
 	}
 
-	public void findStereotypes() {
+	@Override
+    public void findStereotypes() {
 		this.report.append("\n" + this.getKey());
 		try { 
 			this.methodAnalyzer = new MethodAnalyzer(this.method);
@@ -145,7 +151,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		return this.checkForCollaborationalStereotype(false);
 	}
 
-	public String getReport() {
+	@Override
+    public String getReport() {
 		return this.report.toString();
 	}
 
@@ -262,7 +269,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		return this.isInCategory(MethodStereotype.Category.DEGENERATE);
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		int result = 1;
 		result = 31 * result
 				+ ((this.method == null) ? 0 : this.method.hashCode());
@@ -277,7 +285,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		return result;
 	}
 
-	public boolean equals(final Object obj) {
+	@Override
+    public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -292,19 +301,21 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 			if (other.method != null) {
 				return false;
 			}
-		} else if (!this.method.equals((Object) other.method)) {
+		} else if (!this.method.equals(other.method)) {
 			return false;
 		}
 		return this.primaryStereotype == other.primaryStereotype
 				&& this.secondaryStereotype == other.secondaryStereotype;
 	}
 
-	public String getName() {
+	@Override
+    public String getName() {
 		return (this.method != null && this.method.resolveBinding() != null) ? this.method
 				.resolveBinding().getName() : "";
 	}
 
-	public String getQualifiedName() {
+	@Override
+    public String getQualifiedName() {
 		final StringBuilder qName = new StringBuilder();
 		if (this.method != null && this.method.resolveBinding() != null) {
 			final IMethodBinding bind = this.method.resolveBinding();
@@ -329,7 +340,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		return qName.toString();
 	}
 	
-	public String getFullyQualifiedName() {
+	@Override
+    public String getFullyQualifiedName() {
 		final StringBuilder qName = new StringBuilder();
 		if (this.method != null && this.method.resolveBinding() != null) {
 			final IMethodBinding bind = this.method.resolveBinding();
@@ -378,7 +390,8 @@ public class StereotypedMethod extends MethodStereotypeRules implements
 		return qName.toString();
 	}
 
-	public String getKey() {
+	@Override
+    public String getKey() {
 		final StringBuilder parsedKey = new StringBuilder();
 		if (this.method != null && this.method.resolveBinding() != null) {
 			final IMethodBinding binding = this.method.resolveBinding();

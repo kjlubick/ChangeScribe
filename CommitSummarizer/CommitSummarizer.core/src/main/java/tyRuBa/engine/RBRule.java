@@ -28,7 +28,8 @@ public class RBRule extends RBComponent implements Cloneable {
 	private RBExpression cond;
 	Mode mode = null; // is only set for rules that have been mode converted.
 	
-	public Mode getMode() {
+	@Override
+    public Mode getMode() {
 		return mode;
 	}
 
@@ -49,11 +50,13 @@ public class RBRule extends RBComponent implements Cloneable {
 		mode = resultMode;
 	}
 
-	public PredicateIdentifier getPredId() {
+	@Override
+    public PredicateIdentifier getPredId() {
 		return pred;
 	}
 	
-	public RBTuple getArgs() {
+	@Override
+    public RBTuple getArgs() {
 		return args;
 	}
 
@@ -65,7 +68,8 @@ public class RBRule extends RBComponent implements Cloneable {
 		return new RBRule(pred, args, FrontEnd.makeAnd(e, cond));
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		try {
 			RBRule cl = (RBRule) super.clone();
 			return cl;
@@ -85,7 +89,8 @@ public class RBRule extends RBComponent implements Cloneable {
 		return getPredName() + getArgs();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(conclusionToString());
 		if (cond != null) {
 			result.append(" :- " + cond);
@@ -94,7 +99,8 @@ public class RBRule extends RBComponent implements Cloneable {
 		return result.toString();
 	}
 
-	public TupleType typecheck(PredInfoProvider predinfo) 
+	@Override
+    public TupleType typecheck(PredInfoProvider predinfo) 
 	throws TypeModeError {
 		try {
 			TypeEnv startEnv = new TypeEnv();
@@ -134,11 +140,13 @@ public class RBRule extends RBComponent implements Cloneable {
 		}
 	}
 
-	public RBComponent convertToNormalForm() {
+	@Override
+    public RBComponent convertToNormalForm() {
 		return new RBRule(pred, args, cond.convertToNormalForm());
 	}
 
-	public RBComponent convertToMode(PredicateMode predMode, ModeCheckContext context) 
+	@Override
+    public RBComponent convertToMode(PredicateMode predMode, ModeCheckContext context) 
 	throws TypeModeError {
 		BindingList paramModes = predMode.getParamModes();
 		boolean toBeCheck = predMode.toBeCheck();
@@ -194,7 +202,8 @@ public class RBRule extends RBComponent implements Cloneable {
 		}
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		Compiled compiledCond = cond.compile(c);
 		if (compiledCond.getMode().hi.compareTo(mode.hi) > 0) {
 			compiledCond = compiledCond.first();

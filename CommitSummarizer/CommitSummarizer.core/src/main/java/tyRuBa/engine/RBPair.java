@@ -36,7 +36,8 @@ public class RBPair extends RBAbstractPair {
 
 	/** If proper list then Turn into an Object[] otherwise
 	 *  just do as in super */
-	public Object up() {
+	@Override
+    public Object up() {
 		try {
 			int size = getNumSubterms();
 			Object[] array = new Object[size];
@@ -49,15 +50,18 @@ public class RBPair extends RBAbstractPair {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "[" + cdrToString(true, this) + "]";
 	}
 
-	public String quotedToString() {
+	@Override
+    public String quotedToString() {
 		return getCar().quotedToString() + getCdr().quotedToString();
 	}
 
-	protected Type getType(TypeEnv env) throws TypeModeError {
+	@Override
+    protected Type getType(TypeEnv env) throws TypeModeError {
 		Type car,cdr,result;
 		try {		
 			car = getCar().getType(env);
@@ -77,13 +81,15 @@ public class RBPair extends RBAbstractPair {
 		return result;
 	}
 
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
      */
+    @Override
     public String getFirst() {
         return getCar().getFirst();
     }
@@ -91,6 +97,7 @@ public class RBPair extends RBAbstractPair {
     /**
      * @see tyRuBa.util.TwoLevelKey#getSecond()
      */
+    @Override
     public Object getSecond() {
         Object[] result = new Object[2];
         result[0] = getCar().getSecond();

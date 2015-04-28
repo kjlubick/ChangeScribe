@@ -24,7 +24,8 @@ public class BindingList {
 		parts.add(bm);
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		final int size = size();
 		int hash = getClass().hashCode();
 		for (int i = 0; i < size; i++)
@@ -32,7 +33,8 @@ public class BindingList {
 		return hash;
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other instanceof BindingList) {
 			BindingList cother = (BindingList) other;
 			if (this.size() != cother.size()) {
@@ -49,7 +51,8 @@ public class BindingList {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("(");
 		int size = this.size();
 		for (int i = 0; i < size; i++) {

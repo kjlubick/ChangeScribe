@@ -20,7 +20,8 @@ public class IteratorPair implements Iterator {
 		which = 0;
 	}
 
-	public boolean hasNext() {
+	@Override
+    public boolean hasNext() {
 		if(which < 2) {
 			if(iterators[which] != null && iterators[which].hasNext()) {
 				return true;
@@ -33,7 +34,8 @@ public class IteratorPair implements Iterator {
 		}
 	}
 
-	public Object next() {
+	@Override
+    public Object next() {
 		if(hasNext()) {
 			return iterators[which].next();
 		} else {
@@ -41,7 +43,8 @@ public class IteratorPair implements Iterator {
 		}
 	}
 
-	public void remove() {
+	@Override
+    public void remove() {
 		throw new UnsupportedOperationException(); //maybe implement this later
 	}
 }

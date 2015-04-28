@@ -20,6 +20,7 @@ public abstract class Identifier implements Serializable {
         this.arity = arity;
     }
 
+    @Override
     public boolean equals(Object arg) {
     	if (arg.getClass().equals(this.getClass())) {
     	    Identifier other = (Identifier) arg;
@@ -29,10 +30,12 @@ public abstract class Identifier implements Serializable {
     	}
     }
 
+    @Override
     public int hashCode() {
     	return getClass().hashCode() * arity + name.hashCode();
     }
 
+    @Override
     public String toString() {
     	return name + "/" + arity;
     }

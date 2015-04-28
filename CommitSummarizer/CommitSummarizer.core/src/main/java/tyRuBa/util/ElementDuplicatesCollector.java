@@ -16,7 +16,8 @@ public class ElementDuplicatesCollector extends ElementCollector {
   public ElementDuplicatesCollector() {}
 
   /** Just get the fits element, we don't have to check for duplicates */
-  protected int newElementFromSource() {
+  @Override
+protected int newElementFromSource() {
   	int stat;
     if ((stat=source.status())==ElementSource.ELEMENT_READY) {
       Object element=source.nextElement();

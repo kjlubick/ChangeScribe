@@ -54,7 +54,8 @@ public class WeakValueMap
 	}
 
 
-	protected RefMapValue createRefMapValue (Object key, Object value, 
+	@Override
+    protected RefMapValue createRefMapValue (Object key, Object value, 
 		ReferenceQueue queue)
 	{
 		return new WeakMapValue (key, value, queue);
@@ -80,31 +81,36 @@ public class WeakValueMap
 		}
 
 
-		public Object getKey ()
+		@Override
+        public Object getKey ()
 		{
 			return _key;
 		}
 	
 	
-		public Object getValue ()
+		@Override
+        public Object getValue ()
 		{
 			return get ();
 		}
 	
 
-		public boolean isValid ()
+		@Override
+        public boolean isValid ()
 		{
 			return _valid;
 		}
 
 
-		public void invalidate ()
+		@Override
+        public void invalidate ()
 		{
 			_valid = false;
 		}
 
 	
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (this == other)
 				return true;

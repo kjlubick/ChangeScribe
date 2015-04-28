@@ -14,7 +14,8 @@ public class MetaTypeTest extends TyrubaTest implements Serializable {
 		super(arg0);
 	}
 
-	protected void setUp() throws Exception {
+	@Override
+    protected void setUp() throws Exception {
 		TyrubaTest.initfile = true;
 		RuleBase.useCache = true;
 		RuleBase.silent = true;

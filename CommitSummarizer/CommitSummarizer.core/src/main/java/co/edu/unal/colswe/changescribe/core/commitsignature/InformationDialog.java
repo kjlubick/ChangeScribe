@@ -64,7 +64,8 @@ public class InformationDialog extends TitleAreaDialog {
 		toolkit = new FormToolkit(parent.getDisplay());
 		parent.addDisposeListener(new DisposeListener() {
 
-			public void widgetDisposed(DisposeEvent e) {
+			@Override
+            public void widgetDisposed(DisposeEvent e) {
 				toolkit.dispose();
 			}
 		});

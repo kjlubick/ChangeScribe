@@ -61,6 +61,7 @@ public class RBPredicateExpression extends RBExpression {
 		this(predName, RBTuple.make(argTerms));
 	}
 
+    @Override
     public Compiled compile(CompilationContext c) {
         Assert.assertNotNull("Must be mode checked first!",getMode());
         if (getMode().hi.compareTo(Multiplicity.one) <= 0) {
@@ -91,7 +92,8 @@ public class RBPredicateExpression extends RBExpression {
 		return args.getSubterm(pos);
 	}
 	
-	public Object clone() {
+	@Override
+    public Object clone() {
 		try {
 			RBPredicateExpression cl = (RBPredicateExpression) super.clone();
 			cl.args = (RBTuple)args.clone();
@@ -102,7 +104,8 @@ public class RBPredicateExpression extends RBExpression {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(getPredName());
 		int numSubterms = args.getNumSubterms();
 		result.append("(");
@@ -124,7 +127,8 @@ public class RBPredicateExpression extends RBExpression {
         return result.toString();
     }
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) 
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) 
 	throws TypeModeError {
 		try {
 			TypeEnv myEnv = Factory.makeTypeEnv();
@@ -146,7 +150,8 @@ public class RBPredicateExpression extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, 
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, 
 	boolean rearrange) throws TypeModeError {
 		ModeCheckContext resultContext = (ModeCheckContext) context.clone();
 		BindingList bindings = Factory.makeBindingList();
@@ -176,7 +181,8 @@ public class RBPredicateExpression extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 

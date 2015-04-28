@@ -43,7 +43,8 @@ public class FactBaseTest extends TyrubaTest {
 			this.howmany = howmany;
 		}
 
-		public void run() {
+		@Override
+        public void run() {
 			try {
 				doRandomQueries(howmany);
 			} catch (Throwable e) {
@@ -65,7 +66,8 @@ public class FactBaseTest extends TyrubaTest {
 			this.howmany = howmany;
 		}
 
-		public void run() {
+		@Override
+        public void run() {
 			try {
 				for (int i=0;i<howmany;i++) {
 					doRandomQueries(1);
@@ -87,7 +89,8 @@ public class FactBaseTest extends TyrubaTest {
 			super(name);
 		}
 
-		public void run() {
+		@Override
+        public void run() {
 			try {
 				while (test_atoms.length>1) {
 					doRandomQueries(1);
@@ -113,7 +116,8 @@ public class FactBaseTest extends TyrubaTest {
 			this.howmany = howmany;
 		}
 
-		public void run() {
+		@Override
+        public void run() {
 			Random rnd = new Random();
 
 			try {
@@ -299,7 +303,8 @@ public class FactBaseTest extends TyrubaTest {
 		}
 	}
 
-  	protected void setUp() throws Exception {
+  	@Override
+    protected void setUp() throws Exception {
   		bucketLoads = 0;
   		
 		// Make some atoms for the test facts:
@@ -324,7 +329,8 @@ public class FactBaseTest extends TyrubaTest {
 		setUp(false); // false => first time with a clean slate
 	}
 	
-	protected void tearDown() throws Exception {
+	@Override
+    protected void tearDown() throws Exception {
 		super.tearDown();
 	}
 	
@@ -782,7 +788,8 @@ public class FactBaseTest extends TyrubaTest {
 			myfile = filename;
 		}
 
-		public void update() throws ParseException, TypeModeError {
+		@Override
+        public void update() throws ParseException, TypeModeError {
 			try {
 				//System.out.println("Bucket update: "+myfile);
 				load(myfile);
@@ -793,7 +800,8 @@ public class FactBaseTest extends TyrubaTest {
 			}
 		}
 		
-		public String toString() {
+		@Override
+        public String toString() {
 			return "RubFileBucket("+myfile+")";
 		}
 

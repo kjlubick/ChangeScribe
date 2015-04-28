@@ -26,7 +26,8 @@ public class TaggedTerm {
 		this.term = term;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return String.valueOf(this.term) + ":" + this.tag;
 	}
 }

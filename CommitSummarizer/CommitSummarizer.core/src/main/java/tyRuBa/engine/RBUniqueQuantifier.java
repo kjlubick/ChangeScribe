@@ -53,7 +53,8 @@ public class RBUniqueQuantifier extends RBExpression {
 		return vars;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("(UNIQUE ");
 		for (int i = 0; i < vars.length; i++) {
 			if (i > 0)
@@ -64,7 +65,8 @@ public class RBUniqueQuantifier extends RBExpression {
 		return result.toString();
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			return getExp().typecheck(predinfo, startEnv);
 		} catch (TypeModeError e) {
@@ -72,7 +74,8 @@ public class RBUniqueQuantifier extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
 		ModeCheckContext resultContext = (ModeCheckContext)context.clone();
 		Collection boundedVars = exp.getVariables();
 		Collection vars = new HashSet();
@@ -106,7 +109,8 @@ public class RBUniqueQuantifier extends RBExpression {
 		}
 	}
 	
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		RBExpression result = new RBUniqueQuantifier(
 			vars, exp.convertToNormalForm(false));
 		if (negate) {
@@ -116,11 +120,13 @@ public class RBUniqueQuantifier extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return new CompiledUnique(vars, exp.compile(c));
 	}
 

@@ -43,7 +43,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	 * of preferences. Each field editor knows how to save and
 	 * restore itself.
 	 */
-	public void createFieldEditors() {
+	@Override
+    public void createFieldEditors() {
 		BooleanFieldEditor commitSignatureActive = new BooleanFieldEditor(
 				PreferenceConstants.P_COMMIT_SIGNATURE_ACTIVE,
 				"&View commit signature",
@@ -74,7 +75,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 		fieldEditor.setEnabled(false, getFieldEditorParent());
 		scaleFieldEditor.getScaleControl().addListener(SWT.Selection,
 				new Listener() {
-					public void handleEvent(Event event) {
+					@Override
+                    public void handleEvent(Event event) {
 						int perspectiveValue = scaleFieldEditor.getScaleControl().getSelection() + scaleFieldEditor.getMinimum();
 						fieldEditor.setStringValue("" + perspectiveValue + " % ");
 					}
@@ -101,7 +103,8 @@ public class PreferencePage extends FieldEditorPreferencePage implements IWorkbe
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
-	public void init(IWorkbench workbench) {
+	@Override
+    public void init(IWorkbench workbench) {
 	}
 	
 }

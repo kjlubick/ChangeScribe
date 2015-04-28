@@ -24,7 +24,8 @@ public class SemiDetCachedRuleBase extends SemiDetCompiled {
 	}
 
 	/** Unification, check cache first */
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		final RBTuple other = (RBTuple)input;
 		FormKey k = new FormKey(other);
 		CacheEntry entry = (CacheEntry) cache.get(k);
@@ -65,7 +66,8 @@ public class SemiDetCachedRuleBase extends SemiDetCompiled {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "SEMIDET CACHED RULEBASE(...)";
 	}
 

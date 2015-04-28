@@ -15,13 +15,14 @@ public class CompiledFact extends SemiDetCompiled {
 		this.args = args;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		RBTerm goal = (RBTerm) input;
 		// System.err.println("         Goal: " + goal);
 		// System.err.println("Checking Fact: " + this);
 		final Frame callFrame = new Frame();
 		// Rename all the variables in the goal to avoid name conflicts.
-		goal = (RBTuple) goal.instantiate(callFrame);
+		goal = goal.instantiate(callFrame);
 		//System.err.println("     Unifying : " + goal);
 		//System.err.println("         with : " + args);
 		Frame fc = goal.unify(args, new Frame());
@@ -36,7 +37,8 @@ public class CompiledFact extends SemiDetCompiled {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "FACT(" + args + ")";
 	}
 

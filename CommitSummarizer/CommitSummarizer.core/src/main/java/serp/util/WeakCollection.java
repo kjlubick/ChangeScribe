@@ -53,7 +53,8 @@ public class WeakCollection
 	}
 
 
-	protected RefValue createRefValue (Object value, ReferenceQueue queue,
+	@Override
+    protected RefValue createRefValue (Object value, ReferenceQueue queue,
 		boolean identity)
 	{
 		if (queue == null)
@@ -88,13 +89,15 @@ public class WeakCollection
 		}
 
 
-		public Object getValue ()
+		@Override
+        public Object getValue ()
 		{
 			return get ();
 		}
 
 
-		public int hashCode ()
+		@Override
+        public int hashCode ()
 		{
 			Object obj = get ();
 			if (obj == null)
@@ -106,7 +109,8 @@ public class WeakCollection
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (this == other)
 				return true;

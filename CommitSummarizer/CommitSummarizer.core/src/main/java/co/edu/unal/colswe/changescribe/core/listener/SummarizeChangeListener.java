@@ -16,7 +16,8 @@ public class SummarizeChangeListener implements SelectionListener {
 		this.changedListDialog = changedListDialog;
 	}
 
-	public void widgetSelected(SelectionEvent e) {
+	@Override
+    public void widgetSelected(SelectionEvent e) {
 		if(changedListDialog.getSelectedFiles() != null && changedListDialog.getSelectedFiles().length > 0) {
 			SummarizeChanges summarizer = new SummarizeChanges(changedListDialog.getGit());
 			summarizer.setChangedListDialog(changedListDialog);
@@ -29,7 +30,8 @@ public class SummarizeChangeListener implements SelectionListener {
 		}
 	}
 
-	public void widgetDefaultSelected(SelectionEvent e) {
+	@Override
+    public void widgetDefaultSelected(SelectionEvent e) {
 
 	}
 

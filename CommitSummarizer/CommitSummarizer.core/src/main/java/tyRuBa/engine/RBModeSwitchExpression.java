@@ -54,7 +54,8 @@ public class RBModeSwitchExpression extends RBExpression {
 		return defaultExp;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < getNumModeCases(); i++) {
 			if (i > 0) {
@@ -68,12 +69,14 @@ public class RBModeSwitchExpression extends RBExpression {
 		return result.toString();
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		throw new Error("Should not happen: a mode case should have been selected" +
 			" before any compilation is performed");
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			TypeEnv resultEnv = null;
 			for (int i = 0; i < getNumModeCases(); i++) {
@@ -102,7 +105,8 @@ public class RBModeSwitchExpression extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
 	throws TypeModeError {
 		for (int i = 0; i < getNumModeCases(); i++) {
 			ModeCase currModeCase = getModeCaseAt(i);
@@ -127,7 +131,8 @@ public class RBModeSwitchExpression extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 

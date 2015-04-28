@@ -106,6 +106,7 @@ public final class Index {
     /** Location that this index is located at. */
     private Location storageLocation;
     
+    @Override
     public String toString() {
     		String result = "Index(" + predicateName + " ";
     		int arity = boundPlaces.length + freePlaces.length;
@@ -213,6 +214,7 @@ public final class Index {
 
         getPager().asynchDoTask(getResourceFromKey(whole_key), new Pager.Task(true) {
 
+            @Override
             public Object doIt(Resource map_rsrc) {
                 HashMapResource map = (HashMapResource) map_rsrc;
 
@@ -262,6 +264,7 @@ public final class Index {
         });
         getPager().asynchDoTask(storageLocation.getResourceID("keys.data"), new Pager.Task(true) {
 
+            @Override
             public Object doIt(Resource rsrc) {
                 HashSetResource toplevelKeys = (HashSetResource) rsrc;
                 if (toplevelKeys == null)
@@ -292,6 +295,7 @@ public final class Index {
 
         return (ElementSource) getPager().synchDoTask(getResourceFromKey(inputPars), new Pager.Task(false) {
 
+            @Override
             public Object doIt(Resource rsrc) {
                 HashMapResource map_resource = (HashMapResource) rsrc;
                 if (map_resource == null) {
@@ -313,6 +317,7 @@ public final class Index {
     public ElementSource values() {
         return getTopLevelKeys().map(new Action() {
 
+            @Override
             public Object compute(Object arg) {
                 String topkey = (String) arg;
                 return getTopKeyValues(topkey);
@@ -328,6 +333,7 @@ public final class Index {
     private ElementSource getTopLevelKeys() {
         HashSetResource topLevelKeys = (HashSetResource) getPager().synchDoTask(
                 storageLocation.getResourceID("keys.data"), new Pager.Task(false) {
+                    @Override
                     public Object doIt(Resource rsrc) {
                         HashSetResource toplevelKeys = (HashSetResource) rsrc;
                         return toplevelKeys;
@@ -343,9 +349,11 @@ public final class Index {
     private ElementSource getTopKeyValues(String topkey) {
         ElementSource valid_values = (ElementSource) getPager().synchDoTask(
                 storageLocation.getResourceID(nameManager.getPersistentName(topkey)), new Pager.Task(false) {
+                    @Override
                     public Object doIt(Resource rsrc) {
                         HashMapResource map = (HashMapResource) rsrc;
                         return ElementSource.with(map.values().iterator()).map(new Action() {
+                            @Override
                             public Object compute(Object arg) {
                                 return removeInvalids(arg);
                             }
@@ -361,6 +369,7 @@ public final class Index {
      */
     public ElementSource convertIndexValuesToRBTuples(ElementSource source) {
         return source.map(new Action() {
+            @Override
             public Object compute(Object arg) {
                 return ((IndexValue) arg).getParts();
             }
@@ -376,6 +385,7 @@ public final class Index {
             return ElementSource.theEmpty;
         else if (values instanceof ArrayList) {
             return ElementSource.with((ArrayList) values).map(new Action() {
+                @Override
                 public Object compute(Object arg) {
                     if (((IndexValue) arg).isValid(validatorManager))
                         return arg;

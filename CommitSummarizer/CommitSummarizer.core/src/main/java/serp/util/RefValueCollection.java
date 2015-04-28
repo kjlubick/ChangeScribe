@@ -69,7 +69,8 @@ abstract class RefValueCollection
 	}
 
 
-	public boolean makeHard (Object obj)
+	@Override
+    public boolean makeHard (Object obj)
 	{
 		removeExpired ();
 		
@@ -97,7 +98,8 @@ abstract class RefValueCollection
 	}
 
 
-	public boolean makeReference (Object obj)
+	@Override
+    public boolean makeReference (Object obj)
 	{
 		removeExpired ();
 		
@@ -150,14 +152,16 @@ abstract class RefValueCollection
 	}
 
 
-	public boolean add (Object obj)
+	@Override
+    public boolean add (Object obj)
 	{
 		removeExpired ();
 		return addFilter (obj);
 	}
 
 
-	public boolean addAll (Collection objs)
+	@Override
+    public boolean addAll (Collection objs)
 	{
 		removeExpired ();
 
@@ -176,13 +180,15 @@ abstract class RefValueCollection
 	}
 
 
-	public void clear ()
+	@Override
+    public void clear ()
 	{
 		_coll.clear ();
 	}
 
 
-	public boolean contains (Object obj)
+	@Override
+    public boolean contains (Object obj)
 	{
 		if (obj == null)
 			return _coll.contains (null);
@@ -190,7 +196,8 @@ abstract class RefValueCollection
 	}
 
 
-	public boolean containsAll (Collection objs)
+	@Override
+    public boolean containsAll (Collection objs)
 	{
 		boolean contains = true;
 		for (Iterator itr = objs.iterator (); contains && itr.hasNext ();)
@@ -199,26 +206,30 @@ abstract class RefValueCollection
 	}
 
 
-	public boolean equals (Object other)
+	@Override
+    public boolean equals (Object other)
 	{
 		return _coll.equals (other);
 	}
 
 
-	public boolean isEmpty ()
+	@Override
+    public boolean isEmpty ()
 	{
 		return _coll.isEmpty ();
 	}
 
 
-	public boolean remove (Object obj)
+	@Override
+    public boolean remove (Object obj)
 	{
 		removeExpired ();
 		return removeFilter (obj);
 	}
 	
 
-	public boolean removeAll (Collection objs)
+	@Override
+    public boolean removeAll (Collection objs)
 	{
 		removeExpired ();
 
@@ -229,7 +240,8 @@ abstract class RefValueCollection
 	}
 
 
-	public boolean retainAll (Collection objs)
+	@Override
+    public boolean retainAll (Collection objs)
 	{
 		removeExpired ();
 
@@ -255,13 +267,15 @@ abstract class RefValueCollection
 	}
 
 
-	public int size ()
+	@Override
+    public int size ()
 	{
 		return _coll.size ();
 	}	
 
 
-	public Object[] toArray ()
+	@Override
+    public Object[] toArray ()
 	{
 		// not too efficient
 		ArrayList list = new ArrayList (size ());
@@ -272,7 +286,8 @@ abstract class RefValueCollection
 	}
 
 
-	public Object[] toArray (Object[] a)
+	@Override
+    public Object[] toArray (Object[] a)
 	{
 		// not too efficient
 		ArrayList list = new ArrayList (size ());
@@ -283,7 +298,8 @@ abstract class RefValueCollection
 	}
 
 
-	public Iterator iterator ()
+	@Override
+    public Iterator iterator ()
 	{
 		return new ValuesIterator ();
 	}
@@ -344,13 +360,15 @@ abstract class RefValueCollection
 	private class ValuesIterator
 		extends LookaheadIterator
 	{
-		protected Iterator newIterator ()
+		@Override
+        protected Iterator newIterator ()
 		{
 			return _coll.iterator ();
 		}
 
 
-		protected void processValue (ItrValue value)
+		@Override
+        protected void processValue (ItrValue value)
 		{
 			if (value.value instanceof RefValue)
 			{

@@ -46,13 +46,15 @@ public class IdentityPool
 	}
 
 	
-	protected Set freeSet ()
+	@Override
+    protected Set freeSet ()
 	{
 		return _free;
 	}
 
 
-	protected Map takenMap ()
+	@Override
+    protected Map takenMap ()
 	{
 		return _taken;
 	}

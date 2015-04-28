@@ -22,13 +22,15 @@ public class Frame extends Hashtable {
 		return (RBTerm) super.get(v);
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		Frame cl = (Frame) super.clone();
 		//cl.rules = (Stack)rules.clone();
 		return cl;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("|");
 		Enumeration keys = this.keys();
 		if (!keys.hasMoreElements()) {
@@ -77,7 +79,8 @@ public class Frame extends Hashtable {
 		return f;
 	}
 
-	public boolean equals(Object x) {
+	@Override
+    public boolean equals(Object x) {
 		if (!(x.getClass() == this.getClass()))
 			return false;
 		boolean equal = true;
@@ -93,13 +96,14 @@ public class Frame extends Hashtable {
 		return equal;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		int hash = 0;
 		Enumeration keys = this.keys();
 		while (keys.hasMoreElements()) {
 			RBSubstitutable key = (RBSubstitutable) keys.nextElement();
 			RBTerm value = get(key);
-			hash += key.hashCode() * ((RBTerm) value).formHashCode();
+			hash += key.hashCode() * value.formHashCode();
 		}
 		return hash; 
 	}

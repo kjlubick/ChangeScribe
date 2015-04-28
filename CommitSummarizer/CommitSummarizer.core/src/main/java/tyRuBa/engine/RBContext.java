@@ -16,7 +16,8 @@ public class RBContext {
 	rb.retract(new RBFact(fact));
 	}
 	*/
-	public String toString() {
+	@Override
+    public String toString() {
 		return "-- RBContext --";
 	}
 	/*

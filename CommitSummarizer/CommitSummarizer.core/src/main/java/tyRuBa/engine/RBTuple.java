@@ -52,7 +52,7 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 	}
 	
 	private RBTuple(RBTerm[] terms) {
-		subterms = (RBTerm[]) terms.clone();
+		subterms = terms.clone();
 	}
 
     public static RBTuple makeSingleton(RBTerm term) {
@@ -67,7 +67,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return subterms[i];
 	}
 
-	public boolean equals(Object x) {
+	@Override
+    public boolean equals(Object x) {
 		if (!(x.getClass() == this.getClass()))
 			return false;
 		RBTuple cx = (RBTuple) x;
@@ -80,21 +81,24 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return true;
 	}
 
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		int hash = subterms.length;
 		for (int i = 0; i < subterms.length; i++)
 			hash = hash * 19 + subterms[i].formHashCode();
 		return hash;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		int hash = subterms.length;
 		for (int i = 0; i < subterms.length; i++)
 			hash = hash * 19 + subterms[i].hashCode();
 		return hash;
 	}
 
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		for (int i = 0; i < subterms.length; i++) {
 			if (!subterms[i].freefor(v))
 				return false;
@@ -102,7 +106,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return true;
 	}
 
-	public BindingMode getBindingMode(ModeCheckContext context) {
+	@Override
+    public BindingMode getBindingMode(ModeCheckContext context) {
 		for (int i = 0; i < getNumSubterms(); i++) {
 			if (! (getSubterm(i).getBindingMode(context).isBound()))
 				return Factory.makePartiallyBound();
@@ -110,7 +115,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return Factory.makeBound();
 	}
 	
-	public boolean isGround() {
+	@Override
+    public boolean isGround() {
 		for (int i = 0; i < getNumSubterms(); i++) {
 			if (! getSubterm(i).isGround()) {
 				return false;
@@ -119,7 +125,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return true;
 	}
 
-	public boolean sameForm(RBTerm other, Frame lr, Frame rl) {
+	@Override
+    public boolean sameForm(RBTerm other, Frame lr, Frame rl) {
 		if (other.getClass() != this.getClass()) 
 			return false;
 		RBTuple cother = (RBTuple) other;
@@ -132,7 +139,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return true;
 	}
 
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 		if (!(other instanceof RBTuple))
 			if (other instanceof RBVariable)
 				return other.unify(this, f);
@@ -150,7 +158,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return f;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("<");
 		for (int i = 0; i < subterms.length; i++) {
 			if (i > 0)
@@ -161,7 +170,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return result.toString();
 	}
 
-	protected Type getType(TypeEnv env) throws TypeModeError {
+	@Override
+    protected Type getType(TypeEnv env) throws TypeModeError {
 		TupleType tlst = Factory.makeTupleType();
 		for (int i = 0; i < subterms.length; i++) { 
 			tlst.add(subterms[i].getType(env));
@@ -169,13 +179,15 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
 		return tlst;
 	}
 
-	public void makeAllBound(ModeCheckContext context) {
+	@Override
+    public void makeAllBound(ModeCheckContext context) {
 		for (int i = 0; i < getNumSubterms(); i++) {
 			getSubterm(i).makeAllBound(context);
 		}
 	}
 
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 
@@ -193,6 +205,7 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
      */
+    @Override
     public String getFirst() {
         if (subterms.length > 0) {
             return subterms[0].getFirst();
@@ -204,6 +217,7 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
     /**
      * @see tyRuBa.util.TwoLevelKey#getSecond()
      */
+    @Override
     public Object getSecond() {
         if (subterms.length > 1) {
             Object[] objs;
@@ -227,7 +241,8 @@ public class RBTuple extends RBTerm implements TwoLevelKey {
         }
     }
 
-	public Object up() {
+	@Override
+    public Object up() {
 		Object[] objs = new Object[subterms.length];
 		for (int i = 0; i < objs.length; i++) {
 			objs[i] = subterms[i].up();

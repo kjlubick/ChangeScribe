@@ -38,7 +38,8 @@ public class NativePredicate extends RBComponent {
 	private ArrayList implementations = new ArrayList();
 	private PredicateIdentifier predId;
 	
-	public Mode getMode() {
+	@Override
+    public Mode getMode() {
 		return null; // Not yet converted, only specific Implementations have a mode
 	}
 
@@ -77,12 +78,14 @@ public class NativePredicate extends RBComponent {
 		rb.insert(this);
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		throw new Error("Compilation only works after this has been converted "
 			+ "to a proper mode.");
 	}
 
-	public TupleType typecheck(PredInfoProvider predinfo) throws TypeModeError {
+	@Override
+    public TupleType typecheck(PredInfoProvider predinfo) throws TypeModeError {
 		return getPredType();
 	}
 	
@@ -98,15 +101,18 @@ public class NativePredicate extends RBComponent {
 		return predinfo.getTypeList();
 	}
 	
-	public PredicateIdentifier getPredId() {
+	@Override
+    public PredicateIdentifier getPredId() {
 		return predId; 
 	}
 	
-	public RBTuple getArgs() {
+	@Override
+    public RBTuple getArgs() {
 		throw new Error("getArgs cannot be called until an implementation has been selected");
 	}
 	
-	public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) 
+	@Override
+    public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) 
 	throws TypeModeError {
 		BindingList targetBindingList = mode.getParamModes();
 		Implementation result = null;
@@ -127,7 +133,8 @@ public class NativePredicate extends RBComponent {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(predinfo.getPredId().toString());
 		for (Iterator iter = implementations.iterator(); iter.hasNext();) {
 			Implementation element = (Implementation) iter.next();
@@ -141,7 +148,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string, Type.string);
 
 		string_append.addMode(new Implementation("BBF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s1 = (String) args[0].up();
 				String s2 = (String) args[1].up();
 				addSolution(s1.concat(s2));
@@ -149,7 +157,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		string_append.addMode(new Implementation("FFB", "MULTI") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s = (String) args[0].up();
 				int len = s.length();
 				for (int i = 0; i <= len; i++) {
@@ -159,7 +168,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		string_append.addMode(new Implementation("BFB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s1 = (String) args[0].up();
 				String s3 = (String) args[1].up();
 				if (s3.startsWith(s1))
@@ -168,7 +178,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		string_append.addMode(new Implementation("FBB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s2 = (String) args[0].up();
 				String s3 = (String) args[1].up();
 				if (s3.endsWith(s2))
@@ -184,7 +195,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.integer);
 
 		string_length.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s = (String) args[0].up();
 				addSolution(new Integer(s.length()));
 			}
@@ -198,7 +210,8 @@ public class NativePredicate extends RBComponent {
 			Type.integer, Type.string, Type.string, Type.string);
 
 		string_index_split.addMode(new Implementation("BBFF", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int where = ((Integer) args[0].up()).intValue();
 				String to_split = (String) args[1].up();
 				if (where >= 0 && where <= to_split.length()) {
@@ -216,7 +229,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string, Type.string, Type.string);
 
 		string_split_at_last.addMode(new Implementation("BBFF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String separator = (String) args[0].up();
 				String to_split = (String) args[1].up();
 				int where = to_split.lastIndexOf(separator);
@@ -230,7 +244,8 @@ public class NativePredicate extends RBComponent {
 		});
 
 		string_split_at_last.addMode(new Implementation("BFBB", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String separator = (String) args[0].up();
 				String start = (String) args[1].up();
 				String end = (String) args[2].up();
@@ -264,7 +279,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string, Type.string, Type.string);
 
 		string_replace.addMode(new Implementation("BBBF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String r1 = (String) args[0].up();
 				String r2 = (String) args[1].up();
 				String s = (String) args[2].up();
@@ -273,7 +289,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		string_replace.addMode(new Implementation("BBFB", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String r1 = (String) args[0].up();
 				String r2 = (String) args[1].up();
 				String s = (String) args[2].up();
@@ -289,7 +306,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string);
 
 		to_lower_case.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s = (String) args[0].up();
 				addSolution(s.toLowerCase());
 			}
@@ -303,7 +321,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string);
 
 		to_upper_case.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s = (String) args[0].up();
 				addSolution(s.toUpperCase());
 			}
@@ -317,7 +336,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string);
 
 		capitalize.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s = (String) args[0].up();
 				if (s.length() > 0)
 					addSolution(s.substring(0, 1).toUpperCase().concat(s.substring(1)));
@@ -332,7 +352,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string);
 
 		decapitalize.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String s = (String) args[0].up();
 				if (s.length() > 0)
 					addSolution(s.substring(0, 1).toLowerCase().concat(s.substring(1)));
@@ -347,7 +368,8 @@ public class NativePredicate extends RBComponent {
 			Type.integer, Type.string, Type.string);
 
 		string_repeat.addMode(new Implementation("BBF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int num = ((Integer) args[0].up()).intValue();
 				String rep = (String) args[1].up();
 				if (num > -1) {
@@ -369,7 +391,8 @@ public class NativePredicate extends RBComponent {
 		NativePredicate type_test = new NativePredicate(id.getName(), Factory.makeAtomicType(t));
 		
 		type_test.addMode(new Implementation("B", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
                 
 				if (args[0].isOfType(t)) {
 				    addSolution();
@@ -385,7 +408,8 @@ public class NativePredicate extends RBComponent {
 			Type.integer, Type.integer, Type.integer);
 
 		range.addMode(new Implementation("BBF", "NONDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int lo = ((Integer) args[0].up()).intValue();
 				int high = ((Integer) args[1].up()).intValue();
 				if (high > lo) {
@@ -402,7 +426,8 @@ public class NativePredicate extends RBComponent {
 		NativePredicate greater = new NativePredicate("greater", Type.integer, Type.integer);
 
 		greater.addMode(new Implementation("BB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int high = ((Integer) args[0].up()).intValue();
 				int lo = ((Integer) args[1].up()).intValue();
 				if (high > lo)
@@ -418,7 +443,8 @@ public class NativePredicate extends RBComponent {
 			Type.integer, Type.integer, Type.integer);
 
 		sum.addMode(new Implementation("BBF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int v1 = ((Integer) args[0].up()).intValue();
 				int v2 = ((Integer) args[1].up()).intValue();
 				addSolution(new Integer(v1 + v2));
@@ -426,7 +452,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		sum.addMode(new Implementation("BFB", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int v1 = ((Integer) args[0].up()).intValue();
 				int v2 = ((Integer) args[1].up()).intValue();
 				addSolution(new Integer(v2 - v1));
@@ -434,7 +461,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		sum.addMode(new Implementation("FBB", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int v1 = ((Integer) args[0].up()).intValue();
 				int v2 = ((Integer) args[1].up()).intValue();
 				addSolution(new Integer(v2 - v1));
@@ -449,7 +477,8 @@ public class NativePredicate extends RBComponent {
 			Type.integer, Type.integer, Type.integer);
 
 		mul.addMode(new Implementation("BBF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int v1 = ((Integer) args[0].up()).intValue();
 				int v2 = ((Integer) args[1].up()).intValue();
 				addSolution(new Integer(v1 * v2));
@@ -457,7 +486,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		mul.addMode(new Implementation("FBB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int v2 = ((Integer) args[0].up()).intValue();
 				int v3 = ((Integer) args[1].up()).intValue();
 				if (v2 == 0) {
@@ -471,7 +501,8 @@ public class NativePredicate extends RBComponent {
 		}); 
 
 		mul.addMode(new Implementation("BFB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				int v1 = ((Integer) args[0].up()).intValue();
 				int v3 = ((Integer) args[1].up()).intValue();
 				if (v1 == 0) {
@@ -495,7 +526,8 @@ public class NativePredicate extends RBComponent {
 		NativePredicate debug_print = new NativePredicate("debug_print", Type.object);
 
 		debug_print.addMode(new Implementation("B", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String msg = args[0].up().toString();
 				debug_print(msg);
 				addSolution();
@@ -509,7 +541,8 @@ public class NativePredicate extends RBComponent {
 		NativePredicate throw_error = new NativePredicate("throw_error", Type.string);
 
 		throw_error.addMode(new Implementation("B", "FAIL") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String msg = (String)args[0].up();
 				throw new Error(msg);
 			}
@@ -523,7 +556,8 @@ public class NativePredicate extends RBComponent {
 			Type.string, Type.string);
 
 		write_file.addMode(new Implementation("BB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String filename = (String)args[0].up();
 				String contents = (String)args[1].up();
 				debug_print("writing file: " + filename);
@@ -550,7 +584,8 @@ public class NativePredicate extends RBComponent {
 		NativePredicate write_output = new NativePredicate("write_output", Type.string);
 
 		write_output.addMode(new Implementation("B", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				String contents = (String)args[0].up();
 				qe.output().print(contents);
 				addSolution();
@@ -564,7 +599,8 @@ public class NativePredicate extends RBComponent {
 		NativePredicate fileseparator = new NativePredicate("fileseparator", Type.string);
 
 		fileseparator.addMode(new Implementation("F", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				addSolution(System.getProperty("file.separator"));
 			}
 		}); 
@@ -577,7 +613,8 @@ public class NativePredicate extends RBComponent {
 			Type.object, Type.integer);
 
 		hash_value.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				addSolution(new Integer(args[0].up().hashCode()));
 			}
 		}); 
@@ -591,7 +628,8 @@ public class NativePredicate extends RBComponent {
 			Type.integer);
 
 		length.addMode(new Implementation("BF", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				Object arg = args[0].up();
 				if (arg instanceof String && arg.equals("[]")) {
 					addSolution(new Integer(0));
@@ -624,7 +662,8 @@ public class NativePredicate extends RBComponent {
 			Type.string);
 
 		re_match.addMode(new Implementation("BB", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				RE re = (RE) args[0].up();
 				String s = (String) args[1].up();
 				if (re.match(s)) 
@@ -641,7 +680,8 @@ public class NativePredicate extends RBComponent {
 			Factory.makeAtomicType(t), Factory.makeStrictAtomicType(t));
 			
 		convertTo.addMode(new Implementation("BF", "SEMIDET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
                 
                 if (args[0].isOfType(t)) {
                    addSolution(args[0].up());
@@ -650,7 +690,8 @@ public class NativePredicate extends RBComponent {
 		});
 		 
 		convertTo.addMode(new Implementation("FB", "DET") {
-			public void doit(RBTerm[] args) {
+			@Override
+            public void doit(RBTerm[] args) {
 				addSolution(args[0].up());
 			}
 		}); 

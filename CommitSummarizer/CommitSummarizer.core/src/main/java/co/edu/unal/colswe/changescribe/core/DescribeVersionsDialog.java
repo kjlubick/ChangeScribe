@@ -144,7 +144,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 	
 	public void refreshView() {
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				MessageDialog.openInformation(getShell(), "Information", "You must close the window for the changes to take effect");
 			}});
 	}
@@ -160,26 +161,31 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 			return new Object[0];
 		}
 
-		public Object[] getChildren(Object parentElement) {
+		@Override
+        public Object[] getChildren(Object parentElement) {
 			return new Object[0];
 		}
 
-		public Object getParent(Object element) {
+		@Override
+        public Object getParent(Object element) {
 			return null;
 		}
 
-		public boolean hasChildren(Object element) {
+		@Override
+        public boolean hasChildren(Object element) {
 			return false;
 		}
 	}
 	
 	static class CommitPathLabelProvider extends ColumnLabelProvider {
 
-		public String getText(Object obj) {
+		@Override
+        public String getText(Object obj) {
 			return ((ChangedFile) obj).getPath();
 		}
 
-		public String getToolTipText(Object element) {
+		@Override
+        public String getToolTipText(Object element) {
 			return ((ChangedFile) element).getPath();
 		}
 
@@ -210,11 +216,13 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 			return (Image) this.resourceManager.get(decorated);
 		}
 
-		public StyledString getStyledText(Object element) {
+		@Override
+        public StyledString getStyledText(Object element) {
 			return new StyledString();
 		}
 
-		public Image getImage(Object element) {
+		@Override
+        public Image getImage(Object element) {
 			ChangedFile item = (ChangedFile) element;
 			ImageDescriptor decorator = null;
 			//Image other = null;
@@ -261,7 +269,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		toolkit = new FormToolkit(parent.getDisplay());
 		parent.addDisposeListener(new DisposeListener() {
 
-			public void widgetDisposed(DisposeEvent e) {
+			@Override
+            public void widgetDisposed(DisposeEvent e) {
 				toolkit.dispose();
 			}
 		});
@@ -286,7 +295,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		return section;
 	}
 	
-	protected void buttonPressed(int buttonId) {
+	@Override
+    protected void buttonPressed(int buttonId) {
 		if (IDialogConstants.CANCEL_ID == buttonId)
 			cancelPressed();
 	}
@@ -305,7 +315,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		final Menu menu = new Menu(dropDownBar);
 		dropDownItem.addDisposeListener(new DisposeListener() {
 
-			public void widgetDisposed(DisposeEvent e) {
+			@Override
+            public void widgetDisposed(DisposeEvent e) {
 				menu.dispose();
 			}
 		});
@@ -313,7 +324,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		preferencesItem.setText("Configure link");
 		preferencesItem.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent e) {
+			@Override
+            public void widgetSelected(SelectionEvent e) {
 				String[] pages = new String[] { UIPreferences.PAGE_COMMIT_PREFERENCES_SUMMARY };
 				Activator.getDefault().getDialogSettings();
 				PreferencesUtil.createPreferenceDialogOn(getShell(), pages[0],
@@ -323,7 +335,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		});
 		dropDownItem.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent e) {
+			@Override
+            public void widgetSelected(SelectionEvent e) {
 				Rectangle b = dropDownItem.getBounds();
 				Point p = dropDownItem.getParent().toDisplay(
 						new Point(b.x, b.y + b.height));
@@ -372,7 +385,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 
 		filesViewer.addCheckStateListener(new ICheckStateListener() {
 
-			public void checkStateChanged(CheckStateChangedEvent event) {
+			@Override
+            public void checkStateChanged(CheckStateChangedEvent event) {
 				updateMessage();
 			}
 		});
@@ -533,7 +547,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		
 		filesViewer.addCheckStateListener(new ICheckStateListener() {
 
-			public void checkStateChanged(CheckStateChangedEvent event) {
+			@Override
+            public void checkStateChanged(CheckStateChangedEvent event) {
 				updateFileSectionText();
 			}
 		});
@@ -582,7 +597,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		checkAllItem.setToolTipText("Select All");
 		checkAllItem.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent e) {
+			@Override
+            public void widgetSelected(SelectionEvent e) {
 				filesViewer.setAllChecked(true);
 				updateFileSectionText();
 				updateMessage();
@@ -596,7 +612,8 @@ public class DescribeVersionsDialog extends TitleAreaDialog {
 		uncheckAllItem.setToolTipText("Deselect All");
 		uncheckAllItem.addSelectionListener(new SelectionAdapter() {
 
-			public void widgetSelected(SelectionEvent e) {
+			@Override
+            public void widgetSelected(SelectionEvent e) {
 				filesViewer.setAllChecked(false);
 				updateFileSectionText();
 				updateMessage();

@@ -10,7 +10,8 @@ public class RuleBaseBucketTest extends TyrubaTest {
 	SimpleRuleBaseBucket bucket;
 	SimpleRuleBaseBucket otherBucket;
 
-	public void setUp() throws Exception {
+	@Override
+    public void setUp() throws Exception {
 		RuleBase.silent = true;
 		super.setUp();
 		bucket = new SimpleRuleBaseBucket(frontend);

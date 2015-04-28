@@ -45,7 +45,7 @@ public class LSD2KBMatches {
 		ArrayList<LSDFact> factList = new LSDTyrubaFactReader(
 				deltaKBFile).getFacts();
 		for (LSDFact f : factList) {
-			factsDeltaKB.add((LSDFact) f);
+			factsDeltaKB.add(f);
 		}
 		Set<LSDFact> facts = new HashSet<LSDFact>();
 		int numberOfRules = 0;

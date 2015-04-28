@@ -6,7 +6,8 @@ class AppendSource extends ElementSource {
 		this.s1 = s1;
 		this.s2 = s2;
 	}
-	public int status() {
+	@Override
+    public int status() {
 		int stat = s1.status();
 		if (stat == ELEMENT_READY)
 			return stat;
@@ -17,13 +18,15 @@ class AppendSource extends ElementSource {
 		} else
 			return s2.status();
 	}
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		if (s1.status() == ELEMENT_READY)
 			return s1.nextElement();
 		else
 			return s2.nextElement();
 	}
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("Append(");
 		p.indent();p.newline();
 			s1.print(p);

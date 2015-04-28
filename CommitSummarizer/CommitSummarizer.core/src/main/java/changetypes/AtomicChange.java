@@ -83,10 +83,12 @@ public class AtomicChange {
 		params = f.params;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return type.ordinal();
 	}
-	public boolean equals(Object o) {
+	@Override
+    public boolean equals(Object o) {
 		if (o.getClass()!=this.getClass()) return false;
 		AtomicChange f = (AtomicChange)o;
 		if (!type.equals(f.type)) return false;
@@ -98,7 +100,8 @@ public class AtomicChange {
 		return true;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuilder res = new StringBuilder();
 		if (type.ordinal()>=ChangeTypes.ADD_PACKAGE.ordinal() 
 				&& type.ordinal()<=ChangeTypes.ADD_TYPEINTYPE.ordinal()) { 

@@ -249,7 +249,8 @@ class Group implements Comparable {
 		this.description = description;
 	}
 	
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof Group)) {
 			return false;
 		}
@@ -260,11 +261,13 @@ class Group implements Comparable {
 			&& this.description.equals(o.description);
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return id.hashCode();
 	}
 
-	public int compareTo(Object o) {
+	@Override
+    public int compareTo(Object o) {
 		
 		Group g = (Group) o;
 		

@@ -26,14 +26,16 @@ public abstract class AbstractCollectVarsVisitor implements ExpressionVisitor, T
 		return vars;
 	}
 
-	public Object visit(RBConjunction conjunction) {
+	@Override
+    public Object visit(RBConjunction conjunction) {
 		for (int i = 0; i < conjunction.getNumSubexps(); i++) {
 			conjunction.getSubexp(i).accept(this);
 		}
 		return null;
 	}
 
-	public Object visit(RBModeSwitchExpression modeSwitch) {
+	@Override
+    public Object visit(RBModeSwitchExpression modeSwitch) {
 		for (int i = 0; i < modeSwitch.getNumModeCases(); i++) {
 			modeSwitch.getModeCaseAt(i).getExp().accept(this);
 		}
@@ -43,26 +45,30 @@ public abstract class AbstractCollectVarsVisitor implements ExpressionVisitor, T
 		return null;
 	}
 
-	public Object visit(RBPredicateExpression predExp) {
+	@Override
+    public Object visit(RBPredicateExpression predExp) {
 		return predExp.getArgs().accept(this);
 	}
 
-	public Object visit(RBCompoundTerm compoundTerm) {
+	@Override
+    public Object visit(RBCompoundTerm compoundTerm) {
 		compoundTerm.getArg().accept(this);
 		return null;
 	}
 
-	public Object visit(RBTuple tuple) {
+	@Override
+    public Object visit(RBTuple tuple) {
 		for (int i = 0; i < tuple.getNumSubterms(); i++) {
 			tuple.getSubterm(i).accept(this);
 		}
 		return null;
 	}
 
-	public Object visit(RBPair pair) {
+	@Override
+    public Object visit(RBPair pair) {
 		pair.getCar().accept(this);
 		
-		RBTerm cdr = (RBTerm)pair.getCdr();
+		RBTerm cdr = pair.getCdr();
 		
 		while(cdr instanceof RBPair) {
 			pair = (RBPair)cdr;
@@ -75,7 +81,8 @@ public abstract class AbstractCollectVarsVisitor implements ExpressionVisitor, T
 		return null;
 	}
 
-	public Object visit(RBQuoted quoted) {
+	@Override
+    public Object visit(RBQuoted quoted) {
 		return quoted.getQuotedParts().accept(this);
 	}
 	

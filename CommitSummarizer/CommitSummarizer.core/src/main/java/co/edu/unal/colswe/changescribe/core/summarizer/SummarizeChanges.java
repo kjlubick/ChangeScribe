@@ -145,7 +145,8 @@ public class SummarizeChanges {
 							}
 						};
 						internalJob.addJobChangeListener(new JobChangeAdapter() {
-									public void done(IJobChangeEvent event) {
+									@Override
+                                    public void done(IJobChangeEvent event) {
 										//updateTextInputDescription();
 									}
 								});
@@ -161,7 +162,8 @@ public class SummarizeChanges {
 				}
 			};
 			job.addJobChangeListener(new JobChangeAdapter() {
-				public void done(IJobChangeEvent event) {
+				@Override
+                public void done(IJobChangeEvent event) {
 					updateTextInputDescription();
 				}
 			});
@@ -184,7 +186,8 @@ public class SummarizeChanges {
 	public void updateTextInputDescription() {
 
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				//if(summarized.size() + modifiedFiles.size() + otherFiles.size() + typesProblem.size() == differences.length) {
 				Impact impact = new Impact(identifiers);
 				impact.setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
@@ -338,7 +341,7 @@ public class SummarizeChanges {
 
 
 	protected void removeCreatedPackages() {
-		IFolder folder = ((IJavaProject)changedListDialog.getSelection()).getProject().getFolder("src/commsummtmp");
+		IFolder folder = changedListDialog.getSelection().getProject().getFolder("src/commsummtmp");
 		try {
 			folder.delete(true, null);
 		} catch (CoreException e) {
@@ -630,7 +633,7 @@ public class SummarizeChanges {
 		for (StereotypedElement stereotypedElement : stereotypeIdentifier.getStereotypedElements()) {
 			if(stereotypedElement.getStereoSubElements() != null && !stereotypedElement.getStereoSubElements().isEmpty()) {
 				for (StereotypedElement stereotypedElement2 : stereotypedElement.getStereoSubElements()) {
-						System.out.println("Method: " + ((StereotypedMethod)stereotypedElement2) + " stereotype: " + stereotypedElement2.getStereotypes().toString());
+						System.out.println("Method: " + (stereotypedElement2) + " stereotype: " + stereotypedElement2.getStereotypes().toString());
 					
 				}
 			}
@@ -671,7 +674,7 @@ public class SummarizeChanges {
 			IPackageFragment pack = null;
 			String packageName = "";
 			packageName = "commsummtmp." + CompilationUtils.getPackageNameFromStringClass(removedFile);
-			IFolder folder = ((IJavaProject)changedListDialog.getSelection()).getProject().getFolder("src");
+			IFolder folder = changedListDialog.getSelection().getProject().getFolder("src");
 			pack = changedListDialog.getSelection().getPackageFragmentRoot(folder).createPackageFragment(packageName, true, null);
 			ICompilationUnit cu = pack.createCompilationUnit(file.getName(), removedFile,true, null);
 			stereotypeIdentifier = new StereotypeIdentifier(cu, 0, 0);
@@ -700,7 +703,7 @@ public class SummarizeChanges {
 			IPackageFragment pack = null;
 			String packageName = "";
 			packageName = "commsummtmp." + CompilationUtils.getPackageNameFromStringClass(removedFile);
-			IFolder folder = ((IJavaProject)changedListDialog.getSelection()).getProject().getFolder("src");
+			IFolder folder = changedListDialog.getSelection().getProject().getFolder("src");
 			pack = changedListDialog.getSelection().getPackageFragmentRoot(folder).createPackageFragment(packageName, true, null);
 			ICompilationUnit cu = pack.createCompilationUnit(file.getName(), removedFile,true, null);
 			stereotypeIdentifier = new StereotypeIdentifier(cu, 0, 0);

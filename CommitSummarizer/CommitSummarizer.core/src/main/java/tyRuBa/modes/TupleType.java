@@ -29,7 +29,8 @@ public class TupleType extends Type {
 		return (Type[]) parts.toArray(new Type[parts.size()]);
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		final int size = size();
 		int hash = getClass().hashCode();
 		for (int i = 0; i < size; i++)
@@ -37,7 +38,8 @@ public class TupleType extends Type {
 		return hash;
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other == null) {
 			return false;
 		} else if (! (other instanceof TupleType)) {
@@ -64,7 +66,8 @@ public class TupleType extends Type {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("<");
 		for (int i = 0; i < size(); i++) {
 			if (i != 0) {
@@ -88,7 +91,8 @@ public class TupleType extends Type {
 		return parts.size();
 	}
 
-	public void checkEqualTypes(Type tother, boolean grow) throws TypeModeError {
+	@Override
+    public void checkEqualTypes(Type tother, boolean grow) throws TypeModeError {
 		if (tother instanceof TVar) {
 			tother.checkEqualTypes(this, grow);
 		} else {
@@ -103,7 +107,8 @@ public class TupleType extends Type {
 		}
 	}
 	
-	public boolean isSubTypeOf(Type tother, Map renamings) {
+	@Override
+    public boolean isSubTypeOf(Type tother, Map renamings) {
 		if (!(tother instanceof TupleType)) {
 			return false;
 		} else {
@@ -121,7 +126,8 @@ public class TupleType extends Type {
 		}
 	}
 
-	public Type clone(Map tfact) {
+	@Override
+    public Type clone(Map tfact) {
 		TupleType result = Factory.makeTupleType();
 		for (int i = 0; i < size(); i++) {
 			if (get(i) == null) {
@@ -133,7 +139,8 @@ public class TupleType extends Type {
 		return result;
 	}
 	
-	public Type union(Type tother) throws TypeModeError {
+	@Override
+    public Type union(Type tother) throws TypeModeError {
 		if (tother instanceof TVar) {
 			return tother.union(this); 
 		} else {
@@ -152,7 +159,8 @@ public class TupleType extends Type {
 		}
 	}
 
-	public Type intersect(Type tother) throws TypeModeError {
+	@Override
+    public Type intersect(Type tother) throws TypeModeError {
 		if (tother instanceof TVar) {
 			return tother.intersect(this);
 		}
@@ -170,7 +178,8 @@ public class TupleType extends Type {
 		return result;
 	}
 
-	public boolean hasOverlapWith(Type tother) {
+	@Override
+    public boolean hasOverlapWith(Type tother) {
 		if (tother == null) {
 			return false;
 		} else if (tother instanceof TVar) {
@@ -196,7 +205,8 @@ public class TupleType extends Type {
 		}
 	}
 
-	public boolean isFreeFor(TVar var) {
+	@Override
+    public boolean isFreeFor(TVar var) {
 		for (int i = 0; i < size(); i++) {
 			if (get(i) != null && ! get(i).isFreeFor(var)) {
 				return false;
@@ -205,7 +215,8 @@ public class TupleType extends Type {
 		return true;
 	}
 
-	public Type copyStrictPart() {
+	@Override
+    public Type copyStrictPart() {
 		TupleType result = new TupleType();
 		for (int i = 0; i < size(); i++) {
 			result.add(get(i).copyStrictPart());
@@ -246,7 +257,8 @@ public class TupleType extends Type {
 		}
 	}
 
-	public Type getParamType(String currName, Type repAs) {
+	@Override
+    public Type getParamType(String currName, Type repAs) {
 		if (repAs instanceof TVar) {
 			if (currName.equals(((TVar) repAs).getName())) {
 				return this; 

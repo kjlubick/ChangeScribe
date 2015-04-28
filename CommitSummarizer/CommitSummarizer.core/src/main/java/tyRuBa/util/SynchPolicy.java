@@ -80,7 +80,8 @@ public final class SynchPolicy {
 			System.err.println("SynchPolicy "+msg+": "+this);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "SynchPolicy(busy="+busySources+",stop="+stopSources+")";
 	}
 

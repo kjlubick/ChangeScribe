@@ -138,7 +138,8 @@ public class Mode implements Cloneable {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return printString;
 	}
 	
@@ -150,7 +151,8 @@ public class Mode implements Cloneable {
 		}
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other instanceof Mode) {
 			Mode om = (Mode) other;
 			return this.hi.equals(om.hi) && this.lo.equals(om.lo);
@@ -159,7 +161,8 @@ public class Mode implements Cloneable {
 		}
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return hi.hashCode() + 13*lo.hashCode();
 	}
 
@@ -253,7 +256,8 @@ public class Mode implements Cloneable {
 		}
 	}
 	
-	public Object clone() {
+	@Override
+    public Object clone() {
 		try {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {

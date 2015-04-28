@@ -46,7 +46,8 @@ public class ModedRuleBaseCollection {
 			resultTypes = t;
 		}
 		
-		public String toString() {
+		@Override
+        public String toString() {
 			return rule.toString();
 		}
 

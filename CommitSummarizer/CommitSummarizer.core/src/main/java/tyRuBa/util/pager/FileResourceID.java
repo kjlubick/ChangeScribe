@@ -34,6 +34,7 @@ public class FileResourceID extends ResourceId {
         relativeId = relativeID;
     }
 
+    @Override
     public String toString() {
     		return "FileResourceID(" + base + "/" + relativeId +")";
     }
@@ -41,6 +42,7 @@ public class FileResourceID extends ResourceId {
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof FileResourceID) {
             FileResourceID id_other = (FileResourceID) other;
@@ -53,11 +55,13 @@ public class FileResourceID extends ResourceId {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return 23 * base.hashCode() + 47 * relativeId.hashCode();
     }
 
     /** Opens an InputStream to the resource. */
+    @Override
     public InputStream readResource() throws IOException {
         if (lazyActualFile == null) {
             lazyActualFile = new File(base.getBase(), relativeId);
@@ -66,6 +70,7 @@ public class FileResourceID extends ResourceId {
     }
 
     /** Opens an OutputStream to the resource. */
+    @Override
     public OutputStream writeResource() throws IOException {
         File baseFile = base.getBase();
         if (!baseFile.exists()) {
@@ -78,6 +83,7 @@ public class FileResourceID extends ResourceId {
     }
 
     /** Deletes the resource */
+    @Override
     public void removeResource() {
         if (lazyActualFile == null) {
             lazyActualFile = new File(base.getBase(), relativeId);
@@ -86,6 +92,7 @@ public class FileResourceID extends ResourceId {
     }
 
     /** Checks whether the resource exists. */
+    @Override
     public boolean resourceExists() {
         if (lazyActualFile == null) {
             lazyActualFile = new File(base.getBase(), relativeId);

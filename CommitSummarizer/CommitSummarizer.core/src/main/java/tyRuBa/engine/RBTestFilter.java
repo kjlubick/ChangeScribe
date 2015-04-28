@@ -20,11 +20,13 @@ public class RBTestFilter extends RBExpression {
 		test_q = test_query;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "TEST(" + getQuery() + ")";
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return test_q.compile(c).test();
 	}
 
@@ -32,7 +34,8 @@ public class RBTestFilter extends RBExpression {
 		return test_q;
 	}
 	
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			return getQuery().typecheck(predinfo, startEnv);
 		} catch (TypeModeError e) {
@@ -40,7 +43,8 @@ public class RBTestFilter extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
 	throws TypeModeError {
 		Collection vars = test_q.getFreeVariables(context);
 		
@@ -57,7 +61,8 @@ public class RBTestFilter extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		if (negate) {
 			return getQuery().convertToNormalForm(true);
 		} else {
@@ -65,7 +70,8 @@ public class RBTestFilter extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 

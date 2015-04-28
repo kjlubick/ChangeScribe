@@ -52,7 +52,7 @@ public class HandleTable implements Serializable {
 	
 	public long add(Object reference) {
 		if(freeHead != references.length) { //We have room
-			long indirection = ((long)update[freeHead] << 32) + (long)freeHead;
+			long indirection = ((long)update[freeHead] << 32) + freeHead;
 			
 			references[freeHead] = reference;
 			
@@ -60,9 +60,9 @@ public class HandleTable implements Serializable {
 			
 			return indirection;
 		} else {
-			int tmpFree[] = new int[(int)((double)free.length * GROWTHFACTOR)];
-			int tmpUpdate[] = new int[(int)((double)update.length * GROWTHFACTOR)];
-			Object tmpReferences[] = new Object[(int)((double)references.length * GROWTHFACTOR)];
+			int tmpFree[] = new int[(int)(free.length * GROWTHFACTOR)];
+			int tmpUpdate[] = new int[(int)(update.length * GROWTHFACTOR)];
+			Object tmpReferences[] = new Object[(int)(references.length * GROWTHFACTOR)];
 			
 			System.arraycopy(free, 0, tmpFree, 0, free.length);
 			System.arraycopy(update, 0, tmpUpdate, 0, update.length);

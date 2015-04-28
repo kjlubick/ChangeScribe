@@ -14,11 +14,13 @@ public class ListType extends Type {
 		this.element = element;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return getElementType() == null ? 23423 : getElementType().hashCode() + 5774;
 	}
 	
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other instanceof ListType) {
 			ListType cother = (ListType) other;
 			if (this.getElementType() == null) {
@@ -31,7 +33,8 @@ public class ListType extends Type {
 			return false;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		if (getElementType() == null)
 			return "[]";
 		else
@@ -43,15 +46,18 @@ public class ListType extends Type {
 		return element;
 	}
 
-	public boolean isFreeFor(TVar var) {
+	@Override
+    public boolean isFreeFor(TVar var) {
 		return getElementType() == null || getElementType().isFreeFor(var);
 	}
 
-	public Type clone(Map tfact) {
+	@Override
+    public Type clone(Map tfact) {
 		return new ListType(getElementType() == null ? null : getElementType().clone(tfact));
 	}
 
-	public Type intersect(Type other) throws TypeModeError {
+	@Override
+    public Type intersect(Type other) throws TypeModeError {
 		if (other instanceof TVar) {
 			return other.intersect(this);
 		} else if (this.equals(other)) {
@@ -70,7 +76,8 @@ public class ListType extends Type {
 		}
 	}
 	
-	public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
+	@Override
+    public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
 		if (other instanceof TVar)
 			other.checkEqualTypes(this, grow);
 		else {
@@ -90,7 +97,8 @@ public class ListType extends Type {
 		}
 	}
 
-	public boolean isSubTypeOf(Type declared, Map renamings) {
+	@Override
+    public boolean isSubTypeOf(Type declared, Map renamings) {
 		if (declared instanceof TVar)
 			declared = ((TVar)declared).getContents();
 		if (declared == null) // Was a free TVar
@@ -109,7 +117,8 @@ public class ListType extends Type {
 		}
 	}
 	
-	public boolean hasOverlapWith(Type other) {
+	@Override
+    public boolean hasOverlapWith(Type other) {
 		if (other instanceof TVar) {
 			return other.hasOverlapWith(this);
 		} else if (other instanceof ListType) {
@@ -126,7 +135,8 @@ public class ListType extends Type {
 		}
 	}
 
-	public Type copyStrictPart() {
+	@Override
+    public Type copyStrictPart() {
 		if (element == null) {
 			return new ListType();
 		} else {
@@ -143,7 +153,8 @@ public class ListType extends Type {
 //		return new ListType(element.lowerBound(lother.element));
 //	}
 
-	public Type union(Type other) throws TypeModeError {
+	@Override
+    public Type union(Type other) throws TypeModeError {
 		if (other instanceof TVar) {
 			return other.union(this);
 		} else {
@@ -160,7 +171,8 @@ public class ListType extends Type {
 		}
 	}
 	
-	public Type getParamType(String currName, Type repAs) {
+	@Override
+    public Type getParamType(String currName, Type repAs) {
 		if (repAs instanceof TVar) {
 			if (currName.equals(((TVar)repAs).getName())) {
 				return this;

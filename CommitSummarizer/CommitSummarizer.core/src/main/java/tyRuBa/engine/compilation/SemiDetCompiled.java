@@ -23,9 +23,11 @@ public abstract class SemiDetCompiled extends Compiled {
 		super(Mode.makeSemidet());
 	}
 
-	public ElementSource run(ElementSource inputs, final RBContext context) {
+	@Override
+    public ElementSource run(ElementSource inputs, final RBContext context) {
 		return inputs.map(new Action() {
-			public Object compute(Object arg) {
+			@Override
+            public Object compute(Object arg) {
 				return runSemiDet(arg, context);
 			}
 		});
@@ -38,7 +40,8 @@ public abstract class SemiDetCompiled extends Compiled {
 	 * can use this.  However, it would be more efficient for compiled contexts to adapt
 	 * when they are passing frames to a semiDetCompiled and use the runSemiDet instead.
 	 */
-	public ElementSource runNonDet(Object input, RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, RBContext context) {
 		Frame result = runSemiDet(input, context);
 		if (result == null)
 			return ElementSource.theEmpty;
@@ -48,7 +51,8 @@ public abstract class SemiDetCompiled extends Compiled {
 		}
 	}
 
-	public Compiled conjoin(Compiled other) {
+	@Override
+    public Compiled conjoin(Compiled other) {
 		if (other instanceof SemiDetCompiled)
 			return new CompiledConjunction_SemiDet_SemiDet(
 				this, (SemiDetCompiled)other);
@@ -56,7 +60,8 @@ public abstract class SemiDetCompiled extends Compiled {
 			return new CompiledConjunction_SemiDet_NonDet(this, other);
 	}
 
-	public Compiled disjoin(Compiled other) {
+	@Override
+    public Compiled disjoin(Compiled other) {
 		if (other.equals(fail)) {
 			return this;
 		} else if (other instanceof SemiDetCompiled) {

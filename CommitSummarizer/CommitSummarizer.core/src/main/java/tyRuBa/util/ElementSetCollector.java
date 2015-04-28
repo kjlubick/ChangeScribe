@@ -18,7 +18,8 @@ public class ElementSetCollector extends ElementCollector {
   /** Keep track of all the elements I have seen so far */
   private java.util.Set seen = new HashSet();
 
-  protected void addElement(Object e) {
+  @Override
+protected void addElement(Object e) {
     super.addElement(e);
     seen.add(e);
   }
@@ -37,7 +38,8 @@ public class ElementSetCollector extends ElementCollector {
   
     /** Try to get an element from the source until you find a new one or it blocks.
       Returns a status flag */
-	protected int newElementFromSource() {
+	@Override
+    protected int newElementFromSource() {
 		int status;
 		Object element;
 		do {
@@ -66,7 +68,8 @@ public class ElementSetCollector extends ElementCollector {
     final ElementSetCollector testSet = new ElementSetCollector();
     testSet.setSource(
        testSet.elements().map(new Action() {
-	 public Object compute(Object a) {
+	 @Override
+    public Object compute(Object a) {
 	   int i = ((Integer)a).intValue();
 	   i = (i+1)%10; 
 	   return new Integer(i);

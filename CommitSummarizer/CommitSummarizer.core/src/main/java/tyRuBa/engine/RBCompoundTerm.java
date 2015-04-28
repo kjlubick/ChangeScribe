@@ -65,7 +65,8 @@ public abstract class RBCompoundTerm extends RBTerm {
 
     public abstract ConstructorType getConstructorType();
 
-	public boolean equals(Object x) {
+	@Override
+    public boolean equals(Object x) {
 		if (!(x instanceof RBCompoundTerm)) {
 			return false;
 		} else {
@@ -78,19 +79,23 @@ public abstract class RBCompoundTerm extends RBTerm {
 		}
 	}
 	
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		return getConstructorType().hashCode() * 19 + getArg().formHashCode();
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return getConstructorType().hashCode() * 19 + getArg().hashCode();
 	}
 
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		return getArg().freefor(v);
 	}
 
-	public BindingMode getBindingMode(ModeCheckContext context) {
+	@Override
+    public BindingMode getBindingMode(ModeCheckContext context) {
 		BindingMode bm = getArg().getBindingMode(context);
 		if (bm.isBound()) {
 			return bm;
@@ -99,11 +104,13 @@ public abstract class RBCompoundTerm extends RBTerm {
 		}
 	}
 	
-	public boolean isGround() {
+	@Override
+    public boolean isGround() {
 		return getArg().isGround();
 	}
 
-	protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
+	@Override
+    protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
 		if (!(other instanceof RBCompoundTerm)) {
 			return false;
 		} else {
@@ -116,7 +123,8 @@ public abstract class RBCompoundTerm extends RBTerm {
 		}
 	}
 
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 		if (!(other instanceof RBCompoundTerm)) {
 			if (other instanceof RBVariable) {
 				return other.unify(this, f);
@@ -133,20 +141,24 @@ public abstract class RBCompoundTerm extends RBTerm {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return getConstructorType().getFunctorId().toString() + getArg();
 	}
 
-	protected Type getType(TypeEnv env) throws TypeModeError {
+	@Override
+    protected Type getType(TypeEnv env) throws TypeModeError {
 		Type argType = getArg().getType(env);
 		return getConstructorType().apply(argType);
 	}
 
-	public void makeAllBound(ModeCheckContext context) {
+	@Override
+    public void makeAllBound(ModeCheckContext context) {
         getArg().makeAllBound(context);
 	}
 	
-	public Object up() {
+	@Override
+    public Object up() {
 		TypeConstructor tc = getTypeConstructor();
 		if (tc instanceof UserDefinedTypeConstructor) {
 		    TypeMapping mapping = ((UserDefinedTypeConstructor)tc).getMapping();
@@ -161,13 +173,15 @@ public abstract class RBCompoundTerm extends RBTerm {
 		return getConstructorType().getTypeConst();
 	}
 
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
      */
+    @Override
     public String getFirst() {
         if (getNumArgs() > 0) {
             return getConstructorType().getFunctorId().getName() + getArg(0).getFirst();
@@ -179,6 +193,7 @@ public abstract class RBCompoundTerm extends RBTerm {
     /**
      * @see tyRuBa.util.TwoLevelKey#getSecond()
      */
+    @Override
     public Object getSecond() {
         int numArgs = getNumArgs();
         if (numArgs > 1) {
@@ -204,6 +219,7 @@ public abstract class RBCompoundTerm extends RBTerm {
         }
     }
 
+    @Override
     public boolean isOfType(TypeConstructor t) {
         return t.isSuperTypeOf(getConstructorType().getTypeConst());
     }

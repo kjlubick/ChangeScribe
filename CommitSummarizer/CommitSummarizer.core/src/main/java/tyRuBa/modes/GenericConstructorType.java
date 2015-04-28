@@ -31,30 +31,36 @@ public class GenericConstructorType extends ConstructorType implements Serializa
 		this.result = result;
 	}
 	
-	public FunctorIdentifier getFunctorId() {
+	@Override
+    public FunctorIdentifier getFunctorId() {
 		return identifier;
 	}
 
+    @Override
     public TypeConstructor getTypeConst() {
         return result.getTypeConstructor();
     }
     
-	public int getArity() {
+	@Override
+    public int getArity() {
         if (args instanceof TupleType)
             return ((TupleType)args).size();
         else
             return 1;
 	}
 
-	public RBTerm apply(RBTerm tuple) {
+	@Override
+    public RBTerm apply(RBTerm tuple) {
 		return RBCompoundTerm.make(this,tuple);
 	}
 	
+    @Override
     public RBTerm apply(ArrayList terms) {
         return apply(RBTuple.make(terms));
     }
     
-	public Type apply(Type argType) throws TypeModeError {          
+	@Override
+    public Type apply(Type argType) throws TypeModeError {          
 		Map renamings = new HashMap();
 		Type iargs = args.clone(renamings);            
 		CompositeType iresult = (CompositeType)result.clone(renamings);
@@ -63,6 +69,7 @@ public class GenericConstructorType extends ConstructorType implements Serializa
 		return iresult.getTypeConstructor().apply(iresult.getArgs(), true); 
 	}
 
+    @Override
     public boolean equals(Object other) {
         if (other.getClass() != this.getClass()) {
             return false;
@@ -72,6 +79,7 @@ public class GenericConstructorType extends ConstructorType implements Serializa
         }
     }
     
+    @Override
     public int hashCode() {
     		return args.hashCode() + identifier.hashCode()*13 + result.hashCode()*31;
     }

@@ -226,7 +226,8 @@ public class DoubleLinkedList {
 		return tail;
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		String result = "DoubleLL( ";
 		Entry current = head;
 		while (current!=null) {
@@ -241,17 +242,20 @@ public class DoubleLinkedList {
 			
 			private Entry current = head;
 
-			public boolean hasNext() {
+			@Override
+            public boolean hasNext() {
 				return current != null;
 			}
 
-			public Object next() {
+			@Override
+            public Object next() {
 				Entry result = current;
 				current = current.next;
 				return result;
 			}
 
-			public void remove() {
+			@Override
+            public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};

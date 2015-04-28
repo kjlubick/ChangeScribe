@@ -36,7 +36,8 @@ public class CommitAction implements IWorkbenchWindowActionDelegate {
 	 * in the workbench UI.
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action) {
+	@Override
+    public void run(IAction action) {
 		
 		SCMRepository repo = new SCMRepository();
 		Git git = repo.getGit();
@@ -73,7 +74,8 @@ public class CommitAction implements IWorkbenchWindowActionDelegate {
 	 * the delegate has been created.
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
+	@Override
+    public void selectionChanged(IAction action, ISelection selection) {
 	}
 
 	/**
@@ -81,7 +83,8 @@ public class CommitAction implements IWorkbenchWindowActionDelegate {
 	 * resources we previously allocated.
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
-	public void dispose() {
+	@Override
+    public void dispose() {
 	}
 
 	/**
@@ -89,7 +92,8 @@ public class CommitAction implements IWorkbenchWindowActionDelegate {
 	 * be able to provide parent shell for the message dialog.
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
-	public void init(IWorkbenchWindow window) {
+	@Override
+    public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
 }

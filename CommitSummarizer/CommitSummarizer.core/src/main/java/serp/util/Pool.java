@@ -97,7 +97,8 @@ public interface Pool
 	 *	{@link IllegalStateException} if removing an element would
 	 *	violoate the minimum pool size.
 	 */
-	public Iterator iterator ();
+	@Override
+    public Iterator iterator ();
 
 
 	/**
@@ -135,11 +136,13 @@ public interface Pool
 	 *	Pool equality should be implemented to compare the free elements
 	 *	of the pool.
 	 */
-	public boolean equals (Object obj);
+	@Override
+    public boolean equals (Object obj);
 
 
 	/**
 	 *	The hash code should be implemented to be consistent with equality.
 	 */
-	public int hashCode ();
+	@Override
+    public int hashCode ();
 }

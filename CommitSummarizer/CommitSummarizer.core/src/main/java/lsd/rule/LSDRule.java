@@ -37,7 +37,8 @@ public class LSDRule {
 	
 	public class LSDRuleComparator implements Comparator<LSDRule>  {
 
-		public int compare(LSDRule r1, LSDRule r2) {
+		@Override
+        public int compare(LSDRule r1, LSDRule r2) {
 			return ((r2.score - r1.score)>0)?1:
 				((r2.score - r1.score)==0)?0:-1;
 		} 
@@ -258,7 +259,8 @@ public class LSDRule {
 		return nonNegatedLiterals == 1;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuilder output = new StringBuilder();
 		// Antecedents
 		for (LSDLiteral literal : literals) {
@@ -359,13 +361,15 @@ public class LSDRule {
 		return repr;
 	}
 	
-	public boolean equals(Object o) {
+	@Override
+    public boolean equals(Object o) {
 		if (!(o instanceof LSDRule))
 			return false;
 		return canonicalRepresentation().equals(((LSDRule)o).canonicalRepresentation());
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return canonicalRepresentation().hashCode();
 	}
 

@@ -62,7 +62,8 @@ public class TypeInfoBase implements PredInfoProvider {
 		predicateMap.put(pInfo.getPredId(), pInfo);
 	}
 
-	public PredInfo getPredInfo(PredicateIdentifier predId) throws TypeModeError {
+	@Override
+    public PredInfo getPredInfo(PredicateIdentifier predId) throws TypeModeError {
 		PredInfo result = maybeGetPredInfo(predId);
 		if (result == null) {
 			throw new TypeModeError("Unknown predicate " + predId);
@@ -71,7 +72,8 @@ public class TypeInfoBase implements PredInfoProvider {
 		}
 	}
 	
-	public PredInfo maybeGetPredInfo(PredicateIdentifier predId) {
+	@Override
+    public PredInfo maybeGetPredInfo(PredicateIdentifier predId) {
 		return (PredInfo) predicateMap.get(predId);
 	}
 		
@@ -108,7 +110,8 @@ public class TypeInfoBase implements PredInfoProvider {
 		toTyRuBaMappingMap.put(mapping.getMappedClass(), mapping);
     }
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(
 			"/******** predicate info ********/\n");
 		Iterator itr = predicateMap.values().iterator();

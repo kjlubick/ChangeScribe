@@ -14,8 +14,10 @@ public class NullQueryLogger extends QueryLogger {
 	
 	private NullQueryLogger() {}
 
-	final public void close() {}
+	@Override
+    final public void close() {}
 
-	final public void logQuery(RBExpression query) {}
+	@Override
+    final public void logQuery(RBExpression query) {}
 
 }

@@ -23,7 +23,8 @@ public class TDBCTest extends TestCase {
 
 	Connection conn;
 	
-	protected void setUp() throws Exception {
+	@Override
+    protected void setUp() throws Exception {
 		super.setUp();
 		
 		FrontEnd fe = new FrontEnd(true);

@@ -9,7 +9,8 @@ class FormKey {
 
   FormKey(RBTerm t) { theKey = t;}
 
-  public boolean equals(Object other) {
+  @Override
+public boolean equals(Object other) {
     if (other instanceof FormKey) {
       return theKey.sameForm(((FormKey)other).theKey);
     }
@@ -17,7 +18,8 @@ class FormKey {
       return false;
   }
 
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return theKey.formHashCode();
   }
 

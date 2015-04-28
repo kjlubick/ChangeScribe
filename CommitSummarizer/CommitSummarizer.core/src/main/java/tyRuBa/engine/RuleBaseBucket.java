@@ -69,7 +69,8 @@ public abstract class RuleBaseBucket extends QueryEngine {
 	}
 
 	/** Add a fact into this bucket */
-	public void insert(RBComponent t) throws TypeModeError {
+	@Override
+    public void insert(RBComponent t) throws TypeModeError {
 		super.insert(new ValidatorComponent(t, validator));
 	}
 
@@ -86,11 +87,13 @@ public abstract class RuleBaseBucket extends QueryEngine {
 	/** Gets the storage path for this query engine (will be where
 	 * the factbase is stored
 	 */
-	public String getStoragePath() {
+	@Override
+    public String getStoragePath() {
 	    return frontend.getStoragePath() + "/" + identifier;
 	}
 	
-	public String getIdentifier() {
+	@Override
+    public String getIdentifier() {
 	    return identifier;
 	}
 
@@ -105,7 +108,8 @@ public abstract class RuleBaseBucket extends QueryEngine {
 		frontend.flush();
 	}
 
-	public FrontEnd frontend() {
+	@Override
+    public FrontEnd frontend() {
 		return frontend;
 	}
 
@@ -131,7 +135,8 @@ public abstract class RuleBaseBucket extends QueryEngine {
 		frontend.getFrontEndValidatorManager().update(validator.handle(), new Boolean(false), null);
 	}
 	
-	ModedRuleBaseIndex rulebase() {
+	@Override
+    ModedRuleBaseIndex rulebase() {
 		return rulebase;
 	}
 
@@ -164,7 +169,8 @@ public abstract class RuleBaseBucket extends QueryEngine {
 	/**
 	 * @codegroup metadata
 	 */
-	public void enableMetaData() {
+	@Override
+    public void enableMetaData() {
 		rulebase.enableMetaData();
 	}
 }

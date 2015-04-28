@@ -36,9 +36,11 @@ public abstract class RBTerm implements Cloneable, Serializable, TwoLevelKey {
 	/** return true if this term does not contain any unbound variables */
 	public abstract BindingMode getBindingMode(ModeCheckContext context);
 
-	public abstract boolean equals(Object x);
+	@Override
+    public abstract boolean equals(Object x);
 	
-	public abstract int hashCode();
+	@Override
+    public abstract int hashCode();
 
 	/** Determine wether this and other have the "same form". 
 		The frames are used to remember which variables are associated to 
@@ -60,7 +62,8 @@ public abstract class RBTerm implements Cloneable, Serializable, TwoLevelKey {
 		return toString();
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		try {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {
@@ -129,7 +132,8 @@ public abstract class RBTerm implements Cloneable, Serializable, TwoLevelKey {
 		return (RBTerm) accept(visitor);
 	}
 	
-	public abstract String toString();
+	@Override
+    public abstract String toString();
 
     public boolean isOfType(TypeConstructor t) {
         return false;

@@ -13,7 +13,8 @@ public class SemiDetCompiledDisjunction extends SemiDetCompiled {
 		this.right = right;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		Frame result = left.runSemiDet(input, context);
 		if (result == null)
 			return right.runSemiDet(input, context);
@@ -21,7 +22,8 @@ public class SemiDetCompiledDisjunction extends SemiDetCompiled {
 			return result;
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "SEMIDET(" + left + " + " + right + ")";
 	}
 

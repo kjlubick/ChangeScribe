@@ -26,6 +26,7 @@ public class CompositeElementSource extends ElementSource {
 
     public int i=-1;
         
+    @Override
     public int status() {
         for (i=0;i<numberOfChildren();) {
             int stat = get(i).status();
@@ -51,6 +52,7 @@ public class CompositeElementSource extends ElementSource {
             return NO_ELEMENTS_READY;
     }
     
+    @Override
     public Object nextElement() {
         int stat;
         if (!((i>=0) && (i<numberOfChildren())))
@@ -64,6 +66,7 @@ public class CompositeElementSource extends ElementSource {
             throw new java.lang.Error("No nextElement found in CompositeElementSource");
     }
     
+    @Override
     public void print(PrintingState p) {
     	p.print("Composite(");
     	p.indent();p.newline();

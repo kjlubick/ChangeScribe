@@ -24,8 +24,10 @@ public abstract class ConstructorType {
 
     public abstract Type apply(Type argType) throws TypeModeError;
 
+    @Override
     public abstract boolean equals(Object other);
     
+    @Override
     public abstract int hashCode();
     
     public static ConstructorType makeUserDefined(FunctorIdentifier functorId, Type repAs, CompositeType type) {

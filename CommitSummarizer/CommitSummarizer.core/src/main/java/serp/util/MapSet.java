@@ -47,13 +47,15 @@ public class MapSet
 	}
 
 
-	public int size ()
+	@Override
+    public int size ()
 	{
 		return _map.size ();
 	}
 
 	
-	public boolean add (Object obj)
+	@Override
+    public boolean add (Object obj)
 	{
 		if (_map.containsKey (obj))
 			return false;
@@ -63,7 +65,8 @@ public class MapSet
 	}
 
 
-	public boolean remove (Object obj)
+	@Override
+    public boolean remove (Object obj)
 	{
 		boolean contained = _map.containsKey (obj);
 		_map.remove (obj);
@@ -71,13 +74,15 @@ public class MapSet
 	}
 
 
-	public boolean contains (Object obj)
+	@Override
+    public boolean contains (Object obj)
 	{
 		return _map.containsKey (obj);
 	}
 
 
-	public Iterator iterator ()
+	@Override
+    public Iterator iterator ()
 	{
 		return _map.keySet ().iterator ();
 	}

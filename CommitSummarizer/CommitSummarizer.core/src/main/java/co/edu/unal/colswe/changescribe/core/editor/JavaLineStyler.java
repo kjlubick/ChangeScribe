@@ -107,7 +107,8 @@ class JavaLineStyler implements LineStyleListener {
    * LineStyleEvent.styles Enumeration of StyleRanges, need to be in order.
    * (output) LineStyleEvent.background line background color (output)
    */
-  @SuppressWarnings("unchecked")
+  @Override
+@SuppressWarnings("unchecked")
 public void lineGetStyle(LineStyleEvent event) {
     Vector styles = new Vector();
     int token;

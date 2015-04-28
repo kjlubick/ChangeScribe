@@ -32,28 +32,33 @@ public class LinkedList {
     return new RemovableElementSource() {
       private Bucket pos = head;
 
-      public int status() {
+      @Override
+    public int status() {
 	if (pos.next!=null)
 	  return ELEMENT_READY;
 	else
 	  return NO_ELEMENTS_READY;
       }
       
-      public Object peekNextElement() {
+      @Override
+    public Object peekNextElement() {
 	return pos.next.el;
       }
 
-      public void removeNextElement() {
+      @Override
+    public void removeNextElement() {
 	if ((pos.next=pos.next.next)==null)
 	  tail=pos;
       }
 
-      public Object nextElement() {
+      @Override
+    public Object nextElement() {
 	pos = pos.next;
 	return pos.el;
       }
       
-      public void print(PrintingState p) {
+      @Override
+    public void print(PrintingState p) {
       	p.print("Linked[");
       	for (Bucket current = pos.next;current!=null;current = current.next) {
       		p.printObj(current.el);

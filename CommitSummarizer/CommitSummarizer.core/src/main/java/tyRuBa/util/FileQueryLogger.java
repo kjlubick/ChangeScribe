@@ -14,6 +14,7 @@ public class FileQueryLogger extends QueryLogger {
 	
     PrintWriter writer;
     
+    @Override
     public void close() {
     		writer.close();
     }
@@ -23,6 +24,7 @@ public class FileQueryLogger extends QueryLogger {
         writer.println("//SCENARIO");
     }
     
+    @Override
     public void logQuery(RBExpression query) {
         writer.println(query.toString());
     }

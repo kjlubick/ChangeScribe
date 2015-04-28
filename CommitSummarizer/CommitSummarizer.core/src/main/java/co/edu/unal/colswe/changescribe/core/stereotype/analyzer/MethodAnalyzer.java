@@ -76,7 +76,7 @@ public class MethodAnalyzer {
         this.invokedLocalMethods = new HashSet<IMethodBinding>();
         this.invokedExternalMethods = new HashSet<IMethodBinding>();
         this.usedTypes = new LinkedList<TypeInfo>();
-        method.accept((ASTVisitor)new MethodVisitor(method));
+        method.accept(new MethodVisitor(method));
     }
     
     public boolean isConstructor() {
@@ -267,6 +267,7 @@ public class MethodAnalyzer {
             }
         }
         
+        @Override
         public boolean visit(final VariableDeclarationFragment node) {
             boolean isInstantiated = false;
             if (node.getInitializer() != null) {
@@ -276,15 +277,17 @@ public class MethodAnalyzer {
             return super.visit(node);
         }
         
+        @Override
         public boolean visit(final ConditionalExpression node) {
             ++this.inCondition;
-            node.getExpression().accept((ASTVisitor)this);
+            node.getExpression().accept(this);
             --this.inCondition;
-            node.getThenExpression().accept((ASTVisitor)this);
-            node.getElseExpression().accept((ASTVisitor)this);
+            node.getThenExpression().accept(this);
+            node.getElseExpression().accept(this);
             return false;
         }
         
+        @Override
         public boolean visit(final ClassInstanceCreation node) {
             if (this.inReturn > 0 && this.inMethodArguments == 0 && this.inCondition == 0 && MethodAnalyzer.this.returnType != null && !MethodAnalyzer.this.returnType.isPrimitiveType()) {
                 MethodAnalyzer.access$15(MethodAnalyzer.this, true);
@@ -292,6 +295,7 @@ public class MethodAnalyzer {
             return super.visit(node);
         }
         
+        @Override
         public boolean visit(final ReturnStatement node) {
             ++this.inReturn;
             final IVariableBinding field = this.getLocalField(node.getExpression());
@@ -322,11 +326,13 @@ public class MethodAnalyzer {
             return super.visit(node);
         }
         
+        @Override
         public void endVisit(final ReturnStatement node) {
             --this.inReturn;
             super.endVisit(node);
         }
         
+        @Override
         public boolean visit(final Assignment node) {
             final IVariableBinding field = this.getLocalField(node.getLeftHandSide());
             if (field != null) {
@@ -340,19 +346,21 @@ public class MethodAnalyzer {
             if (this.assignedParameterIndex != -1) {
                 MethodAnalyzer.this.parameters.get(this.assignedParameterIndex).setModified(true);
             }
-            node.getLeftHandSide().accept((ASTVisitor)this);
+            node.getLeftHandSide().accept(this);
             ++this.inAssignmentRightSide;
-            node.getRightHandSide().accept((ASTVisitor)this);
+            node.getRightHandSide().accept(this);
             --this.inAssignmentRightSide;
             return false;
         }
         
+        @Override
         public void endVisit(final Assignment node) {
             this.assignedVariableIndex = -1;
             this.assignedParameterIndex = -1;
             super.endVisit(node);
         }
         
+        @Override
         public boolean visit(final MethodInvocation node) {
             if (this.inReturn > 0) {
                 final IVariableBinding field = this.getLocalField(node.getExpression());
@@ -370,17 +378,18 @@ public class MethodAnalyzer {
                 }
             }
             if (node.getExpression() != null) {
-                node.getExpression().accept((ASTVisitor)this);
+                node.getExpression().accept(this);
             }
-            node.getName().accept((ASTVisitor)this);
+            node.getName().accept(this);
             ++this.inMethodArguments;
             for (final Object o : node.arguments()) {
-                ((Expression)o).accept((ASTVisitor)this);
+                ((Expression)o).accept(this);
             }
             --this.inMethodArguments;
             return false;
         }
         
+        @Override
         public boolean visit(final ExpressionStatement node) {
             if (node.getExpression() instanceof MethodInvocation) {
                 final MethodInvocation method = (MethodInvocation)node.getExpression();
@@ -406,8 +415,9 @@ public class MethodAnalyzer {
             return super.visit(node);
         }
         
+        @Override
         public boolean visit(final SimpleName node) {
-            final IVariableBinding field = this.getLocalField((Expression)node);
+            final IVariableBinding field = this.getLocalField(node);
             MethodAnalyzer.this.checkNonFinalStaticFieldUse(field);
             if (field != null) {
                 if (this.inAssignmentRightSide > 0 && this.assignedVariableIndex != -1) {
@@ -442,23 +452,27 @@ public class MethodAnalyzer {
             }
         }
         
+        @Override
         public boolean visit(final FieldAccess node) {
-            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField((Expression)node));
+            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField(node));
             return super.visit(node);
         }
         
+        @Override
         public boolean visit(final SuperFieldAccess node) {
-            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField((Expression)node));
+            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField(node));
             return super.visit(node);
         }
         
+        @Override
         public boolean visit(final QualifiedName node) {
-            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField((Expression)node));
+            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField(node));
             return super.visit(node);
         }
         
+        @Override
         public boolean visit(final ArrayAccess node) {
-            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField((Expression)node));
+            MethodAnalyzer.this.checkNonFinalStaticFieldUse(this.getLocalField(node));
             return super.visit(node);
         }
         
@@ -478,11 +492,11 @@ public class MethodAnalyzer {
             }
             if (expression instanceof SuperFieldAccess) {
                 final SuperFieldAccess superFieldAccess = (SuperFieldAccess)expression;
-                final IVariableBinding nameBinding = this.getLocalField((Expression)superFieldAccess.getName());
+                final IVariableBinding nameBinding = this.getLocalField(superFieldAccess.getName());
                 if (nameBinding != null) {
                     return nameBinding;
                 }
-                return this.getLocalField((Expression)superFieldAccess.getQualifier());
+                return this.getLocalField(superFieldAccess.getQualifier());
             } else {
                 if (expression instanceof ArrayAccess) {
                     final ArrayAccess arrayAccess = (ArrayAccess)expression;
@@ -492,17 +506,17 @@ public class MethodAnalyzer {
                     return null;
                 }
                 final QualifiedName qualifiedName = (QualifiedName)expression;
-                final IVariableBinding nameBinding = this.getLocalField((Expression)qualifiedName.getName());
+                final IVariableBinding nameBinding = this.getLocalField(qualifiedName.getName());
                 if (nameBinding != null) {
                     return nameBinding;
                 }
-                return this.getLocalField((Expression)qualifiedName.getQualifier());
+                return this.getLocalField(qualifiedName.getQualifier());
             }
         }
         
         private boolean isLocalField(final IVariableBinding field, final ITypeBinding relatedType) {
             if (field.getDeclaringClass() != null) {
-                if (field.getDeclaringClass().equals((Object)relatedType)) {
+                if (field.getDeclaringClass().equals(relatedType)) {
                     return true;
                 }
                 if (relatedType != null && relatedType.isNested() && !Modifier.isStatic(relatedType.getModifiers()) && this.isLocalField(field, relatedType.getDeclaringClass())) {
@@ -538,11 +552,11 @@ public class MethodAnalyzer {
                 return -1;
             }
             final QualifiedName qualifiedName = (QualifiedName)expression;
-            final int index = this.getVariableIndex((Expression)qualifiedName.getName());
+            final int index = this.getVariableIndex(qualifiedName.getName());
             if (index != -1) {
                 return index;
             }
-            return this.getVariableIndex((Expression)qualifiedName.getQualifier());
+            return this.getVariableIndex(qualifiedName.getQualifier());
         }
         
         private int getParameterIndex(final Expression expression) {
@@ -559,17 +573,17 @@ public class MethodAnalyzer {
                 return -1;
             }
             final QualifiedName qualifiedName = (QualifiedName)expression;
-            final int index = this.getParameterIndex((Expression)qualifiedName.getName());
+            final int index = this.getParameterIndex(qualifiedName.getName());
             if (index != -1) {
                 return index;
             }
-            return this.getParameterIndex((Expression)qualifiedName.getQualifier());
+            return this.getParameterIndex(qualifiedName.getQualifier());
         }
         
         private boolean isLocalMethod(final MethodInvocation method) {
             final IMethodBinding methodBinding = method.resolveMethodBinding();
             if (methodBinding != null && methodBinding.getDeclaringClass() != null) {
-                if (methodBinding.getDeclaringClass().equals((Object)MethodAnalyzer.this.declaringClass)) {
+                if (methodBinding.getDeclaringClass().equals(MethodAnalyzer.this.declaringClass)) {
                     return true;
                 }
                 ITypeBinding relatedClass = MethodAnalyzer.this.declaringClass;
@@ -578,13 +592,13 @@ public class MethodAnalyzer {
                     if (relatedClass == null) {
                         break;
                     }
-                    if (methodBinding.getDeclaringClass().equals((Object)relatedClass)) {
+                    if (methodBinding.getDeclaringClass().equals(relatedClass)) {
                         return true;
                     }
                 }
                 if(MethodAnalyzer.this.declaringClass != null) {
                 	for (relatedClass = MethodAnalyzer.this.declaringClass.getSuperclass(); relatedClass != null; relatedClass = relatedClass.getSuperclass()) {
-                        if (methodBinding.getDeclaringClass().equals((Object)relatedClass)) {
+                        if (methodBinding.getDeclaringClass().equals(relatedClass)) {
                             return true;
                         }
                     }

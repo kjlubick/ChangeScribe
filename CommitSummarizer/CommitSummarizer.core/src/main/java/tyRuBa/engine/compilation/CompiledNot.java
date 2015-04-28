@@ -13,7 +13,8 @@ public class CompiledNot extends SemiDetCompiled {
 		this.negated = negated;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		if (negated.runNonDet(input, context).hasMoreElements())
 			return null;
 		else {
@@ -21,11 +22,13 @@ public class CompiledNot extends SemiDetCompiled {
 		}
 	}
 	
-	public Compiled negate() {
+	@Override
+    public Compiled negate() {
 		return new CompiledTest(negated);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "NOT(" + negated + ")";
 	}
 

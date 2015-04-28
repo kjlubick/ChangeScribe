@@ -66,11 +66,13 @@ public class PredInfo {
 		return (PredicateMode) predModes.get(pos);
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return predId.hashCode();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(
 			predId.toString() + tList + "\nMODES\n");
 

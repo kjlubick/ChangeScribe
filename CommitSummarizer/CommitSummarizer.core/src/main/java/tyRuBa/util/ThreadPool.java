@@ -24,7 +24,8 @@ public class ThreadPool {
 	
 	private class Worker implements Runnable {
 		
-		public void run() {
+		@Override
+        public void run() {
 			Runnable job;
 			
 			do {
@@ -153,7 +154,8 @@ public class ThreadPool {
 		}
 	}
 	
-	protected void finalize() {
+	@Override
+    protected void finalize() {
 		exit();
 	}
 }

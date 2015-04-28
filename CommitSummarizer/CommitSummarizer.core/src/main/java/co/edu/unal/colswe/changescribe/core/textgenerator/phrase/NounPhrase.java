@@ -28,7 +28,8 @@ public class NounPhrase extends Phrase {
 		this.connector = connector;
 	}
 
-	public void generate() {
+	@Override
+    public void generate() {
 		if (this.taggedPhrase == null || this.taggedPhrase.isEmpty()) {
 			return;
 		}
@@ -58,7 +59,8 @@ public class NounPhrase extends Phrase {
 		
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuilder phrase = new StringBuilder();
 		if(this.phrase != null && !this.phrase.toString().equals("")) {
 			phrase.append(this.phrase.toString() + " ");

@@ -24,12 +24,14 @@ public class PredicateMode {
 		this.toBeCheck = toBeCheck;
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return paramModes.hashCode()
 			+ 13 * (mode.hashCode() + 13 * (this.getClass().hashCode()));
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other instanceof PredicateMode) {
 			PredicateMode cother = (PredicateMode) other;
 			return (paramModes.equals(cother.paramModes))
@@ -39,7 +41,8 @@ public class PredicateMode {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return paramModes + " IS " + mode;
 	}
 

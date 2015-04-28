@@ -41,7 +41,8 @@ public class CachedRuleBase extends Compiled {
 	}
 
 	/** Unification, check cache first */
-	public ElementSource runNonDet(Object input, final RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, final RBContext context) {
 		final RBTuple other = (RBTuple)input;
 		FormKey k = new FormKey(other);
 		CacheEntry entry = (CacheEntry) cache.get(k);
@@ -59,10 +60,12 @@ public class CachedRuleBase extends Compiled {
 			cache.put(k, entry);
 //			result.setSource(contents.unify(other, context));
 			result.setSource(new DelayedElementSource() {
-				public ElementSource produce() {
+				@Override
+                public ElementSource produce() {
 					return compiledContents.runNonDet(other, context);
 				}
-				public String produceString() {
+				@Override
+                public String produceString() {
 					return other.toString();
 				}
 			});
@@ -81,7 +84,8 @@ public class CachedRuleBase extends Compiled {
 //				System.err.println("callframe = " + call);
 				/* previous call to sameform determines call frame! */
 				return cachedResult.elements().map(new Action() {
-					public Object compute(Object f) {
+					@Override
+                    public Object compute(Object f) {
 //						System.err.println("cache frame = " + f);
 						Frame callres = call.callResult((Frame) f);
 //						System.err.println(" callresult = " + callres);
@@ -117,14 +121,16 @@ public class CachedRuleBase extends Compiled {
 		}
 	}
 
-	public SemiDetCompiled first() {
+	@Override
+    public SemiDetCompiled first() {
 		if (mySemiDetCompanion == null) {
 			mySemiDetCompanion = new SemiDetCachedRuleBase(compiledContents.first());
 		}
 		return mySemiDetCompanion;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "CACHED RULEBASE(...)";
 	}
 }

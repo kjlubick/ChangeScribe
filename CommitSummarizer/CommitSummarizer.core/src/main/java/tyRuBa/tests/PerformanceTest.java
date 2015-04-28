@@ -90,7 +90,8 @@ public class PerformanceTest {
 			return endtime;
 		}
 
-		public String toString() {
+		@Override
+        public String toString() {
 			if (error!=null)
 				return query + "#CRASHED: "+error.getMessage();
 			else
@@ -138,7 +139,8 @@ public class PerformanceTest {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer out = new StringBuffer();
 		for (int i = 0; i < tests.length; i++) {
 			out.append(tests[i]+"\n");

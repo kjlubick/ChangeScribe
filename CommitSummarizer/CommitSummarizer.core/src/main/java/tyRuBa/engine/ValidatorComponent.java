@@ -28,7 +28,8 @@ public class ValidatorComponent extends RBComponent {
 		this.comp = c;
 	}
 
-	public boolean isValid() {
+	@Override
+    public boolean isValid() {
 		return (validator != null && validator.isValid());
 	}
 
@@ -39,54 +40,64 @@ public class ValidatorComponent extends RBComponent {
 		}
 	}
 
-	public Validator getValidator() {
+	@Override
+    public Validator getValidator() {
 		return validator;
 	}
 
-	public RBTuple getArgs() {
+	@Override
+    public RBTuple getArgs() {
 		checkValid();
 		return comp.getArgs();
 	}
 	
-	public PredicateIdentifier getPredId() {
+	@Override
+    public PredicateIdentifier getPredId() {
 		checkValid();
 		return comp.getPredId();
 	}
 	
-	public TupleType typecheck(PredInfoProvider predinfos) throws TypeModeError {
+	@Override
+    public TupleType typecheck(PredInfoProvider predinfos) throws TypeModeError {
 		checkValid();
 		return comp.typecheck(predinfos);
 	}
 
-	public RBComponent convertToNormalForm() {
+	@Override
+    public RBComponent convertToNormalForm() {
 		checkValid();
 		return new ValidatorComponent(comp.convertToNormalForm(), validator);
 	}
 
-	public boolean isGroundFact() {
+	@Override
+    public boolean isGroundFact() {
 		checkValid();
 		return comp.isGroundFact();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		if (isValid())
 			return comp.toString();
 		else
 			return "ValidatorComponent(INVALIDATED,"+comp+")";
 	}
 
-	public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) throws TypeModeError {
+	@Override
+    public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) throws TypeModeError {
 		checkValid();
 		RBComponent converted = comp.convertToMode(mode, context);
 		return new ValidatorComponent(converted, validator);
 	}
 
-	public Mode getMode() {
+	@Override
+    public Mode getMode() {
 		checkValid();
 		return comp.getMode();
 	}
 
-	public Compiled compile(final CompilationContext c) {
+	@Override
+    public Compiled compile(final CompilationContext c) {
 		checkValid();
 		return comp.compile(c);
 	}

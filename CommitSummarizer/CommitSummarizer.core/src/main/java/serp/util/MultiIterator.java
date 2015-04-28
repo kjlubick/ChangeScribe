@@ -20,21 +20,24 @@ public abstract class MultiIterator
 	private int			_index	= 0;
 
 
-	public boolean hasNext ()
+	@Override
+    public boolean hasNext ()
 	{
 		setIterator ();
 		return _itr.hasNext ();
 	}
 
 
-	public Object next ()
+	@Override
+    public Object next ()
 	{
 		setIterator ();
 		return _itr.next ();
 	}
 	
 	
-	public void remove ()
+	@Override
+    public void remove ()
 	{
 		setIterator ();
 		_last.remove ();

@@ -23,7 +23,8 @@ public class FlattenElementSource extends ElementSource {
 		sources.setSource(metaSource);
 	}
 
-	public int status() {
+	@Override
+    public int status() {
 		if (e != null)
 			return ELEMENT_READY;
 		else {
@@ -56,7 +57,8 @@ public class FlattenElementSource extends ElementSource {
 		}
 	}
 
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		status();
 		Object result = e;
 		e = null;
@@ -64,7 +66,8 @@ public class FlattenElementSource extends ElementSource {
 	}
 
 	
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("Flatten(");
 		p.indent();p.newline();
 			sources.print(p);

@@ -32,14 +32,16 @@ public class SelectProjectDialog extends Dialog {
 		return proj2;
 	}
 
-	public void okPressed() {
+	@Override
+    public void okPressed() {
 		proj1 = cmbProj1.getText();
 		proj2 = cmbProj2.getText();
 
 		super.okPressed();
 	}
 
-	protected Control createDialogArea(Composite parent) {
+	@Override
+    protected Control createDialogArea(Composite parent) {
 		this.getShell().setText("Select Versions");
 
 		// overall layout

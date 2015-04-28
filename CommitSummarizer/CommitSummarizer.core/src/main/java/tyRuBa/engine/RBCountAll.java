@@ -39,15 +39,18 @@ public class RBCountAll extends RBExpression {
 		return result; 
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "COUNTALL(" + getQuery() + "," + getExtract() + "," + getResult() + ")";
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return new CompiledCount(getQuery().compile(c),getExtract(),getResult());
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			TypeEnv afterQueryEnv = getQuery().typecheck(predinfo, startEnv);
 			TypeEnv resultTypeEnv = Factory.makeTypeEnv();
@@ -61,7 +64,8 @@ public class RBCountAll extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
 		Collection freevars = query.getFreeVariables(context);
 		Collection extractedVars = getExtract().getVariables();
 		freevars.removeAll(extractedVars);
@@ -88,7 +92,8 @@ public class RBCountAll extends RBExpression {
 		}
 	}
 	
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		RBExpression result = 
 			new RBCountAll(getQuery().convertToNormalForm(false), 
 					getExtract(), getResult());
@@ -99,7 +104,8 @@ public class RBCountAll extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 

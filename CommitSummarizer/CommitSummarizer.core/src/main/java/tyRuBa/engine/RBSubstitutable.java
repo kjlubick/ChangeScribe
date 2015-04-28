@@ -15,15 +15,18 @@ public abstract class RBSubstitutable extends RBTerm {
 		return name;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return name.hashCode();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return name;
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		return (obj instanceof RBSubstitutable)
 			&& ((RBSubstitutable) obj).name == this.name;
 	}	

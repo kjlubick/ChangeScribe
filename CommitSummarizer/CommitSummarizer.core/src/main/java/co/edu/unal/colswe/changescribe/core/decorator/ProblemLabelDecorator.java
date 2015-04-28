@@ -59,14 +59,16 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
-	public void dispose() {
+	@Override
+    public void dispose() {
 		resourceManager.dispose();
 		if (this.viewer != null)
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
 		super.dispose();
 	}
 
-	public Image decorateImage(Image image, Object element) {
+	@Override
+    public Image decorateImage(Image image, Object element) {
 		IProblemDecoratable decoratable = getProblemDecoratable(element);
 		if (decoratable != null) {
 			int problemSeverity = decoratable.getProblemSeverity();
@@ -78,7 +80,8 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 		return null;
 	}
 
-	public String decorateText(String text, Object element) {
+	@Override
+    public String decorateText(String text, Object element) {
 		// No decoration
 		return null;
 	}
@@ -97,7 +100,8 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 		return (Image) this.resourceManager.get(decorated);
 	}
 
-	public void resourceChanged(IResourceChangeEvent event) {
+	@Override
+    public void resourceChanged(IResourceChangeEvent event) {
 		Set<IResource> resources = new HashSet<IResource>();
 
 		IMarkerDelta[] markerDeltas = event.findMarkerDeltas(IMarker.PROBLEM,
@@ -115,7 +119,8 @@ public class ProblemLabelDecorator extends BaseLabelProvider implements
 			final Object[] updateElements = elements.toArray(new Object[elements.size()]);
 			Display display = viewer.getControl().getDisplay();
 			display.asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					viewer.update(updateElements, null);
 				}
 			});

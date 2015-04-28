@@ -17,7 +17,8 @@ public class TypeVisitor extends ASTVisitor {
 		this.typeAnalyzer = typeAnalyzer;
 	}
 
-	public boolean visit(final MethodDeclaration node) {
+	@Override
+    public boolean visit(final MethodDeclaration node) {
 		final StereotypedMethod stereotypedMethod = new StereotypedMethod(node);
 		stereotypedMethod.findStereotypes();
 		typeAnalyzer.getReport().append(stereotypedMethod.getReport());
@@ -25,7 +26,8 @@ public class TypeVisitor extends ASTVisitor {
 		return super.visit(node);
 	}
 
-	public boolean visit(final TypeDeclaration node) {
+	@Override
+    public boolean visit(final TypeDeclaration node) {
 		if (this.isRoot) {
 			this.isRoot = false;
 			return super.visit(node);

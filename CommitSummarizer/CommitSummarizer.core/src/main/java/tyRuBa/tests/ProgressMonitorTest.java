@@ -11,7 +11,8 @@ public class ProgressMonitorTest extends TyrubaTest {
 	SimpleRuleBaseBucket bucket;
 	SimpleRuleBaseBucket otherBucket;
 
-	public void setUp() throws Exception {
+	@Override
+    public void setUp() throws Exception {
 		super.setUp(mon);
 		bucket = new SimpleRuleBaseBucket(frontend);
 		otherBucket = new SimpleRuleBaseBucket(frontend);
@@ -26,7 +27,8 @@ public class ProgressMonitorTest extends TyrubaTest {
 		int updates = -99;
 		int expectedWork;
 
-		public void beginTask(String name, int totalWork) {
+		@Override
+        public void beginTask(String name, int totalWork) {
 			updates = 0;
 			expectedWork = totalWork;
 			if (!isDone)
@@ -35,11 +37,13 @@ public class ProgressMonitorTest extends TyrubaTest {
 			assertTrue(totalWork > 0);
 		}
 
-		public void worked(int units) {
+		@Override
+        public void worked(int units) {
 			updates += units;
 		}
 
-		public void done() {
+		@Override
+        public void done() {
 			isDone = true;
 		}
 

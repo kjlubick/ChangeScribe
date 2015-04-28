@@ -24,13 +24,15 @@ public class SynchronizedElementSource extends ElementSource {
 		}
 	}
 
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("Synchronized(");
 		src.print(p);
 		p.print(")");
 	}
 
-	public int status() {
+	@Override
+    public int status() {
 		if (resource==null)
 			return NO_MORE_ELEMENTS;
 		else 
@@ -44,7 +46,8 @@ public class SynchronizedElementSource extends ElementSource {
 		}
 	}
 
-	public void release() {
+	@Override
+    public void release() {
 		if (resource!=null) {
 		    //TODO: TESTING SOMETHING HERE
 			if (src!=null) {
@@ -64,13 +67,15 @@ public class SynchronizedElementSource extends ElementSource {
 		}		
 	}
 
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		synchronized (resource) {
 			return src.nextElement();
 		}
 	}
 
-	protected void finalize() throws Throwable {
+	@Override
+    protected void finalize() throws Throwable {
 	    //System.err.println("[INFO] - Synchronized Element source finalizer called.");
 		try {
 			if (resource!=null) {

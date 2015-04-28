@@ -17,7 +17,8 @@ public class UppedTerm {
 		return term;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return term.toString();
 	}
 }

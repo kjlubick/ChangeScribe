@@ -34,7 +34,8 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 		return frame;
 	}
 
-	public Object visit(RBConjunction conjunction) {
+	@Override
+    public Object visit(RBConjunction conjunction) {
 		RBConjunction result = new RBConjunction();
 		for (int i = 0; i < conjunction.getNumSubexps(); i++) {
 			result.addSubexp(
@@ -43,7 +44,8 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 		return result;
 	}
 
-	public Object visit(RBDisjunction disjunction) {
+	@Override
+    public Object visit(RBDisjunction disjunction) {
 		RBDisjunction result = new RBDisjunction();
 		for (int i = 0; i < disjunction.getNumSubexps(); i++) {
 			result.addSubexp(
@@ -52,7 +54,8 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 		return result;
 	}
 
-	public Object visit(RBExistsQuantifier exists) {
+	@Override
+    public Object visit(RBExistsQuantifier exists) {
 		RBExpression exp = (RBExpression) exists.getExp().accept(this);
 		Collection vars = new HashSet();
 		for (int i = 0; i < exists.getNumVars(); i++) {
@@ -61,42 +64,49 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 		return new RBExistsQuantifier(vars, exp);
 	}
 
-	public Object visit(RBFindAll findAll) {
+	@Override
+    public Object visit(RBFindAll findAll) {
 		RBExpression query = (RBExpression) findAll.getQuery().accept(this);
 		RBTerm extract = (RBTerm) findAll.getExtract().accept(this);
 		RBTerm result = (RBTerm) findAll.getResult().accept(this);
 		return new RBFindAll(query, extract, result);
 	}
 
-	public Object visit(RBCountAll count) {
+	@Override
+    public Object visit(RBCountAll count) {
 		RBExpression query = (RBExpression) count.getQuery().accept(this);
 		RBTerm extract = (RBTerm) count.getExtract().accept(this);
 		RBTerm result = (RBTerm) count.getResult().accept(this);
 		return new RBCountAll(query, extract, result);
 	}
 
-	public Object visit(RBModeSwitchExpression modeSwitch) {
+	@Override
+    public Object visit(RBModeSwitchExpression modeSwitch) {
 		throw new Error("Should not happen: a mode case should have been selected" +
 			" before any substitution or instantiation is performed");
 	}
 
-	public Object visit(RBNotFilter notFilter) {
+	@Override
+    public Object visit(RBNotFilter notFilter) {
 		RBExpression negatedQuery = 
 			(RBExpression) notFilter.getNegatedQuery().accept(this);
 		return new RBNotFilter(negatedQuery);
 	}
 
-	public Object visit(RBPredicateExpression predExp) {
+	@Override
+    public Object visit(RBPredicateExpression predExp) {
 		return predExp.withNewArgs((RBTuple)predExp.getArgs().accept(this));
 	}
 
-	public Object visit(RBTestFilter testFilter) {
+	@Override
+    public Object visit(RBTestFilter testFilter) {
 		RBExpression testQuery = 
 			(RBExpression) testFilter.getQuery().accept(this);
 		return new RBTestFilter(testQuery);
 	}
 
-	public Object visit(RBCompoundTerm compoundTerm) {
+	@Override
+    public Object visit(RBCompoundTerm compoundTerm) {
 		ConstructorType typeConst = compoundTerm.getConstructorType();
 		return typeConst.apply(
 			(RBTerm) compoundTerm.getArg().accept(this));
@@ -104,7 +114,8 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 //		return RBCompoundTerm.makeForVisitor(pred, (RBTerm)compoundTerm.getArgsForVisitor().accept(this));
 	}
 
-	public Object visit(RBTuple tuple) {
+	@Override
+    public Object visit(RBTuple tuple) {
 		RBTerm[] subterms = new RBTerm[tuple.getNumSubterms()];
 		for (int i = 0; i < subterms.length; i++) {
 			subterms[i] = (RBTerm) tuple.getSubterm(i).accept(this);
@@ -112,17 +123,19 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 		return RBTuple.make(subterms);
 	}
 
-	public Object visit(RBIgnoredVariable ignoredVar) {
+	@Override
+    public Object visit(RBIgnoredVariable ignoredVar) {
 		return ignoredVar;
 	}
 
-	public Object visit(RBPair pair) {
+	@Override
+    public Object visit(RBPair pair) {
 		RBPair head = new RBPair((RBTerm)pair.getCar().accept(this));
 		
 		RBPair next;
 		RBPair prev = head;
 		
-		RBTerm cdr = (RBTerm)pair.getCdr();
+		RBTerm cdr = pair.getCdr();
 		
 		while(cdr instanceof RBPair) {
 			pair = (RBPair)cdr;
@@ -137,7 +150,8 @@ public abstract class SubstituteOrInstantiateVisitor implements ExpressionVisito
 		return head;
 	}
 
-	public Object visit(RBQuoted quoted) {
+	@Override
+    public Object visit(RBQuoted quoted) {
 		return new RBQuoted(
 			(RBTerm)quoted.getQuotedParts().accept(this));
 	}

@@ -15,7 +15,8 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
 		}
 	}
 	
-	public String getName() {
+	@Override
+    public String getName() {
 		String name = javaClass.getName();
 		if (name.startsWith("java.lang.")) {
 			return name.substring("java.lang.".length());
@@ -24,7 +25,8 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
 		}
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (other != null && this.getClass().equals(other.getClass())) {
 			return this.getName().equals(((TypeConstructor)other).getName());
 		} else {
@@ -32,7 +34,8 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
 		}
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return getName().hashCode();
 	}
 
@@ -40,6 +43,7 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
 		throw new TypeModeError("Can not add super type for java types " + this);
 	}
 
+    @Override
     public TypeConstructor getSuperTypeConstructor() {
         if (javaClass.getSuperclass() == null)
             return null;
@@ -47,10 +51,12 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
             return new JavaTypeConstructor(javaClass.getSuperclass());
     }
 
+    @Override
     public int getTypeArity() {
         return 0;
     }
 
+    @Override
     public String getParameterName(int i) {
         throw new Error("This is not a user defined type");
     }
@@ -58,23 +64,28 @@ public class JavaTypeConstructor extends TypeConstructor implements Serializable
     /* (non-Javadoc)
      * @see tyRuBa.modes.TypeConstructor#isInitialized()
      */
+    @Override
     public boolean isInitialized() {
         throw new Error("This is not a user defined type");
     }
 
+    @Override
     public ConstructorType getConstructorType() {
         return ConstructorType.makeJava(javaClass);
     }
     
+    @Override
     public boolean isJavaTypeConstructor() {
         return true;
     }
 
+    @Override
     public String toString() {
     		return "JavaTypeConstructor("+javaClass+")";
     }
     
-	public Class javaEquivalent() {
+	@Override
+    public Class javaEquivalent() {
 		return javaClass;
 	}
 }

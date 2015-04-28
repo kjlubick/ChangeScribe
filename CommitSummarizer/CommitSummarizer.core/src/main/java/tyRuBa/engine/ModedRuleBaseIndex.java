@@ -86,7 +86,8 @@ public abstract class ModedRuleBaseIndex implements PredInfoProvider {
 	
 	abstract public void addTypePredicate(TypeConstructor TypeConstructor, ArrayList subTypes);
 
-	final public PredInfo getPredInfo(PredicateIdentifier predId) throws TypeModeError {
+	@Override
+    final public PredInfo getPredInfo(PredicateIdentifier predId) throws TypeModeError {
 		PredInfo result = maybeGetPredInfo(predId);
 		if (result == null) {
 			if (predId.getArity() == 1) {

@@ -16,7 +16,8 @@ public class SubstituteVisitor extends SubstituteOrInstantiateVisitor {
 		super(frame);
 	}
 
-	public Object visit(RBUniqueQuantifier unique) {
+	@Override
+    public Object visit(RBUniqueQuantifier unique) {
 		Frame f = getFrame();
 		for (int i = 0; i < unique.getNumVars(); i++) {
 			f.remove(unique.getVarAt(i));
@@ -25,8 +26,9 @@ public class SubstituteVisitor extends SubstituteOrInstantiateVisitor {
 		return new RBUniqueQuantifier(unique.getQuantifiedVars(), exp);
 	}
 
-	public Object visit(RBVariable var) {
-		RBTerm val = (RBTerm) getFrame().get(var);
+	@Override
+    public Object visit(RBVariable var) {
+		RBTerm val = getFrame().get(var);
 		if (val == null) {
 			return var;
 		} else {
@@ -34,9 +36,10 @@ public class SubstituteVisitor extends SubstituteOrInstantiateVisitor {
 		}
 	}
 
-	public Object visit(RBTemplateVar var) {
+	@Override
+    public Object visit(RBTemplateVar var) {
 		// Same implementation as for regular variables
-		RBTerm val = (RBTerm) getFrame().get(var);
+		RBTerm val = getFrame().get(var);
 		if (val == null) {
 			return var;
 		} else {

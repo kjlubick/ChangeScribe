@@ -22,7 +22,8 @@ public class BindingEnv extends Hashtable implements Cloneable {
 		return (BindingMode)put(var, bindingmode);
 	}
 	
-	public Object clone() {
+	@Override
+    public Object clone() {
 		BindingEnv cl = (BindingEnv) super.clone();
 		return cl;
 	}

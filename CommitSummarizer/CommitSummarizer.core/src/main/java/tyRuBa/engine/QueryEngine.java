@@ -165,12 +165,14 @@ public abstract class QueryEngine {
 			frontend().getSynchPolicy().newSource();
 			ElementSource result = new DelayedElementSource() {
 
-				protected ElementSource produce() {
+				@Override
+                protected ElementSource produce() {
 					//System.err.println("[INFO] - QueryEngine - Starting Query");
 					return runable.start();
 				}
 
-				protected String produceString() {
+				@Override
+                protected String produceString() {
 					// TODO Auto-generated method stub
 					return null;
 				}
@@ -195,7 +197,8 @@ public abstract class QueryEngine {
 	public ElementSource varQuery(RBExpression e, final RBVariable v)
 			throws TypeModeError, ParseException {
 		return frameQuery(e).map(new Action() {
-			public Object compute(Object f) {
+			@Override
+            public Object compute(Object f) {
 				return ((Frame) f).get(v);
 			}
 		});

@@ -22,11 +22,13 @@ public class GrowableType extends Type {
 		this.upperBound = upperBound;
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return lowerBound.hashCode() + 13 * (upperBound.hashCode());
 	}
 	
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (! (other instanceof GrowableType)) {
 			return false;
 		} else {
@@ -36,11 +38,13 @@ public class GrowableType extends Type {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return upperBound.toString();
 	}
 
-	public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
+	@Override
+    public void checkEqualTypes(Type other, boolean grow) throws TypeModeError {
 		if (other instanceof TVar) {
 			other.checkEqualTypes(this, grow);
 		} else if (this.equals(other)) {
@@ -62,11 +66,13 @@ public class GrowableType extends Type {
 		}
 	}
 
-	public boolean isSubTypeOf(Type other, Map renamings) {
+	@Override
+    public boolean isSubTypeOf(Type other, Map renamings) {
 		return lowerBound.isSubTypeOf(other, renamings);
 	}
 
-	public Type intersect(Type other) throws TypeModeError {
+	@Override
+    public Type intersect(Type other) throws TypeModeError {
 		if (other instanceof GrowableType) {
 			GrowableType sother = (GrowableType) other;
 			BoundaryType max =
@@ -100,16 +106,19 @@ public class GrowableType extends Type {
 //		return lowerBound.lowerBound(other);
 //	}
 
-	public boolean isFreeFor(TVar var) {
+	@Override
+    public boolean isFreeFor(TVar var) {
 		return upperBound.isFreeFor(var);
 	}
 
-	public Type clone(Map tfact) {
+	@Override
+    public Type clone(Map tfact) {
 		return new GrowableType((BoundaryType)lowerBound.clone(tfact),
 			(BoundaryType)upperBound.clone(tfact));
 	}
 
-	public Type union(Type other) throws TypeModeError {
+	@Override
+    public Type union(Type other) throws TypeModeError {
 		if (other instanceof TVar) 
 			return other.union(this);
 		else if (other instanceof BoundaryType) {
@@ -127,15 +136,18 @@ public class GrowableType extends Type {
 		}
 	}
 
-	public Type copyStrictPart() {
+	@Override
+    public Type copyStrictPart() {
 		throw new Error("This should not be called!");
 	}
 
-	public boolean hasOverlapWith(Type other) {
+	@Override
+    public boolean hasOverlapWith(Type other) {
 		return lowerBound.hasOverlapWith(other);
 	}
 
-	public Type getParamType(String currName, Type repAs) {
+	@Override
+    public Type getParamType(String currName, Type repAs) {
 		if (repAs instanceof TVar) {
 			if (currName.equals(((TVar)repAs).getName())) {
 				return this;

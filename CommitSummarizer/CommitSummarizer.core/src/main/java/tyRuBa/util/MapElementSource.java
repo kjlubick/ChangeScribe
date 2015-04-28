@@ -17,7 +17,8 @@ final class MapElementSource extends ElementSource {
     remaining = on;
   }
 
-  public int status() {
+  @Override
+public int status() {
 //System.err.println("before advance");
     if (next==null)
       advance();
@@ -34,7 +35,8 @@ final class MapElementSource extends ElementSource {
       return ELEMENT_READY;
   }
 
-  public Object nextElement() {
+  @Override
+public Object nextElement() {
     if (status()==ELEMENT_READY) {
       Object theNext = next;
       next = null;
@@ -44,7 +46,8 @@ final class MapElementSource extends ElementSource {
       throw new NoSuchElementException("MapElementSource");
   }
 
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("Map(");
 		p.indent();
 			if (next!=null) {
@@ -77,11 +80,13 @@ final class MapElementSource extends ElementSource {
     return result;
   }
   
-  public boolean isEmpty() {
+  @Override
+public boolean isEmpty() {
   	return (next == null) && (remaining.isEmpty());	
   }
   
-  public ElementSource first() {
+  @Override
+public ElementSource first() {
   	if (next!=null) {
   		return ElementSource.singleton(next);
   	}
@@ -89,7 +94,8 @@ final class MapElementSource extends ElementSource {
   		return remaining.first().map(action);
   }
 
-	public void release() {
+	@Override
+    public void release() {
 		super.release();
 		next = null;
 		action = null;

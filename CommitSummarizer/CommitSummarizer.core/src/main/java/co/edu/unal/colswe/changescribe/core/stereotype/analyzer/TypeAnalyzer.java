@@ -19,7 +19,7 @@ public class TypeAnalyzer {
 		this.report = new StringBuilder();
 		final TypeVisitor visitor = new TypeVisitor(this);
 		if(type != null && visitor != null) {
-			type.accept((ASTVisitor) visitor);
+			type.accept(visitor);
 		}
 	}
 

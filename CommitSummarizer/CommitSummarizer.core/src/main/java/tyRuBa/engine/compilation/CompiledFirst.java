@@ -13,7 +13,8 @@ public class CompiledFirst extends SemiDetCompiled {
 		this.compiled = compiled;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		ElementSource result = compiled.runNonDet(input, context);
 		if (result.hasMoreElements()) {
 			return (Frame)result.nextElement();
@@ -22,7 +23,8 @@ public class CompiledFirst extends SemiDetCompiled {
 			return null;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "FIRST(" + compiled + ")";
 	}
 

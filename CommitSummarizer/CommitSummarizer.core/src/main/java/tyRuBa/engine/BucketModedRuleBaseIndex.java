@@ -26,7 +26,8 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 	/**	
 	 * @codegroup metadata
 	 */
-	public void enableMetaData() {
+	@Override
+    public void enableMetaData() {
 		localRuleBase.enableMetaData();
 		globalRuleBase.enableMetaData();
 	}
@@ -36,7 +37,8 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 		this.globalRuleBase = globalRuleBase;
 	}
 
-	protected ModedRuleBaseCollection getModedRuleBases(PredicateIdentifier predID)
+	@Override
+    protected ModedRuleBaseCollection getModedRuleBases(PredicateIdentifier predID)
 	throws TypeModeError {
 		ModedRuleBaseCollection result = localRuleBase.maybeGetModedRuleBases(predID);
 		if (result == null) {
@@ -46,21 +48,24 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 		}
 	}
 
-	public void insert(PredInfo p) throws TypeModeError {
+	@Override
+    public void insert(PredInfo p) throws TypeModeError {
 		if (globalRuleBase.contains(p.getPredId()))
 			throw new TypeModeError("Duplicate mode/type entries for predicate "
 				+ p.getPredId());
 		localRuleBase.insert(p);
 	}
 
-	public void dumpFacts(PrintStream out) {
+	@Override
+    public void dumpFacts(PrintStream out) {
 		out.print("local facts: ");
 		localRuleBase.dumpFacts(out);
 		out.print("global facts: ");
 		globalRuleBase.dumpFacts(out);
 	}
 
-	public PredInfo maybeGetPredInfo(PredicateIdentifier predId) {
+	@Override
+    public PredInfo maybeGetPredInfo(PredicateIdentifier predId) {
 		PredInfo result = localRuleBase.maybeGetPredInfo(predId);
 		if (result == null) {
 			return globalRuleBase.maybeGetPredInfo(predId);
@@ -69,23 +74,28 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 		}
 	}
 	
-	public void addTypePredicate(TypeConstructor TypeConstructor, ArrayList subtypes) {
+	@Override
+    public void addTypePredicate(TypeConstructor TypeConstructor, ArrayList subtypes) {
 		localRuleBase.addTypePredicate(TypeConstructor, subtypes);
 	}
 		
-	protected void basicAddTypeConst(TypeConstructor t) {
+	@Override
+    protected void basicAddTypeConst(TypeConstructor t) {
 		localRuleBase.basicAddTypeConst(t);
 	}
 	
-	public void addFunctorConst(Type repAs, CompositeType type) {
+	@Override
+    public void addFunctorConst(Type repAs, CompositeType type) {
 		localRuleBase.addFunctorConst(repAs, type);
 	}
 
-	public void addTypeMapping(TypeMapping mapping, FunctorIdentifier id) throws TypeModeError {
+	@Override
+    public void addTypeMapping(TypeMapping mapping, FunctorIdentifier id) throws TypeModeError {
 	    localRuleBase.addTypeMapping(mapping, id);
 	}	
 
-	public TypeConstructor findType(String typeName) {
+	@Override
+    public TypeConstructor findType(String typeName) {
 		TypeConstructor result;
 		result = localRuleBase.findType(typeName);
 		if (result == null) {
@@ -94,7 +104,8 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 		return result;
 	}
 
-	public TypeConstructor findTypeConst(String typeName, int arity) {
+	@Override
+    public TypeConstructor findTypeConst(String typeName, int arity) {
 		TypeConstructor result;
 		result = localRuleBase.typeInfoBase.findTypeConst(typeName, arity);
 		if (result != null) {
@@ -104,7 +115,8 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 		}
 	}
 	
-	public ConstructorType findConstructorType(FunctorIdentifier id) {
+	@Override
+    public ConstructorType findConstructorType(FunctorIdentifier id) {
 		ConstructorType result;
 		result = localRuleBase.typeInfoBase.findConstructorType(id);
 		if (result != null) {
@@ -114,6 +126,7 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
 		}
 	}
 
+    @Override
     public TypeMapping findTypeMapping(Class forWhat) {
         TypeMapping result;
 		result = localRuleBase.typeInfoBase.findTypeMapping(forWhat);
@@ -131,6 +144,7 @@ public class BucketModedRuleBaseIndex extends ModedRuleBaseIndex {
     /**
      * @see tyRuBa.engine.ModedRuleBaseIndex#backup()
      */
+    @Override
     public void backup() {
         globalRuleBase.backup();
         localRuleBase.backup();

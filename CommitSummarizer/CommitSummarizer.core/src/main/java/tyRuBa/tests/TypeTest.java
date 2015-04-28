@@ -16,7 +16,8 @@ public class TypeTest extends TyrubaTest implements Serializable {
 		super(arg0);
 	}
 
-	protected void setUp() throws Exception {
+	@Override
+    protected void setUp() throws Exception {
 		TyrubaTest.initfile = true;
 		RuleBase.useCache = true;
 		RuleBase.silent = true;
@@ -433,6 +434,7 @@ public class TypeTest extends TyrubaTest implements Serializable {
         protected int f3;
         protected int f4;
 
+        @Override
         public boolean equals(Object _other) {
             if (!this.getClass().equals(_other.getClass()))
                 return false;
@@ -458,10 +460,12 @@ public class TypeTest extends TyrubaTest implements Serializable {
 	    		"label :: Object, String");
 	    frontend.addTypeMapping(new FunctorIdentifier("SourceLocation", 0), new TypeMapping() {
 
-	        public Class getMappedClass() {
+	        @Override
+            public Class getMappedClass() {
 	            return SourceLocation.class;
 	        }
 
+            @Override
             public Object toTyRuBa(Object obj) {
                 SourceLocation sl_obj = (SourceLocation) obj;
                 return new Object[] {
@@ -472,6 +476,7 @@ public class TypeTest extends TyrubaTest implements Serializable {
                 	};
             }
 
+            @Override
             public Object toJava(Object _parts) {
             		Object[] parts = (Object[])_parts;
             		return new SourceLocation(

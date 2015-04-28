@@ -49,18 +49,21 @@ public abstract class ElementSource {
 //		PoormansProfiler.countSingletons++;
 		return new ElementSource() {
 			private Object myElement = e;
-			public int status() {
+			@Override
+            public int status() {
 				if (myElement == null)
 					return NO_MORE_ELEMENTS;
 				else
 					return ELEMENT_READY;
 			}
-			public Object nextElement() {
+			@Override
+            public Object nextElement() {
 				Object el = myElement;
 				myElement = null;
 				return el;
 			}
-			public void print(PrintingState p) {
+			@Override
+            public void print(PrintingState p) {
 				p.print("{");
 				if (myElement==null)
 					p.print("null");
@@ -68,10 +71,12 @@ public abstract class ElementSource {
 					p.print(myElement.toString());
 				p.print("}");
 			}
-			public boolean isEmpty() {
+			@Override
+            public boolean isEmpty() {
 				return myElement==null;
 			}
-			public ElementSource first() {
+			@Override
+            public ElementSource first() {
 				return this;
 			}
 
@@ -114,13 +119,16 @@ public abstract class ElementSource {
 	public static ElementSource with(final Object[] els) {
 		return new ElementSource() {
 			int pos = 0;
-			public int status() {
+			@Override
+            public int status() {
 				return (pos < els.length) ? ELEMENT_READY : NO_MORE_ELEMENTS;
 			}
-			public Object nextElement() {
+			@Override
+            public Object nextElement() {
 				return els[pos++];
 			}
-			public void print(PrintingState p) {
+			@Override
+            public void print(PrintingState p) {
 				p.print("{");
 				for (int i = 0; i < els.length; i++) {
 					if (i>0)
@@ -129,7 +137,8 @@ public abstract class ElementSource {
 				}
 				p.print("}");
 			}
-			public ElementSource first() {
+			@Override
+            public ElementSource first() {
 				// An Arrya based sourse is not lazy... so don;t bother being lazy either
 				if (hasMoreElements())
 					return ElementSource.singleton(nextElement());
@@ -151,15 +160,18 @@ public abstract class ElementSource {
 	public static ElementSource with(final Iterator it) {
 		return new ElementSource() {
 			
-			public int status() {
+			@Override
+            public int status() {
 				return it.hasNext() ? ELEMENT_READY : NO_MORE_ELEMENTS;
 			}
 			
-			public Object nextElement() {
+			@Override
+            public Object nextElement() {
 				return it.next();
 			}
 			
-			public void print(PrintingState p) {
+			@Override
+            public void print(PrintingState p) {
 				p.print("{");
 				p.print("NOT CURRENTLY SUPPORTED");
 				p.print("}");
@@ -177,7 +189,8 @@ public abstract class ElementSource {
 			nextElement();
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		ByteArrayOutputStream result = new ByteArrayOutputStream();
 		print(new PrintingState(new PrintStream(result)));
 		return result.toString();

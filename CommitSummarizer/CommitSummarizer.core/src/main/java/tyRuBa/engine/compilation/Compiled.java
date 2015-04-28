@@ -37,20 +37,25 @@ public abstract class Compiled {
 		public ElementSource run(ElementSource in) {
 			return in;
 		}
-		public Frame runSemiDet(Object input, RBContext context) {
+		@Override
+        public Frame runSemiDet(Object input, RBContext context) {
 //			PoormansProfiler.countSingletonsFromSucceed++;
 			return new Frame();
 		}
-		public Compiled conjoin(Compiled other) {
+		@Override
+        public Compiled conjoin(Compiled other) {
 			return other;
 		}
-		public Compiled disjoin(Compiled other) {
+		@Override
+        public Compiled disjoin(Compiled other) {
 			return this;
 		}
-		public Compiled negate() {
+		@Override
+        public Compiled negate() {
 			return Compiled.fail;
 		}
-		public String toString() {
+		@Override
+        public String toString() {
 			return "SUCCEED";
 		}
 	};
@@ -59,19 +64,24 @@ public abstract class Compiled {
 		public ElementSource run(ElementSource in) {
 			return ElementSource.theEmpty;
 		}
-		public Frame runSemiDet(Object input, RBContext context) {
+		@Override
+        public Frame runSemiDet(Object input, RBContext context) {
 			return null;
 		}
-		public Compiled conjoin(Compiled other) {
+		@Override
+        public Compiled conjoin(Compiled other) {
 			return this;
 		}
-		public Compiled disjoin(Compiled other) {
+		@Override
+        public Compiled disjoin(Compiled other) {
 			return other;
 		}
-		public Compiled negate() {
+		@Override
+        public Compiled negate() {
 			return Compiled.succeed;
 		}
-		public String toString() {
+		@Override
+        public String toString() {
 			return "FAIL";
 		}
 	};
@@ -82,7 +92,8 @@ public abstract class Compiled {
 	 */
 	public ElementSource run(ElementSource inputs, final RBContext context) {
 		return inputs.map(new Action() {
-			public Object compute(Object arg) {
+			@Override
+            public Object compute(Object arg) {
 				return runNonDet(arg, context);
 			}
 		}).flatten();

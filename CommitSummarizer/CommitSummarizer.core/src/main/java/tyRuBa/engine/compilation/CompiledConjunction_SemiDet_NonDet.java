@@ -15,7 +15,8 @@ public class CompiledConjunction_SemiDet_NonDet extends Compiled {
 		this.right = right;
 	}
 
-	public ElementSource runNonDet(Object input, RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, RBContext context) {
 		Frame leftResult = left.runSemiDet(input, context);
 		if (leftResult == null)
 			return ElementSource.theEmpty;
@@ -23,7 +24,8 @@ public class CompiledConjunction_SemiDet_NonDet extends Compiled {
 			return right.runNonDet(leftResult, context);
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "(" + right + "==>" + left + ")";
 	}
 

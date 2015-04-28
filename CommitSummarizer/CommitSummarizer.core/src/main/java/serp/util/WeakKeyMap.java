@@ -55,7 +55,8 @@ public class WeakKeyMap
 	}
 
 
-	protected RefMapKey createRefMapKey (Object key, ReferenceQueue queue, 
+	@Override
+    protected RefMapKey createRefMapKey (Object key, ReferenceQueue queue, 
 		boolean identity)
 	{
 		if (queue == null)
@@ -92,19 +93,22 @@ public class WeakKeyMap
 		}
 
 
-		public Object getKey ()
+		@Override
+        public Object getKey ()
 		{
 			return get ();
 		}
 
 
-		public int hashCode ()
+		@Override
+        public int hashCode ()
 		{
 			return _hash;
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (this == other)
 				return true;
@@ -121,7 +125,8 @@ public class WeakKeyMap
 		}
 
 
-		public int compareTo (Object other)
+		@Override
+        public int compareTo (Object other)
 		{
 			if (this == other)
 				return 0;

@@ -16,15 +16,18 @@ public class CompiledConjunction_Nondet_Semidet extends Compiled {
 		this.right = right;
 	}
 
-	public ElementSource runNonDet(Object input, final RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, final RBContext context) {
 		return left.runNonDet(input, context).map(new Action() {
-			public Object compute(Object arg) {
+			@Override
+            public Object compute(Object arg) {
 				return right.runSemiDet(arg, context); 
 			}
 		});
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "(" + right + " ==> " + left + ")";
 	}
 

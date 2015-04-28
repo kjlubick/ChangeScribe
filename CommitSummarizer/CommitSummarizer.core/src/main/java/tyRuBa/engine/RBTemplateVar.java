@@ -32,7 +32,8 @@ public class RBTemplateVar extends RBSubstitutable {
 		super(name.intern());
 	}
 
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 		// This method is called only during execution.
 		// No templateVars should remain by the time something is executing.
 		throw new Error("Unsupported operation");
@@ -41,23 +42,27 @@ public class RBTemplateVar extends RBSubstitutable {
 	/* (non-Javadoc)
 	 * @see tyRuBa.engine.RBTerm#freefor(tyRuBa.engine.RBVariable)
 	 */
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		// This method is called only during execution.
 		// No templateVars should remain by the time something is executing.
 		throw new Error("Unsupported operation");
 	}
 
-	boolean isGround() {
+	@Override
+    boolean isGround() {
 		// Basically should be treated as constant in this case.
 		return true;
 	}
 
-	public BindingMode getBindingMode(ModeCheckContext context) {
+	@Override
+    public BindingMode getBindingMode(ModeCheckContext context) {
 		// Basically should be treated as constant in this case: always bound.
 		return Bound.the;
 	}
 
-	protected boolean sameForm(
+	@Override
+    protected boolean sameForm(
 		RBTerm other,
 		Frame leftToRight,
 		Frame rightToLeft) {
@@ -66,28 +71,33 @@ public class RBTemplateVar extends RBSubstitutable {
 			throw new Error("Unsupported operation");
 	}
 
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		// This method is called only during execution.
 		// No templateVars should remain by the time something is executing.
 		throw new Error("Unsupported operation");
 	}
 
-	protected Type getType(TypeEnv env) throws TypeModeError {
+	@Override
+    protected Type getType(TypeEnv env) throws TypeModeError {
 		// Just like a variable.
 		return env.get(this);
 	}
 
-	public void makeAllBound(ModeCheckContext context) {
+	@Override
+    public void makeAllBound(ModeCheckContext context) {
 		// Just like a constant. Nothing to do!
 	}
 
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
      */
+    @Override
     public String getFirst() {
         throw new Error("Variables cannot be two level keys");
     }
@@ -95,6 +105,7 @@ public class RBTemplateVar extends RBSubstitutable {
     /**
      * @see tyRuBa.util.TwoLevelKey#getSecond()
      */
+    @Override
     public Object getSecond() {
         throw new Error("Variables cannot be two level keys");
     }

@@ -401,7 +401,8 @@ implements SynchResource {
 //		// look at result, we must force it to be evaluated!
 //	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "FrontEnd: " + rules;
 	}
 
@@ -482,7 +483,8 @@ implements SynchResource {
 
 	private static final int PROGRESS_BAR_LEN = 100;
 
-	public void finalize() throws Throwable {
+	@Override
+    public void finalize() throws Throwable {
 		try {
 			closeOutput();
 			super.finalize();
@@ -501,7 +503,8 @@ implements SynchResource {
 	/**
 	 * @see tyRuBa.engine.QueryEngine#frontend()
 	 */
-	FrontEnd frontend() {
+	@Override
+    FrontEnd frontend() {
 		return this;
 	}
 
@@ -538,7 +541,8 @@ implements SynchResource {
 		return myBuckets.size() + (holdingPen==null?0:holdingPen.size());
 	}
 
-	ModedRuleBaseIndex rulebase() {
+	@Override
+    ModedRuleBaseIndex rulebase() {
 		return rules;
 	}
 
@@ -610,7 +614,8 @@ implements SynchResource {
 	
 	private SynchPolicy synchPol = null;
 	
-	public SynchPolicy getSynchPolicy() {
+	@Override
+    public SynchPolicy getSynchPolicy() {
 		if (synchPol==null)
 			synchPol = new SynchPolicy(this);
 		return synchPol;
@@ -619,7 +624,8 @@ implements SynchResource {
 	////////
 	
 	
-	public String getStoragePath() {
+	@Override
+    public String getStoragePath() {
 	    return path.getPath();	    
 	}
 	
@@ -639,7 +645,8 @@ implements SynchResource {
         return pager;
     }
 	
-	public String getIdentifier() {
+	@Override
+    public String getIdentifier() {
 	    return identifier;
 	}
 
@@ -661,7 +668,8 @@ implements SynchResource {
 	 * metaData for the declarations entered via buckets.
 	 * @codegroup metadata
 	 */
-	public void enableMetaData() {
+	@Override
+    public void enableMetaData() {
 		rules.enableMetaData();
 	}
 

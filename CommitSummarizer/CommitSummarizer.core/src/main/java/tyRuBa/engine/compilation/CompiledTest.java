@@ -12,18 +12,21 @@ public class CompiledTest extends SemiDetCompiled {
 		this.tested = tested;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		if (tested.runNonDet(input, context).hasMoreElements())
 			return (Frame)input;
 		else 
 			return null;
 	}
 	
-	public Compiled negate() {
+	@Override
+    public Compiled negate() {
 		return new CompiledNot(tested);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "TEST(" + tested + ")";
 	}
 

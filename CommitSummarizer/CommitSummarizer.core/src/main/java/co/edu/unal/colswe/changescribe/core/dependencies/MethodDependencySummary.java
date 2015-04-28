@@ -24,7 +24,8 @@ public class MethodDependencySummary extends DependencySummary {
 		setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
 		
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
 			}
 		});

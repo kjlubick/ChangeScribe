@@ -30,15 +30,18 @@ public class RBFact extends RBComponent implements Cloneable {
 		args = e.getArgs();
 	}
 
-	public PredicateIdentifier getPredId() {
+	@Override
+    public PredicateIdentifier getPredId() {
 		return pred;
 	}
 	
-	public RBTuple getArgs() {
+	@Override
+    public RBTuple getArgs() {
 		return args;
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		try {
 			RBFact cl = (RBFact) super.clone();
 			cl.args = (RBTuple) args.clone();
@@ -48,7 +51,8 @@ public class RBFact extends RBComponent implements Cloneable {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return getPredName() + args + ".";
 	}
 
@@ -56,11 +60,13 @@ public class RBFact extends RBComponent implements Cloneable {
 		return args.isGround();
 	}
 
-	public boolean isGroundFact() {
+	@Override
+    public boolean isGroundFact() {
 		return isGround();
 	}
 
-	public TupleType typecheck(PredInfoProvider predinfo) throws TypeModeError {		
+	@Override
+    public TupleType typecheck(PredInfoProvider predinfo) throws TypeModeError {		
 		try {
 			TypeEnv startEnv = new TypeEnv();
 			PredicateIdentifier pred = getPredId();
@@ -91,7 +97,8 @@ public class RBFact extends RBComponent implements Cloneable {
 		}
 	}
 
-	public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) 
+	@Override
+    public RBComponent convertToMode(PredicateMode mode, ModeCheckContext context) 
 	throws TypeModeError {
 		BindingList paramModes = mode.getParamModes();
 		
@@ -112,11 +119,13 @@ public class RBFact extends RBComponent implements Cloneable {
 		}
 	}
 
-	public Mode getMode() {
+	@Override
+    public Mode getMode() {
 		return Mode.makeSemidet(); // facts are always semidet
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return new CompiledFact(args);
 	}
 

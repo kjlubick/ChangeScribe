@@ -146,7 +146,7 @@ public class MethodStereotypeRules {
 		if (type.isPrimitiveType()) {
 			final PrimitiveType primitive = (PrimitiveType) type;
 			if (primitive.getPrimitiveTypeCode().equals(
-					(Object) PrimitiveType.VOID)) {
+					PrimitiveType.VOID)) {
 				return true;
 			}
 		}
@@ -157,7 +157,7 @@ public class MethodStereotypeRules {
 		if (type.isPrimitiveType()) {
 			final PrimitiveType primitive = (PrimitiveType) type;
 			if (primitive.getPrimitiveTypeCode().equals(
-					(Object) PrimitiveType.BOOLEAN)) {
+					PrimitiveType.BOOLEAN)) {
 				return true;
 			}
 		}

@@ -24,7 +24,8 @@ public class ModeCase {
 		return boundVars;
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		String varString = getBoundVars().toString();
 		return "BOUND " + varString.substring(1, varString.length() - 1)
 			+ " : " + getExp();

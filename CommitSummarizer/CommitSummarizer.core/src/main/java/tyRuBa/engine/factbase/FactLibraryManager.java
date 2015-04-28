@@ -114,6 +114,7 @@ public class FactLibraryManager {
                 // Case 1: SemiDet and NOT all bound
                 return new SemiDetCompiled(pm.getMode()) {
 
+                    @Override
                     public Frame runSemiDet(Object input, RBContext context) {
                         final RBTuple goal = (RBTuple) input;
                         final RBTuple inputPars;
@@ -133,6 +134,7 @@ public class FactLibraryManager {
                 // Case 2: SemiDet and all bound
                 return new SemiDetCompiled(pm.getMode()) {
 
+                    @Override
                     public Frame runSemiDet(Object input, RBContext context) {
                         final RBTuple goal = (RBTuple) input;
                         for (int i = 0; i < indexes.length; i++) {
@@ -150,6 +152,7 @@ public class FactLibraryManager {
                 //CASE 3: NonDet and NOT all bound
                 return new Compiled(pm.getMode()) {
 
+                    @Override
                     public ElementSource runNonDet(Object input, RBContext context) {
                         final RBTuple goal = (RBTuple) input;
                         final RBTuple inputPars;
@@ -163,6 +166,7 @@ public class FactLibraryManager {
                         }
                         return matches.map(new Action() {
 
+                            @Override
                             public Object compute(Object arg) {
                                 RBTuple retrieved = (RBTuple) arg;
                                 return retrieved.unify(outputPars, new Frame());

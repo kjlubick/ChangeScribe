@@ -73,7 +73,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		facts.print(out);
 	}
 
-	public boolean visit(PackageDeclaration node) {
+	@Override
+    public boolean visit(PackageDeclaration node) {
 		try {
 			facts.add(Fact.makePackageFact(node.getName().toString()));
 		} catch (Exception e) {
@@ -113,7 +114,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 	}
 
 	// Niki's added code
-	public boolean visit(IfStatement node) {
+	@Override
+    public boolean visit(IfStatement node) {
 		Statement thenStmt = node.getThenStatement();
 		Statement elseStmt = node.getElseStatement();
 		Expression condExpr = node.getExpression();
@@ -150,7 +152,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public void endVisit(IfStatement node) {
+	@Override
+    public void endVisit(IfStatement node) {
 		// System.out.println("There was a call to end visit for the if statement**********");
 		// itbStack.pop();
 	}
@@ -158,7 +161,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 	// end of added code
 
 	// Kyle's methods
-	public boolean visit(CastExpression node) {
+	@Override
+    public boolean visit(CastExpression node) {
 		if (mtbStack.isEmpty()) // not part of a method
 			return true;
 
@@ -176,7 +180,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(TryStatement node) {
+	@Override
+    public boolean visit(TryStatement node) {
 		if (mtbStack.isEmpty()) // not part of a method
 			return true;
 
@@ -300,7 +305,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		}
 	}
 
-	public boolean visit(CompilationUnit node) {
+	@Override
+    public boolean visit(CompilationUnit node) {
 		IJavaElement thisFile = node.getJavaElement();
 
 		for (Object abstractTypeDeclaration : node.types()) {
@@ -314,7 +320,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(TypeDeclaration node) {
+	@Override
+    public boolean visit(TypeDeclaration node) {
 		ITypeBinding itb = node.resolveBinding();
 		itbStack.push(itb);
 		// make class facts
@@ -425,11 +432,13 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return sb.toString();
 	}
 
-	public void endVisit(TypeDeclaration node) {
+	@Override
+    public void endVisit(TypeDeclaration node) {
 		itbStack.pop();
 	}
 
-	public boolean visit(AnonymousClassDeclaration node) {
+	@Override
+    public boolean visit(AnonymousClassDeclaration node) {
 		ITypeBinding itb = node.resolveBinding();
 		itbStack.push(itb);
 
@@ -500,11 +509,13 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public void endVisit(AnonymousClassDeclaration node) {
+	@Override
+    public void endVisit(AnonymousClassDeclaration node) {
 		itbStack.pop();
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+    @SuppressWarnings("unchecked")
 	public boolean visit(MethodDeclaration node) {
 
 		IMethodBinding mtb = node.resolveBinding();
@@ -598,11 +609,13 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public void endVisit(MethodDeclaration node) {
+	@Override
+    public void endVisit(MethodDeclaration node) {
 		mtbStack.pop();
 	}
 
-	public boolean visit(FieldAccess node) {
+	@Override
+    public boolean visit(FieldAccess node) {
 		IVariableBinding ivb = node.resolveFieldBinding();
 
 		if (mtbStack.isEmpty()) // not part of a method
@@ -642,7 +655,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(SimpleName node) {
+	@Override
+    public boolean visit(SimpleName node) {
 		if (mtbStack.isEmpty() && !itbStack.isEmpty()) { // not part of a method
 			return false;
 			/*
@@ -666,7 +680,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return false;
 	}
 
-	public boolean visit(QualifiedName node) {
+	@Override
+    public boolean visit(QualifiedName node) {
 		if (mtbStack.isEmpty() && !itbStack.isEmpty()) { // not part of a method
 			return false;
 		} else if (!mtbStack.isEmpty()) {
@@ -731,7 +746,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		 */
 	}
 
-	public boolean visit(MethodInvocation node) {
+	@Override
+    public boolean visit(MethodInvocation node) {
 		IMethodBinding mmtb = node.resolveMethodBinding();
 
 		if (mtbStack.isEmpty()) // not part of a method
@@ -768,7 +784,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(SuperMethodInvocation node) {
+	@Override
+    public boolean visit(SuperMethodInvocation node) {
 		IMethodBinding mmtb = node.resolveMethodBinding();
 
 		if (mtbStack.isEmpty()) // not part of a method
@@ -785,7 +802,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(ClassInstanceCreation node) {
+	@Override
+    public boolean visit(ClassInstanceCreation node) {
 		IMethodBinding mmtb = node.resolveConstructorBinding();
 
 		if (mtbStack.isEmpty()) // not part of a method
@@ -802,7 +820,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(ConstructorInvocation node) {
+	@Override
+    public boolean visit(ConstructorInvocation node) {
 		IMethodBinding mmtb = node.resolveConstructorBinding();
 
 		if (mtbStack.isEmpty()) // not part of a method
@@ -819,7 +838,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(SuperConstructorInvocation node) {
+	@Override
+    public boolean visit(SuperConstructorInvocation node) {
 		IMethodBinding mmtb = node.resolveConstructorBinding();
 
 		if (mtbStack.isEmpty()) // not part of a method
@@ -837,7 +857,8 @@ public class ASTVisitorAtomicChange extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(VariableDeclarationStatement vds) {
+	@Override
+    public boolean visit(VariableDeclarationStatement vds) {
 		if (mtbStack.isEmpty()) // not part of a method
 			return true;
 

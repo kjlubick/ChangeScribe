@@ -27,7 +27,8 @@ public class TypeEnv extends Hashtable {
 		return result;
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		TypeEnv cl = new TypeEnv();
 		HashMap varRenamings = new HashMap();
 		for (Iterator iter = keySet().iterator(); iter.hasNext();) {
@@ -37,7 +38,8 @@ public class TypeEnv extends Hashtable {
 		return cl;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("TypeEnv(");
 		Enumeration keys = this.keys();
 		while (keys.hasMoreElements()) {

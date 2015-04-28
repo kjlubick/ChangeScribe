@@ -20,7 +20,8 @@ public class LSDBinding implements Comparable<LSDBinding>{
 		return temp;
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (!(other instanceof LSDBinding))
 			return false;
 		LSDBinding otherBinding = (LSDBinding) other;
@@ -92,7 +93,8 @@ public class LSDBinding implements Comparable<LSDBinding>{
 		return variable;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		if (variable != null)
 			return variable.toString();
 		else
@@ -108,7 +110,8 @@ public class LSDBinding implements Comparable<LSDBinding>{
 		return type;
 	}
 
-	public int compareTo(LSDBinding o) {
+	@Override
+    public int compareTo(LSDBinding o) {
 		// FIXME this is generated for LSdiffDistanceFactBasse
 		String os = o.getType()+":" +o.groundConst; 
 		String ts = this.type +":"+this.groundConst; 

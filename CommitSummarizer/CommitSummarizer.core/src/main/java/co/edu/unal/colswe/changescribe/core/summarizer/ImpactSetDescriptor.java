@@ -10,7 +10,7 @@ public class ImpactSetDescriptor {
 	
 	public static String describe(ICompilationUnit cu, ChangedFile[] differences, String operation) {
 		
-		TypeDependencySummary dependency = new TypeDependencySummary((IJavaElement) cu, operation);
+		TypeDependencySummary dependency = new TypeDependencySummary(cu, operation);
 		dependency.setDifferences(differences);
 		dependency.find();
 		dependency.generateSummary();

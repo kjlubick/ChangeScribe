@@ -161,7 +161,8 @@ public class TypedProperties
 	 *
 	 *	@see	Properties#setProperty(String,String)
 	 */
-	public Object setProperty (String key, String val)
+	@Override
+    public Object setProperty (String key, String val)
 	{
 		if (val == null)
 			return remove (key);

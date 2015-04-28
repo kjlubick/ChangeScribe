@@ -22,7 +22,8 @@ public abstract class TyrubaTest extends TestCase {
 		super(arg0);
 	}
 
-	protected void setUp() throws Exception {
+	@Override
+    protected void setUp() throws Exception {
 		super.setUp();
 		frontend = new FrontEnd(initfile,true);
 	}

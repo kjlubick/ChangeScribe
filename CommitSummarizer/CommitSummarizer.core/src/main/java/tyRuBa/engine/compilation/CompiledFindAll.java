@@ -24,10 +24,12 @@ public class CompiledFindAll extends SemiDetCompiled {
 		this.result = result;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		ElementSource res = query.runNonDet(((Frame)input).clone(), context);
 		res = res.map(new Action() {
-			public Object compute(Object arg) {
+			@Override
+            public Object compute(Object arg) {
 				return extract.substitute((Frame) arg);
 			}
 		});
@@ -35,7 +37,8 @@ public class CompiledFindAll extends SemiDetCompiled {
 		return result.unify(resultList, (Frame)input);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "COMPILED FINDALL(" + query + "," + extract + "," + result + ")";
 	}
 

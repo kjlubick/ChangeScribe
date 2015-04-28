@@ -19,7 +19,8 @@ public class InstantiateVisitor extends SubstituteOrInstantiateVisitor {
 		super(frame);
 	}
 
-	public Object visit(RBUniqueQuantifier unique) {
+	@Override
+    public Object visit(RBUniqueQuantifier unique) {
 		RBExpression exp = (RBExpression) unique.getExp().accept(this);
 		Collection vars = new HashSet();
 		for (int i = 0; i < unique.getNumVars(); i++) {
@@ -28,8 +29,9 @@ public class InstantiateVisitor extends SubstituteOrInstantiateVisitor {
 		return new RBUniqueQuantifier(vars, exp);
 	}
 
-	public Object visit(RBVariable var) {
-		RBTerm val = (RBTerm) getFrame().get(var);
+	@Override
+    public Object visit(RBVariable var) {
+		RBTerm val = getFrame().get(var);
 		if (val == null) {
 			val = (RBVariable) var.clone();
 			getFrame().put(var, val);
@@ -39,7 +41,8 @@ public class InstantiateVisitor extends SubstituteOrInstantiateVisitor {
 		}
 	}
 
-	public Object visit(RBTemplateVar templVar) {
+	@Override
+    public Object visit(RBTemplateVar templVar) {
 		//Instantiation only happens at runtime. TemplateVar should not
 		//exsit any more at runtime so...
 		throw new Error("Unsupported operation");

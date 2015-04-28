@@ -240,7 +240,7 @@ public class LSDTyrubaRuleChecker {
 		List<LSDFact> foundFacts = new ArrayList<LSDFact>();
 		for (LSDRule r : newSubstitutedRules) {
 			for (LSDLiteral literal : r.getLiterals()) {
-				if (literal instanceof LSDFact && literal.getPredicate().is2KBPredicate() && !foundFacts.contains((LSDFact)literal))
+				if (literal instanceof LSDFact && literal.getPredicate().is2KBPredicate() && !foundFacts.contains(literal))
 					foundFacts.add((LSDFact)literal);
 			}
 		}

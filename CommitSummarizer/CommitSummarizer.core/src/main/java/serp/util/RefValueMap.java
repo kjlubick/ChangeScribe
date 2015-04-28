@@ -61,7 +61,8 @@ abstract class RefValueMap
 	}
 
 
-	public boolean makeHard (Object key)
+	@Override
+    public boolean makeHard (Object key)
 	{
 		removeExpired ();
 
@@ -83,7 +84,8 @@ abstract class RefValueMap
 	}
 
 
-	public boolean makeReference (Object key)
+	@Override
+    public boolean makeReference (Object key)
 	{
 		removeExpired ();
 
@@ -96,7 +98,8 @@ abstract class RefValueMap
 	}
 
 
-	public void clear ()
+	@Override
+    public void clear ()
 	{
 		Collection values = _map.values ();
 		Object value;
@@ -110,31 +113,36 @@ abstract class RefValueMap
 	}
 
 
-	public boolean containsKey (Object key)
+	@Override
+    public boolean containsKey (Object key)
 	{
 		return _map.containsKey (key);
 	}
 
 
-	public boolean containsValue (Object value)
+	@Override
+    public boolean containsValue (Object value)
 	{
 		return values ().contains (value);
 	}
 
 
-	public Set entrySet ()
+	@Override
+    public Set entrySet ()
 	{
 		return new EntrySet ();
 	}
 
 
-	public boolean equals (Object other)
+	@Override
+    public boolean equals (Object other)
 	{
 		return _map.equals (other);
 	}
 
 
-	public Object get (Object key)
+	@Override
+    public Object get (Object key)
 	{
 		Object value = _map.get (key);
 		if (!(value instanceof RefMapValue))
@@ -143,19 +151,22 @@ abstract class RefValueMap
 	}
 
 
-	public boolean isEmpty ()
+	@Override
+    public boolean isEmpty ()
 	{
 		return _map.isEmpty ();
 	}
 
 
-	public Set keySet ()
+	@Override
+    public Set keySet ()
 	{
 		return new KeySet ();
 	}
 
 
-	public Object put (Object key, Object value)
+	@Override
+    public Object put (Object key, Object value)
 	{
 		removeExpired ();
 
@@ -166,7 +177,8 @@ abstract class RefValueMap
 	}
 
 
-	public void putAll (Map map)
+	@Override
+    public void putAll (Map map)
 	{
 		removeExpired ();
 
@@ -193,7 +205,8 @@ abstract class RefValueMap
 	}
 
 
-	public Object remove (Object key)
+	@Override
+    public Object remove (Object key)
 	{
 		removeExpired ();
 
@@ -207,19 +220,22 @@ abstract class RefValueMap
 	}
 
 
-	public int size ()
+	@Override
+    public int size ()
 	{
 		return _map.size ();
 	}
 
 
-	public Collection values ()
+	@Override
+    public Collection values ()
 	{
 		return new ValueCollection ();
 	}
 
 
-	public String toString ()
+	@Override
+    public String toString ()
 	{
 		return _map.toString ();
 	}
@@ -298,13 +314,15 @@ abstract class RefValueMap
 		}
 
 	
-		public Object getKey ()
+		@Override
+        public Object getKey ()
 		{
 			return _entry.getKey ();
 		}
 
 
-		public Object getValue ()
+		@Override
+        public Object getValue ()
 		{
 			Object value = _entry.getValue ();
 			if (!(value instanceof RefMapValue))
@@ -313,7 +331,8 @@ abstract class RefValueMap
 		}
 
 
-		public Object setValue (Object value)
+		@Override
+        public Object setValue (Object value)
 		{
 			Object ret = _entry.getValue ();
 			if (value == null)
@@ -331,7 +350,8 @@ abstract class RefValueMap
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (other == this)
 				return true;
@@ -358,13 +378,15 @@ abstract class RefValueMap
 	private class EntrySet
 		extends AbstractSet
 	{
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return RefValueMap.this.size ();
 		}
 	
 	
-		public boolean add (Object o)
+		@Override
+        public boolean add (Object o)
 		{
 			Map.Entry entry = (Map.Entry) o;
 			put (entry.getKey (), entry.getValue ());
@@ -372,7 +394,8 @@ abstract class RefValueMap
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			return new EntryIterator ();
 		}
@@ -384,13 +407,15 @@ abstract class RefValueMap
 		private class EntryIterator
 			extends LookaheadIterator
 		{
-			protected Iterator newIterator ()
+			@Override
+            protected Iterator newIterator ()
 			{
 				return _map.entrySet ().iterator ();
 			}
 
 
-			protected void processValue (ItrValue value)
+			@Override
+            protected void processValue (ItrValue value)
 			{
 				Map.Entry entry = (Map.Entry) value.value;
 
@@ -412,13 +437,15 @@ abstract class RefValueMap
 	private class ValueCollection
 		extends AbstractCollection
 	{
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return RefValueMap.this.size ();
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			return new ValueIterator ();
 		}
@@ -430,13 +457,15 @@ abstract class RefValueMap
 		private class ValueIterator
 			extends LookaheadIterator
 		{
-			protected Iterator newIterator ()
+			@Override
+            protected Iterator newIterator ()
 			{
 				return _map.values ().iterator ();
 			}
 
 		
-			protected void processValue (ItrValue value)
+			@Override
+            protected void processValue (ItrValue value)
 			{
 				if (value.value instanceof RefMapValue)
 				{
@@ -457,13 +486,15 @@ abstract class RefValueMap
 	private class KeySet
 		extends AbstractSet
 	{
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return RefValueMap.this.size ();
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			return new KeyIterator ();
 		}
@@ -475,13 +506,15 @@ abstract class RefValueMap
 		private class KeyIterator
 			extends LookaheadIterator
 		{
-			protected Iterator newIterator ()
+			@Override
+            protected Iterator newIterator ()
 			{
 				return _map.entrySet ().iterator ();
 			}
 
 
-			protected void processValue (ItrValue value)
+			@Override
+            protected void processValue (ItrValue value)
 			{
 				Map.Entry entry = (Map.Entry) value.value;
 

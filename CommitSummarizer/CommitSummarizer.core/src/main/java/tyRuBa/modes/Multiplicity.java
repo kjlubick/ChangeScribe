@@ -26,25 +26,31 @@ public abstract class Multiplicity implements Comparable {
 	}
 	
 	public static final Multiplicity zero = new Multiplicity(0) {
-		public String toString() {
+		@Override
+        public String toString() {
 			return "Mult(0)";
 		}
-		public Multiplicity multiply(Multiplicity other) {
+		@Override
+        public Multiplicity multiply(Multiplicity other) {
 			return this;
 		}
-		public Multiplicity add(Multiplicity other) {
+		@Override
+        public Multiplicity add(Multiplicity other) {
 			return other;
 		}
 	};
 
 	public static final Multiplicity one = new Multiplicity(1) {
-		public String toString() {
+		@Override
+        public String toString() {
 			return "Mult(1)";
 		}
-		public Multiplicity multiply(Multiplicity other) {
+		@Override
+        public Multiplicity multiply(Multiplicity other) {
 			return other;
 		}
-		public Multiplicity add(Multiplicity other) {
+		@Override
+        public Multiplicity add(Multiplicity other) {
 			if (other.equals(zero)) {
 				return this;
 			} else if (other.equals(infinite)) {
@@ -56,10 +62,12 @@ public abstract class Multiplicity implements Comparable {
 	};
 
 	public static final Multiplicity many = new Multiplicity(2) {
-		public String toString() {
+		@Override
+        public String toString() {
 			return "Mult(>1)";
 		}
-		public Multiplicity multiply(Multiplicity other) {
+		@Override
+        public Multiplicity multiply(Multiplicity other) {
 			if (other.equals(zero)) {
 				return other;
 			} else if (other.equals(infinite)) {
@@ -68,7 +76,8 @@ public abstract class Multiplicity implements Comparable {
 				return this;
 			}
 		}
-		public Multiplicity add(Multiplicity other) {
+		@Override
+        public Multiplicity add(Multiplicity other) {
 			if (other.equals(infinite)) {
 				return other;
 			} else {
@@ -78,17 +87,20 @@ public abstract class Multiplicity implements Comparable {
 	};
 
 	public static final Multiplicity infinite = new Multiplicity(999) {
-		public String toString() {
+		@Override
+        public String toString() {
 			return "Mult(INFINITE)";
 		}
-		public Multiplicity multiply(Multiplicity other) {
+		@Override
+        public Multiplicity multiply(Multiplicity other) {
 			if (other.equals(zero)) {
 				return other;
 			} else {
 				return this;
 			}
 		}
-		public Multiplicity add(Multiplicity other) {
+		@Override
+        public Multiplicity add(Multiplicity other) {
 			return this;
 		}
 	};
@@ -111,7 +123,8 @@ public abstract class Multiplicity implements Comparable {
 	int compareInt;
 	
 		
-	public int compareTo(Object o) {
+	@Override
+    public int compareTo(Object o) {
 		if (this.compareInt < ((Multiplicity) o).compareInt) {
 			return -1;
 		} else if (this.compareInt>((Multiplicity) o).compareInt) {
@@ -121,11 +134,13 @@ public abstract class Multiplicity implements Comparable {
 		}
 	}
 	
-	public boolean equals(Object arg0) {
+	@Override
+    public boolean equals(Object arg0) {
 		return this.compareTo(arg0) == 0;
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return (compareInt+13)*113;
 	}
 

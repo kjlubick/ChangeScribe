@@ -11,26 +11,32 @@ public class Bound extends BindingMode {
 
 	private Bound() {}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return this.getClass().hashCode();
 	}
 
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		return other instanceof Bound;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "B";
 	}
 
-	public boolean satisfyBinding(BindingMode mode) {
+	@Override
+    public boolean satisfyBinding(BindingMode mode) {
 		return true;
 	}
 
-	public boolean isBound() {
+	@Override
+    public boolean isBound() {
 		return true;
 	}
-	public boolean isFree() {
+	@Override
+    public boolean isFree() {
 		return false;
 	}
 	

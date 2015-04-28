@@ -74,14 +74,16 @@ public class ModeCheckContext implements Cloneable {
 		}
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		ModeCheckContext cl = new ModeCheckContext(bindings,
 			getModedRuleBaseIndex());
 		cl.bindings = (BindingEnv)getBindingEnv().clone();
 		return cl;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "---------ModeCheckContext---------\n" 
 			+ "Bindings: " + bindings;
 	}

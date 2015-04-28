@@ -129,7 +129,8 @@ public class Node
 	public String getMessage()
 	{ return message; }
 	
-	public String toString()
+	@Override
+    public String toString()
 	{ return getName(); }
 	
 	public void setParent(Node p)
@@ -148,7 +149,7 @@ public class Node
 	}
 	
 	public Node getChild(int index)
-	{ return (Node)children.get(index); }
+	{ return children.get(index); }
 	
 	public Vector<Node> getChildren()
 	{ return children; }

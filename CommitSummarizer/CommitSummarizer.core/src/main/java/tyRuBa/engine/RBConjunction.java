@@ -33,7 +33,8 @@ public class RBConjunction extends RBCompoundExpression {
 	}
 	
 	/** Evaluate this expression with a given frame in a given rulebase */
-	public final Compiled compile(CompilationContext c) {
+	@Override
+    public final Compiled compile(CompilationContext c) {
 		Compiled res = Compiled.succeed;
 		for (int i = 0; i < getNumSubexps(); i++) {
 			res = res.conjoin(getSubexp(i).compile(c));
@@ -41,11 +42,13 @@ public class RBConjunction extends RBCompoundExpression {
 		return res;
 	}
 	
-	protected String separator() {
+	@Override
+    protected String separator() {
 		return ",";
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) 
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) 
 	throws TypeModeError {
 		TypeEnv resultEnv = startEnv;
 		for (int i = 0; i < getNumSubexps(); i++) {
@@ -59,7 +62,8 @@ public class RBConjunction extends RBCompoundExpression {
 		return resultEnv;
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context,
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context,
 	boolean rearrangeAllowed) throws TypeModeError {
 		RBConjunction result = new RBConjunction();
 		Mode resultMode = Mode.makeDet();
@@ -99,7 +103,8 @@ public class RBConjunction extends RBCompoundExpression {
 		return Factory.makeModedExpression(result, resultMode, context);
 	}
 
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		if (negate) {
 			RBDisjunction result = new RBDisjunction();
 			for (int i = 0; i < getNumSubexps(); i++) {
@@ -122,7 +127,8 @@ public class RBConjunction extends RBCompoundExpression {
 		}
 	}
 	
-	public RBExpression crossMultiply(RBExpression other) {
+	@Override
+    public RBExpression crossMultiply(RBExpression other) {
 		if (other instanceof RBDisjunction)
 			return other.crossMultiply(this);
 		
@@ -136,7 +142,8 @@ public class RBConjunction extends RBCompoundExpression {
 		return result;
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 }

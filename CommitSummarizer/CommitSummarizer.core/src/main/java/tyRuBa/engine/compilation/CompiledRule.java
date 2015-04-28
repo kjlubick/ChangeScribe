@@ -34,7 +34,8 @@ public class CompiledRule extends Compiled {
 		System.err.println("CallResult: " + callResult);
 	}
 
-	public ElementSource runNonDet(Object input, RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, RBContext context) {
 		final RBTerm goaL = (RBTerm) input;
 //		System.err.println("         Goal: " + goaL);
 //		System.err.println("Checking Rule: " + rule);
@@ -51,12 +52,14 @@ public class CompiledRule extends Compiled {
 			final RBRule r = rule.substitute(fc);
 			context = new RBAvoidRecursion(context, r);
 			return compiledCond.runNonDet(fc, context).map(new Action() {
-				public Object compute(Object resultFrame) {
+				@Override
+                public Object compute(Object resultFrame) {
 					Frame result = callFrame.callResult((Frame) resultFrame);
 //					 debugInfo(r, goaL, goal, callFrame, (Frame)resultFrame, result);
 					return result;
 				}
-				public String toString() {
+				@Override
+                public String toString() {
 					return "callFrame" + callFrame;
 				}
 			});
@@ -72,7 +75,8 @@ public class CompiledRule extends Compiled {
 			return new CompiledRule(rule, args, compiledCond);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "RULE(" + args + " :- " + compiledCond + ")";
 	}
 

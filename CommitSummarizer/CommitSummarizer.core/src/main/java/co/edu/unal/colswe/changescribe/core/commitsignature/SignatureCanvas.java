@@ -60,7 +60,8 @@ public class SignatureCanvas {
 		canvas.setSize(width, 40);
 
 		canvas.addListener(SWT.Paint, new Listener() {
-			public void handleEvent(Event e) {
+			@Override
+            public void handleEvent(Event e) {
 				e.gc.setBackground(e.display.getSystemColor(SWT.COLOR_GRAY));
 				e.gc.fillRectangle(0, 5, composite.getClientArea().width + 10,50);
 
@@ -69,7 +70,7 @@ public class SignatureCanvas {
 				// tan factory
 				// Collaborational rose and turquoise
 				// degenerate gray
-				int accum = (int) ((int)(getShell().getSize().x - width) / 2.0);
+				int accum = (int) ((getShell().getSize().x - width) / 2.0);
 				if (signatureMap != null) {
 					rectangles = new LinkedList<Rectangle>();
 					setTotal();
@@ -121,7 +122,8 @@ public class SignatureCanvas {
 		});
 		
 		canvas.addListener(SWT.MouseHover, new Listener() {
-			public void handleEvent(Event e) {
+			@Override
+            public void handleEvent(Event e) {
 				int counter = 0;
 				for(Rectangle rect : rectangles) {
 					if(rect.contains(e.x, e.y)) {
@@ -147,7 +149,8 @@ public class SignatureCanvas {
 		});
 		
 		canvas.addListener(SWT.MouseExit, new Listener() {
-			public void handleEvent(Event e) {
+			@Override
+            public void handleEvent(Event e) {
 				boolean visible = false;
 				int i = 0;
 				for(Rectangle rect : rectangles) {
@@ -181,7 +184,7 @@ public class SignatureCanvas {
 	
 	public void createPercentageRule(Event e) {
 		//int accumulate = 20;
-		int accumulate = (int) ((int)(getShell().getSize().x - width) / 2.0);
+		int accumulate = (int) ((getShell().getSize().x - width) / 2.0);
 		int initial = accumulate;
 		int i = 0;
 		while (accumulate <= width + initial) {

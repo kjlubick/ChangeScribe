@@ -74,7 +74,8 @@ public class RBComponentVector {
 //		update();
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		int len = contents.size();
 		StringBuffer result = new StringBuffer();
 		for (int i = 0; i < len; i++) {
@@ -101,7 +102,8 @@ public class RBComponentVector {
 				skipInvalids();
 			}
 
-			public boolean hasNext() {
+			@Override
+            public boolean hasNext() {
 				return pos<contents.size();
 			}
 
@@ -111,13 +113,15 @@ public class RBComponentVector {
 					pos++;
 			}
 
-			public Object next() {
+			@Override
+            public Object next() {
 				Object result = contents.get(pos++);
 				skipInvalids();
 				return result;
 			}
 
-			public void remove() {
+			@Override
+            public void remove() {
 				throw new Error("This operation is not supported");
 			}
 		};

@@ -56,6 +56,7 @@ public class FileWriterFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#isEmpty()
      */
+    @Override
     public boolean isEmpty() {
         return containedFactBase.isEmpty();
     }
@@ -63,6 +64,7 @@ public class FileWriterFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#isPersistent()
      */
+    @Override
     public boolean isPersistent() {
         return containedFactBase.isPersistent();
     }
@@ -70,6 +72,7 @@ public class FileWriterFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#insert(tyRuBa.engine.RBComponent)
      */
+    @Override
     public synchronized void insert(RBComponent f) {
         if (f.isGroundFact()) {
             pw.print(predicateName + "(");
@@ -107,6 +110,7 @@ public class FileWriterFactBase extends FactBase {
      * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode,
      * tyRuBa.engine.compilation.CompilationContext)
      */
+    @Override
     public Compiled basicCompile(PredicateMode mode, CompilationContext context) {
         pw.flush();
         return containedFactBase.compile(mode, context);
@@ -116,6 +120,7 @@ public class FileWriterFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#backup()
      */
+    @Override
     public void backup() {
         containedFactBase.backup();
     }

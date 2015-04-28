@@ -33,6 +33,7 @@ public class URLResourceID extends ResourceId {
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object other) {
         if (other instanceof URLResourceID) {
             URLResourceID id_other = (URLResourceID) other;
@@ -45,27 +46,32 @@ public class URLResourceID extends ResourceId {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return 29 * actualLocation.hashCode();
     }
 
     /** Opens an InputStream to the resource. */
+    @Override
     public InputStream readResource() throws IOException {
         return actualLocation.openStream();
     }
 
     /** Opens an OutputStream to the resource. */
+    @Override
     public OutputStream writeResource() throws IOException {
         //read only, so return null;
         return null;
     }
 
     /** Deletes the resource */
+    @Override
     public void removeResource() {
         //read only, so do nothing
     }
 
     /** Checks whether the resource exists. */
+    @Override
     public boolean resourceExists() {
         try {
             actualLocation.openStream().close();

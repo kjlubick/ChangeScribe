@@ -92,6 +92,7 @@ public class ObjectTuple implements Serializable {
         }
     }
     
+    @Override
     public boolean equals(Object obj) {
         if (obj.getClass() == this.getClass()) {
             if (this == obj) {
@@ -130,6 +131,7 @@ public class ObjectTuple implements Serializable {
     
     
     
+    @Override
     public String toString() {
         StringBuffer result = new StringBuffer();
         result.append("<<");
@@ -149,6 +151,7 @@ public class ObjectTuple implements Serializable {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         if (isSingleton) {
             int hash = 1;

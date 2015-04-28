@@ -16,39 +16,48 @@ public class RBIgnoredVariable extends RBVariable {
 		super("?");
 	}
 
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 		return f;
 	}
 
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		return true;
 	}
 
-	protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
+	@Override
+    protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
 		return this == other;
 	}
 
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		return 1;
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+    public boolean equals(Object obj) {
 		return obj == this;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return 66727982;
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		return this;
 	}
 	
-	protected Type getType(TypeEnv env) {
+	@Override
+    protected Type getType(TypeEnv env) {
 		return Factory.makeTVar("");
 	}
 	
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 

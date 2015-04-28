@@ -507,7 +507,7 @@ public class TyRuBaParser implements TyRuBaParserConstants {
     t = jj_consume_token(IDENTIFIER);
     //	(
            args = TupleType(tfact, rules);
-                                       arity = ((TupleType)args).size();
+                                       arity = args.size();
                 if (strict)
                         type = rules.findTypeConst(t.image, arity).applyStrict(args, false);
             else

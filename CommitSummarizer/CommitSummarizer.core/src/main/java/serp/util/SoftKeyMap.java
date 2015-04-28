@@ -55,7 +55,8 @@ public class SoftKeyMap
 	}
 
 
-	protected RefMapKey createRefMapKey (Object key, ReferenceQueue queue,
+	@Override
+    protected RefMapKey createRefMapKey (Object key, ReferenceQueue queue,
 		boolean identity)
 	{
 		if (queue == null)
@@ -90,13 +91,15 @@ public class SoftKeyMap
 		}
 
 
-		public Object getKey ()
+		@Override
+        public Object getKey ()
 		{
 			return get ();
 		}
 
 
-		public int hashCode ()
+		@Override
+        public int hashCode ()
 		{
 			Object obj = get ();
 			if (obj == null)
@@ -108,7 +111,8 @@ public class SoftKeyMap
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (this == other)
 				return true;
@@ -125,7 +129,8 @@ public class SoftKeyMap
 		}
 
 
-		public int compareTo (Object other)
+		@Override
+        public int compareTo (Object other)
 		{
 			if (this == other)
 				return 0;

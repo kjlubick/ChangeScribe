@@ -155,15 +155,18 @@ public class MetaBase {
 				new FunctorIdentifier("meta.Type", 0), 
 				new TypeMapping() {
 
-					public Class getMappedClass() {
+					@Override
+                    public Class getMappedClass() {
 						return Type.class;
 					}
 
-					public Object toTyRuBa(Object obj) {
+					@Override
+                    public Object toTyRuBa(Object obj) {
 						throw new Error("This method cannot be caled because the class Type is abstract");
 					}
 
-					public Object toJava(Object parts) {
+					@Override
+                    public Object toJava(Object parts) {
 						throw new Error("This method cannot be called because meta.Type is abstract");
 					}
 				});
@@ -171,11 +174,13 @@ public class MetaBase {
 				new FunctorIdentifier("meta.CompositeType", 0), 
 				new TypeMapping() {
 
-					public Class getMappedClass() {
+					@Override
+                    public Class getMappedClass() {
 						return CompositeType.class;
 					}
 
-					public Object toTyRuBa(Object obj) {
+					@Override
+                    public Object toTyRuBa(Object obj) {
 						CompositeType compType = (CompositeType)obj;
 						return new Object[] {
 							compType.getTypeConstructor(),
@@ -183,7 +188,8 @@ public class MetaBase {
 						};
 					}
 
-					public Object toJava(Object _parts) {
+					@Override
+                    public Object toJava(Object _parts) {
 						Object[] parts = (Object[])_parts;
 						TypeConstructor constructor = (TypeConstructor)parts[0];
 						TupleType args = (TupleType)parts[1];
@@ -194,15 +200,18 @@ public class MetaBase {
 				new FunctorIdentifier("meta.TupleType",0),
 				new TypeMapping() {
 
-					public Class getMappedClass() {
+					@Override
+                    public Class getMappedClass() {
 						return TupleType.class;
 					}
 
-					public Object toTyRuBa(Object obj) {
+					@Override
+                    public Object toTyRuBa(Object obj) {
 						return ((TupleType)obj).getTypes();
 					}
 
-					public Object toJava(Object obj) {
+					@Override
+                    public Object toJava(Object obj) {
 						Object[] objs = (Object[]) obj;
 						Type[] types = new Type[objs.length];
 						for (int i = 0; i < types.length; i++) {

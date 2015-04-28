@@ -23,19 +23,22 @@ public class LRUMap
 	private int 	_order	= Integer.MAX_VALUE;
 
 
-	public Comparator comparator ()
+	@Override
+    public Comparator comparator ()
 	{
 		return null;
 	}
 
 
-	public Object firstKey ()
+	@Override
+    public Object firstKey ()
 	{
 		return ((OrderKey) _values.firstKey ()).key;
 	}
 
 
-	public Object lastKey ()
+	@Override
+    public Object lastKey ()
 	{
 		return ((OrderKey) _values.lastKey ()).key;
 	}
@@ -44,7 +47,8 @@ public class LRUMap
 	/**
 	 *	Not supported.
 	 */
-	public SortedMap headMap (Object toKey)
+	@Override
+    public SortedMap headMap (Object toKey)
 	{
 		throw new UnsupportedOperationException ();
 	}
@@ -53,7 +57,8 @@ public class LRUMap
 	/**
 	 *	Not supported.
 	 */
-	public SortedMap subMap (Object fromKey, Object toKey)
+	@Override
+    public SortedMap subMap (Object fromKey, Object toKey)
 	{
 		throw new UnsupportedOperationException ();
 	}
@@ -62,38 +67,44 @@ public class LRUMap
 	/**
 	 *	Not supported.
 	 */
-	public SortedMap tailMap (Object fromKey)
+	@Override
+    public SortedMap tailMap (Object fromKey)
 	{
 		throw new UnsupportedOperationException ();
 	}
 
 
-	public void clear ()
+	@Override
+    public void clear ()
 	{
 		_orders.clear ();
 		_values.clear ();
 	}
 
 
-	public boolean containsKey (Object key)
+	@Override
+    public boolean containsKey (Object key)
 	{
 		return _orders.containsKey (key);
 	}
 
 
-	public boolean containsValue (Object value)
+	@Override
+    public boolean containsValue (Object value)
 	{
 		return _values.containsValue (value);
 	}
 
 
-	public Set entrySet ()
+	@Override
+    public Set entrySet ()
 	{
 		return new EntrySet ();
 	}
 
 
-	public boolean equals (Object other)
+	@Override
+    public boolean equals (Object other)
 	{
 		if (other == this)
 			return true;
@@ -105,7 +116,8 @@ public class LRUMap
 	}
 
 
-	public Object get (Object key)
+	@Override
+    public Object get (Object key)
 	{
 		Object order = _orders.remove (key);
 		if (order == null)
@@ -121,19 +133,22 @@ public class LRUMap
 	}
 
 
-	public boolean isEmpty ()
+	@Override
+    public boolean isEmpty ()
 	{
 		return _orders.isEmpty ();
 	}
 
 
-	public Set keySet ()
+	@Override
+    public Set keySet ()
 	{
 		return new KeySet ();
 	}
 
 
-	public Object put (Object key, Object value)
+	@Override
+    public Object put (Object key, Object value)
 	{
 		Object order = nextOrderKey (key);
 		Object oldOrder = _orders.put (key, order);
@@ -147,7 +162,8 @@ public class LRUMap
 	}
 
 
-	public void putAll (Map map)
+	@Override
+    public void putAll (Map map)
 	{
 		Map.Entry entry;
 		for (Iterator itr = map.entrySet ().iterator (); itr.hasNext ();)
@@ -158,7 +174,8 @@ public class LRUMap
 	}
 
 
-	public Object remove (Object key)
+	@Override
+    public Object remove (Object key)
 	{
 		Object order = _orders.remove (key);
 		if (order != null)
@@ -167,19 +184,22 @@ public class LRUMap
 	}
 
 
-	public int size ()
+	@Override
+    public int size ()
 	{
 		return _orders.size ();
 	}
 
 
-	public Collection values ()
+	@Override
+    public Collection values ()
 	{
 		return new ValueCollection ();
 	}
 
 
-	public String toString ()
+	@Override
+    public String toString ()
 	{
 		return entrySet ().toString ();
 	}
@@ -207,7 +227,8 @@ public class LRUMap
 		public int		order	= 0;
 
 
-		public int compareTo (Object other)
+		@Override
+        public int compareTo (Object other)
 		{
 			return order - ((OrderKey) other).order;
 		}
@@ -229,26 +250,30 @@ public class LRUMap
 		}
 
 
-		public Object getKey ()
+		@Override
+        public Object getKey ()
 		{
 			OrderKey ok = (OrderKey) _valuesEntry.getKey ();
 			return ok.key;
 		}
 
 
-		public Object getValue ()
+		@Override
+        public Object getValue ()
 		{
 			return _valuesEntry.getValue ();
 		}
 
 
-		public Object setValue (Object value)
+		@Override
+        public Object setValue (Object value)
 		{
 			return _valuesEntry.setValue (value);
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (other == this)
 				return true;
@@ -275,13 +300,15 @@ public class LRUMap
 	private class EntrySet
 		extends AbstractSet
 	{
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return LRUMap.this.size ();
 		}
 	
 	
-		public boolean add (Object o)
+		@Override
+        public boolean add (Object o)
 		{
 			Map.Entry entry = (Map.Entry) o;
 			put (entry.getKey (), entry.getValue ());
@@ -289,7 +316,8 @@ public class LRUMap
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			final Iterator valuesItr = _values.entrySet ().iterator ();
 
@@ -298,20 +326,23 @@ public class LRUMap
 				private MapEntry _last = null;
 
 
-				public boolean hasNext ()
+				@Override
+                public boolean hasNext ()
 				{
 					return valuesItr.hasNext ();
 				}
 
 	
-				public Object next ()
+				@Override
+                public Object next ()
 				{
 					_last = new MapEntry ((Map.Entry) valuesItr.next ());
 					return _last;
 				}
 
 
-				public void remove ()
+				@Override
+                public void remove ()
 				{
 					valuesItr.remove ();
 					_orders.remove (_last.getKey ());
@@ -327,13 +358,15 @@ public class LRUMap
 	private class KeySet
 		extends AbstractSet
 	{
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return LRUMap.this.size ();
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			final Iterator keysItr = _values.keySet ().iterator ();
 
@@ -342,20 +375,23 @@ public class LRUMap
 				private Object _last = null;
 
 
-				public boolean hasNext ()
+				@Override
+                public boolean hasNext ()
 				{
 					return keysItr.hasNext ();
 				}
 
 				
-				public Object next ()
+				@Override
+                public Object next ()
 				{
 					_last = ((OrderKey) keysItr.next ()).key;
 					return _last;
 				} 
 
 
-				public void remove ()
+				@Override
+                public void remove ()
 				{
 					keysItr.remove ();
 					_orders.remove (_last);
@@ -371,13 +407,15 @@ public class LRUMap
 	private class ValueCollection
 		extends AbstractCollection
 	{
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return LRUMap.this.size ();
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			final Iterator valuesItr = _values.entrySet ().iterator ();
 
@@ -386,13 +424,15 @@ public class LRUMap
 				private Object _last = null;
 
 
-				public boolean hasNext ()
+				@Override
+                public boolean hasNext ()
 				{
 					return valuesItr.hasNext ();
 				}
 
 
-				public Object next ()
+				@Override
+                public Object next ()
 				{
 					Map.Entry entry = (Map.Entry) valuesItr.next ();
 					_last = ((OrderKey) entry.getKey ()).key;
@@ -400,7 +440,8 @@ public class LRUMap
 				}
 
 	
-				public void remove ()
+				@Override
+                public void remove ()
 				{
 					valuesItr.remove ();
 					_orders.remove (_last);

@@ -21,7 +21,8 @@ public class SubstantiateVisitor implements TermVisitor {
 		this.inst = inst;
 	}
 
-	public Object visit(RBCompoundTerm compoundTerm) {
+	@Override
+    public Object visit(RBCompoundTerm compoundTerm) {
 		ConstructorType typeConst = compoundTerm.getConstructorType();
 		return typeConst.apply(
 			(RBTerm) compoundTerm.getArg().accept(this));
@@ -30,7 +31,8 @@ public class SubstantiateVisitor implements TermVisitor {
 //			(RBTerm)compoundTerm.getArgsForVisitor().accept(this));
 	}
 
-	public Object visit(RBTuple tuple) {
+	@Override
+    public Object visit(RBTuple tuple) {
 		RBTerm[] subterms = new RBTerm[tuple.getNumSubterms()];
 		for (int i = 0; i < subterms.length; i++) {
 			subterms[i] = (RBTerm)tuple.getSubterm(i).accept(this);
@@ -38,13 +40,14 @@ public class SubstantiateVisitor implements TermVisitor {
 		return RBTuple.make(subterms);
 	}
 
-	public Object visit(RBPair pair) {
+	@Override
+    public Object visit(RBPair pair) {
 		RBPair head = new RBPair((RBTerm)pair.getCar().accept(this));
 		
 		RBPair next;
 		RBPair prev = head;
 		
-		RBTerm cdr = (RBTerm)pair.getCdr();
+		RBTerm cdr = pair.getCdr();
 		
 		while(cdr instanceof RBPair) {
 			pair = (RBPair)cdr;
@@ -59,25 +62,29 @@ public class SubstantiateVisitor implements TermVisitor {
 		return head;
 	}
 
-	public Object visit(RBQuoted quoted) {
+	@Override
+    public Object visit(RBQuoted quoted) {
 		return new RBQuoted(
 			(RBTerm)quoted.getQuotedParts().accept(this));
 	}
 
-	public Object visit(RBVariable var) {
-		RBTerm val = (RBTerm) subst.get(var);
+	@Override
+    public Object visit(RBVariable var) {
+		RBTerm val = subst.get(var);
 		if (val == null) {
-			return (RBTerm) var.accept(new InstantiateVisitor(inst));
+			return var.accept(new InstantiateVisitor(inst));
 		} else {
-			return (RBTerm) val.accept(this);
+			return val.accept(this);
 		}
 	}
 
-	public Object visit(RBIgnoredVariable ignoredVar) {
+	@Override
+    public Object visit(RBIgnoredVariable ignoredVar) {
 		return ignoredVar;
 	}
 	
-	public Object visit(RBTemplateVar templVar) {
+	@Override
+    public Object visit(RBTemplateVar templVar) {
 		//Instantiation only happens at runtime. TemplateVar should not
 		//exsit any more at runtime so...
 		throw new Error("Unsupported operation");

@@ -15,7 +15,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 * 
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
 	 */
-	public void initializeDefaultPreferences() {
+	@Override
+    public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		store.setDefault(PreferenceConstants.P_FILTER_COMMIT_MESSAGE, true);
 		store.setDefault(PreferenceConstants.P_FILTER_FACTOR, 10);

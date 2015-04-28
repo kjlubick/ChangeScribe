@@ -6,7 +6,8 @@ import tyRuBa.parser.ParseException;
 
 public class CacheRuleBaseTest extends TyrubaTest {
 	
-	public void setUp() throws Exception {
+	@Override
+    public void setUp() throws Exception {
 		RuleBase.useCache = true;
 		TyrubaTest.initfile = false;
 		super.setUp();

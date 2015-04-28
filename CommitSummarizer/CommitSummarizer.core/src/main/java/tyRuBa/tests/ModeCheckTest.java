@@ -9,7 +9,8 @@ public class ModeCheckTest extends TyrubaTest {
 		super(arg0);
 	}
 
-	protected void setUp() throws Exception {
+	@Override
+    protected void setUp() throws Exception {
 		TyrubaTest.initfile = true;
 		super.setUp();
 	}

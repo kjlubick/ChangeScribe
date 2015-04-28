@@ -32,7 +32,8 @@ public class PreparedInsert extends PreparedStatement {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "PrepIns("+fact+", "+putMap+")";
 	}
 

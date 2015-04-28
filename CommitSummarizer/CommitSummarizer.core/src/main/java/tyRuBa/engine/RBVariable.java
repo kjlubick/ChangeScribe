@@ -35,7 +35,8 @@ public class RBVariable extends RBSubstitutable {
 		return f;
 	}
 
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 		//System.err.println("** entering unify " + this + " to: " + other);
 		if (other instanceof RBIgnoredVariable)
 			return f;
@@ -52,11 +53,13 @@ public class RBVariable extends RBSubstitutable {
 			return val.unify(other, f);
 	}
 
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		return ! equals(v);
 	}
 
-	public BindingMode getBindingMode(ModeCheckContext context) {
+	@Override
+    public BindingMode getBindingMode(ModeCheckContext context) {
 		if (context.isBound(this)) {
 			return Factory.makeBound();
 		} else {
@@ -64,11 +67,13 @@ public class RBVariable extends RBSubstitutable {
 		}
 	}
 	
-	public boolean isGround() {
+	@Override
+    public boolean isGround() {
 		return false;
 	}
 
-	protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
+	@Override
+    protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
 		if (!(other.getClass() == this.getClass()))
 			return false;
 		else {
@@ -88,23 +93,28 @@ public class RBVariable extends RBSubstitutable {
 		}
 	}
 
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		return 1;
 	}
 
-	public Object clone() {
+	@Override
+    public Object clone() {
 		return makeUnique(name);
 	}
 
-	protected Type getType(TypeEnv env) {
+	@Override
+    protected Type getType(TypeEnv env) {
 		return env.get(this);
 	}
 
-	public void makeAllBound(ModeCheckContext context) {
+	@Override
+    public void makeAllBound(ModeCheckContext context) {
 		context.makeBound(this);
 	}
 
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 	
@@ -118,10 +128,12 @@ public class RBVariable extends RBSubstitutable {
 	}
 
 	
+    @Override
     public String getFirst() {
         throw new Error("Variables cannot be two level keys");
     }
 
+    @Override
     public Object getSecond() {
         throw new Error("Variables cannot be two level keys");
     }

@@ -78,6 +78,7 @@ public class IndexValue implements Serializable {
         return new IndexValue(validatorHandle, tuple.append(parts));
     }
 
+    @Override
     public String toString() {
     		return parts.toString();
     }

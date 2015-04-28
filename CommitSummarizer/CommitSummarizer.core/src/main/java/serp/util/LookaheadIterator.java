@@ -41,14 +41,16 @@ public abstract class LookaheadIterator
 	}
 
 
-	public boolean hasNext ()
+	@Override
+    public boolean hasNext ()
 	{
 		initialize ();
 		return _next.valid;	
 	}
 
 
-	public Object next ()
+	@Override
+    public Object next ()
 	{
 		initialize ();
 		if (!_next.valid)
@@ -60,7 +62,8 @@ public abstract class LookaheadIterator
 	}
 	
 	
-	public void remove ()
+	@Override
+    public void remove ()
 	{
 		initialize ();
 

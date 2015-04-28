@@ -38,16 +38,19 @@ public class RBFindAll extends RBExpression {
 		return result; 
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "FINDALL(" + getQuery() + "," + getExtract() + "," 
 			+ getResult() + ")";
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return new CompiledFindAll(getQuery().compile(c),getExtract(),getResult());
 	}
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			TypeEnv afterQueryEnv = getQuery().typecheck(predinfo, startEnv);
 			Type extractType = getExtract().getType(afterQueryEnv);
@@ -62,7 +65,8 @@ public class RBFindAll extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange) throws TypeModeError {
 		Collection freevars = query.getFreeVariables(context);
 		Collection extractedVars = getExtract().getVariables();
 		freevars.removeAll(extractedVars);
@@ -89,7 +93,8 @@ public class RBFindAll extends RBExpression {
 		}
 	}
 	
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		RBExpression result = 
 			new RBFindAll(getQuery().convertToNormalForm(false), 
 			getExtract(), getResult());
@@ -100,7 +105,8 @@ public class RBFindAll extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 

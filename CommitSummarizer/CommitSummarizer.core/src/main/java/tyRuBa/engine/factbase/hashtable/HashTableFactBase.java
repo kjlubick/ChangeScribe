@@ -175,6 +175,7 @@ public class HashTableFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#isEmpty()
      */
+    @Override
     public boolean isEmpty() {
         return isEmpty;
     }
@@ -182,6 +183,7 @@ public class HashTableFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#isPersistent()
      */
+    @Override
     public boolean isPersistent() {
         return true;
     }
@@ -189,6 +191,7 @@ public class HashTableFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#insert(tyRuBa.engine.RBComponent)
      */
+    @Override
     public void insert(RBComponent f) {
         Assert.assertTrue("Only ground facts should be insterted in to FactBases", f.isGroundFact());
         isEmpty = false;
@@ -209,6 +212,7 @@ public class HashTableFactBase extends FactBase {
      * @see tyRuBa.engine.factbase.FactBase#compile(tyRuBa.modes.PredicateMode,
      * tyRuBa.engine.compilation.CompilationContext)
      */
+    @Override
     public Compiled basicCompile(final PredicateMode mode, CompilationContext context) {
         final Index index = getIndex(mode);
 
@@ -217,6 +221,7 @@ public class HashTableFactBase extends FactBase {
                 // Case 1: SemiDet and NOT all bound
                 return new SemiDetCompiled(mode.getMode()) {
 
+                    @Override
                     public Frame runSemiDet(Object input, RBContext context) {
                         final RBTuple goal = (RBTuple) input;
                         final RBTuple inputPars;
@@ -235,6 +240,7 @@ public class HashTableFactBase extends FactBase {
                 // Case 2: SemiDet and all bound
                 return new SemiDetCompiled(mode.getMode()) {
 
+                    @Override
                     public Frame runSemiDet(Object input, RBContext context) {
                         final RBTuple goal = (RBTuple) input;
                         RBTuple retrieved = index.getMatchSingle(goal);
@@ -251,6 +257,7 @@ public class HashTableFactBase extends FactBase {
                 //CASE 3: NonDet and NOT all bound
                 return new Compiled(mode.getMode()) {
 
+                    @Override
                     public ElementSource runNonDet(Object input, RBContext context) {
                         final RBTuple goal = (RBTuple) input;
                         final RBTuple inputPars;
@@ -260,6 +267,7 @@ public class HashTableFactBase extends FactBase {
                         ElementSource matches = index.getMatchElementSource(inputPars);
                         return matches.map(new Action() {
 
+                            @Override
                             public Object compute(Object arg) {
                                 RBTuple retrieved = (RBTuple) arg;
                                 return retrieved.unify(outputPars, new Frame());
@@ -278,6 +286,7 @@ public class HashTableFactBase extends FactBase {
     /**
      * @see tyRuBa.engine.factbase.FactBase#backup()
      */
+    @Override
     public void backup() {
         for (Iterator iter = indexes.entrySet().iterator(); iter.hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();

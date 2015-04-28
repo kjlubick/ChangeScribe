@@ -313,9 +313,9 @@ public class ModificationDescriptor {
 			if(insert.getChangedEntity().getAstNode() instanceof PrefixExpression) {
 				PrefixExpression prefixExpression = (PrefixExpression) insert.getChangedEntity().getAstNode();
 				
-				if(prefixExpression.PLUS == prefixExpression.operator) {
+				if(OperatorIds.PLUS == prefixExpression.operator) {
 					desc.append(" to increment ");
-				} else if(prefixExpression.MINUS == prefixExpression.operator) {
+				} else if(OperatorIds.MINUS == prefixExpression.operator) {
 					desc.append(" to decrement ");
 				}
 				

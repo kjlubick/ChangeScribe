@@ -18,26 +18,32 @@ public abstract class ConsList {
 			car = a;
 			cdr = b;
 		}
-		public boolean isEmpty() {
+		@Override
+        public boolean isEmpty() {
 			return false;
 		}
-		public Object car() {
+		@Override
+        public Object car() {
 			return car;
 		}
-		public ConsList cdr() {
+		@Override
+        public ConsList cdr() {
 			return cdr;
 		}
 	}
 
 	/** Empty list (there can be only one!) */
 	public final static ConsList theEmpty = new ConsList() {
-		public boolean isEmpty() {
+		@Override
+        public boolean isEmpty() {
 			return true;
 		}
-		public Object car() {
+		@Override
+        public Object car() {
 			throw new Error("Illegal operation -- car -- on empty ConsList");
 		}
-		public ConsList cdr() {
+		@Override
+        public ConsList cdr() {
 			throw new Error("Illegal operation -- cdr -- on empty ConsList");
 		}
 	};
@@ -76,7 +82,8 @@ public abstract class ConsList {
 		return result;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		Object[] els = asArray();
 		StringBuffer text = new StringBuffer();
 		for (int i = 0; i < els.length; i++) {

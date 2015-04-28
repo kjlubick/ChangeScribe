@@ -24,16 +24,19 @@ public class RBNotFilter extends RBExpression {
 		return negated_q;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "NOT(" + getNegatedQuery() + ")";
 	}
 
-	public Compiled compile(CompilationContext c) {
+	@Override
+    public Compiled compile(CompilationContext c) {
 		return getNegatedQuery().compile(c).negate();
 	}
 
 
-	public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
+	@Override
+    public TypeEnv typecheck(PredInfoProvider predinfo, TypeEnv startEnv) throws TypeModeError {
 		try {
 			getNegatedQuery().typecheck(predinfo, startEnv);
 			return startEnv;
@@ -42,7 +45,8 @@ public class RBNotFilter extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
+	@Override
+    public RBExpression convertToMode(ModeCheckContext context, boolean rearrange)
 	throws TypeModeError {
 		Collection vars = negated_q.getFreeVariables(context);
 		
@@ -60,7 +64,8 @@ public class RBNotFilter extends RBExpression {
 		}
 	}
 
-	public RBExpression convertToNormalForm(boolean negate) {
+	@Override
+    public RBExpression convertToNormalForm(boolean negate) {
 		if (negate) {
 			return getNegatedQuery().convertToNormalForm(false);
 		} else {
@@ -68,7 +73,8 @@ public class RBNotFilter extends RBExpression {
 		}
 	}
 
-	public Object accept(ExpressionVisitor v) {
+	@Override
+    public Object accept(ExpressionVisitor v) {
 		return v.visit(this);
 	}
 

@@ -26,7 +26,8 @@ public class CompiledCount extends SemiDetCompiled {
 		this.result = result;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		ElementSource res = query.runNonDet(((Frame)input).clone(), context);
 		Set results = new HashSet();
 		while (res.hasMoreElements()) {
@@ -37,7 +38,8 @@ public class CompiledCount extends SemiDetCompiled {
 		return result.unify(resultCount, (Frame)input);
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "COMPILED FINDALL(" + query + "," + result + ")";
 	}
 

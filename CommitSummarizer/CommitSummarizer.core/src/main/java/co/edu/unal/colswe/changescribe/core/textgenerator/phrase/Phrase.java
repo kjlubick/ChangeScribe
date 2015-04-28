@@ -18,5 +18,6 @@ public abstract class Phrase {
 
 	public abstract void generate();
 
-	public abstract String toString();
+	@Override
+    public abstract String toString();
 }

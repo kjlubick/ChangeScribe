@@ -31,7 +31,8 @@ public class TypeDependencySummary extends DependencySummary {
 		this.setDependencies(new ArrayList<SearchMatch>());
 		
 		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				setProject(ProjectInformation.getProject(ProjectInformation.getSelectedProject()));
 			}
 		});
@@ -97,7 +98,8 @@ public class TypeDependencySummary extends DependencySummary {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		if(getBuilder() == null) {
 			setBuilder(new StringBuilder());
 		}

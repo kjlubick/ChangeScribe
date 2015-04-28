@@ -9,7 +9,8 @@ public class ExistQuantifierAndNotFilterTest extends TyrubaTest {
 		super(arg0);
 	}
 	
-	public void setUp() throws Exception {
+	@Override
+    public void setUp() throws Exception {
 		TyrubaTest.initfile = false;
 		super.setUp();
 	}

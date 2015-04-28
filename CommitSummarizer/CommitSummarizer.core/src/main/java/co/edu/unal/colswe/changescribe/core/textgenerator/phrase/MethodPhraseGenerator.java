@@ -37,7 +37,7 @@ public class MethodPhraseGenerator implements PhraseGenerator {
 	
 	@SuppressWarnings("unchecked")
 	private void setParameters() {
-		List<SingleVariableDeclaration> parameters2 = ((List<SingleVariableDeclaration>) getMethod().parameters());
+		List<SingleVariableDeclaration> parameters2 = (getMethod().parameters());
 		for (int i = 0; i < parameters2.size(); i++) {
 			SingleVariableDeclaration param = parameters2.get(i);
 			Parameter parameter = new Parameter(param.getType().toString(), param.getName().getFullyQualifiedName());

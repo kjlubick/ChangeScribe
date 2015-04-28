@@ -11,7 +11,8 @@ public class StringNativePredicateTest extends TyrubaTest {
 		super(arg0);
 	}
 	
-	public void setUp() throws Exception {
+	@Override
+    public void setUp() throws Exception {
 		TyrubaTest.initfile = true;
 		super.setUp();
 	}

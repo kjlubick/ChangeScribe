@@ -28,14 +28,16 @@ public class CollectFreeVarsVisitor extends AbstractCollectVarsVisitor {
 		super(new HashSet(), context);
 	}
 	
-	public Object visit(RBDisjunction disjunction) {
+	@Override
+    public Object visit(RBDisjunction disjunction) {
 		for (int i = 0; i < disjunction.getNumSubexps(); i++) {
 			disjunction.getSubexp(i).accept(this);
 		}
 		return null;
 	}
 
-	public Object visit(RBExistsQuantifier exists) {
+	@Override
+    public Object visit(RBExistsQuantifier exists) {
 		exists.getExp().accept(this);
 		for (int i = 0; i < exists.getNumVars(); i++) {
 			vars.remove(exists.getVarAt(i));
@@ -43,27 +45,32 @@ public class CollectFreeVarsVisitor extends AbstractCollectVarsVisitor {
 		return null;
 	}
 
-	public Object visit(RBFindAll findAll) {
+	@Override
+    public Object visit(RBFindAll findAll) {
 		findAll.getQuery().accept(this);
 		findAll.getResult().accept(this);
 		return null;
 	}
 
-	public Object visit(RBCountAll count) {
+	@Override
+    public Object visit(RBCountAll count) {
 		count.getQuery().accept(this);
 		count.getResult().accept(this);
 		return null;
 	}
 
-	public Object visit(RBNotFilter notFilter) {
+	@Override
+    public Object visit(RBNotFilter notFilter) {
 		return notFilter.getNegatedQuery().accept(this);
 	}
 
-	public Object visit(RBTestFilter testFilter) {
+	@Override
+    public Object visit(RBTestFilter testFilter) {
 		return testFilter.getQuery().accept(this);
 	}
 
-	public Object visit(RBUniqueQuantifier unique) {
+	@Override
+    public Object visit(RBUniqueQuantifier unique) {
 		unique.getExp().accept(this);
 		for (int i = 0; i < unique.getNumVars(); i++) {
 			vars.remove(unique.getVarAt(i));
@@ -71,18 +78,21 @@ public class CollectFreeVarsVisitor extends AbstractCollectVarsVisitor {
 		return null;
 	}
 
-	public Object visit(RBVariable var) {
+	@Override
+    public Object visit(RBVariable var) {
 		if (! var.getBindingMode(context).isBound()) {
 			vars.add(var);
 		}
 		return null;
 	}
 	
-	public Object visit(RBIgnoredVariable ignoredVar) {
+	@Override
+    public Object visit(RBIgnoredVariable ignoredVar) {
 		return null;
 	}
 
-	public Object visit(RBTemplateVar ignoredVar) {
+	@Override
+    public Object visit(RBTemplateVar ignoredVar) {
 		return null;
 	}
 

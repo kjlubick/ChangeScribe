@@ -14,15 +14,18 @@ public class RBQuoted extends RBAbstractPair {
 		super(quotedName, listOfParts);
 	}
 
-	public Object up() {
+	@Override
+    public Object up() {
 		return quotedToString();
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "{" + getQuotedParts().quotedToString() + "}";
 	}
 
-	public String quotedToString() {
+	@Override
+    public String quotedToString() {
 		return getQuotedParts().quotedToString();
 	}
 
@@ -30,17 +33,20 @@ public class RBQuoted extends RBAbstractPair {
 		return getCdr();
 	}
 	
-	protected Type getType(TypeEnv env) throws TypeModeError {
+	@Override
+    protected Type getType(TypeEnv env) throws TypeModeError {
 		return Factory.makeSubAtomicType(Factory.makeTypeConstructor(String.class));
 	}
 
-	public Object accept(TermVisitor v) {
+	@Override
+    public Object accept(TermVisitor v) {
 		return v.visit(this);
 	}
 
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
      */
+    @Override
     public String getFirst() {
         return getCdr().getFirst();
     }
@@ -48,6 +54,7 @@ public class RBQuoted extends RBAbstractPair {
     /**
      * @see tyRuBa.util.TwoLevelKey#getSecond()
      */
+    @Override
     public Object getSecond() {
         return getCdr().getSecond();
     }

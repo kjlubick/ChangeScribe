@@ -13,13 +13,16 @@ public class ArrayListSource extends ElementSource {
 		sz = els.size();
 	}
 	
-	public int status() {
+	@Override
+    public int status() {
 		return (pos < sz) ? ELEMENT_READY : NO_MORE_ELEMENTS;
 	}
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		return els.get(pos++);
 	}
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("{");
 		for (int i = pos; i < els.size(); i++) {
 			if (i > 0)
@@ -29,7 +32,8 @@ public class ArrayListSource extends ElementSource {
 		p.print("}");
 	}
 	
-	public ElementSource first() {
+	@Override
+    public ElementSource first() {
 		// An ArrayListSource is not lazy... so don;t bother being lazy either
 		if (hasMoreElements())
 			return ElementSource.singleton(nextElement());

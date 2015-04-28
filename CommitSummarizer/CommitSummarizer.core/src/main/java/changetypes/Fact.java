@@ -62,12 +62,14 @@ public class Fact {
 		params = f.params;
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return params.hashCode()+type.ordinal()*1000;
 //		return type.ordinal();
 	}
 
-	public boolean equals(Object o) {
+	@Override
+    public boolean equals(Object o) {
 		if (o.getClass()!=this.getClass()) return false;
 		Fact f = (Fact)o;
 		if (!type.equals(f.type)) return false;
@@ -79,7 +81,8 @@ public class Fact {
 		return true;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuilder res = new StringBuilder();
 		res.append(type.toString());
 		res.append("(");

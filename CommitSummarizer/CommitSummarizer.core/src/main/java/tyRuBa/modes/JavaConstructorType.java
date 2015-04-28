@@ -22,11 +22,13 @@ public class JavaConstructorType extends ConstructorType {
 		this.javaClass = javaClass;
 	}
 	
-	public RBTerm apply(ArrayList terms) {
+	@Override
+    public RBTerm apply(ArrayList terms) {
 		throw new Error("Java Constructors can only be applied a single term");
 	}
 	
-	public RBTerm apply(RBTerm term) {
+	@Override
+    public RBTerm apply(RBTerm term) {
 		if (term instanceof RBJavaObjectCompoundTerm) {
 			RBJavaObjectCompoundTerm java_term = (RBJavaObjectCompoundTerm) term;
 			if (this.getTypeConst().isSuperTypeOf(java_term.getTypeConstructor()))
@@ -45,7 +47,8 @@ public class JavaConstructorType extends ConstructorType {
 		return RBCompoundTerm.make(this,term);
 	}
 	
-	public Type apply(Type argType) throws TypeModeError {
+	@Override
+    public Type apply(Type argType) throws TypeModeError {
 		Type iresult = getType();
 		argType.checkEqualTypes(iresult);
 		return iresult;
@@ -55,29 +58,35 @@ public class JavaConstructorType extends ConstructorType {
 		return Factory.makeSubAtomicType(this.getTypeConst());
 	}
 	
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (this.getClass()!=other.getClass())
 			return false;
 		else
 			return this.javaClass.equals(((JavaConstructorType)other).javaClass);
 	}
 	
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return javaClass.hashCode();
 	}
 	
-	public int getArity() {
+	@Override
+    public int getArity() {
 		return 1;
 	}
 	
-	public FunctorIdentifier getFunctorId() {
+	@Override
+    public FunctorIdentifier getFunctorId() {
 		return new FunctorIdentifier(javaClass.getName(),1);
 	}
-	public TypeConstructor getTypeConst() {
+	@Override
+    public TypeConstructor getTypeConst() {
 		return Factory.makeTypeConstructor(javaClass);
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "JavaConstructorType("+javaClass+")";
 	}
 }

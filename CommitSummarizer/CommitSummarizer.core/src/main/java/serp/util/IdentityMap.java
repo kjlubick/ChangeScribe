@@ -50,43 +50,50 @@ public class IdentityMap
 	}
 
 
-	public Object clone ()
+	@Override
+    public Object clone ()
 	{
 		return new IdentityMap (this);
 	}
 
 
-	public boolean containsKey (Object key)
+	@Override
+    public boolean containsKey (Object key)
 	{
 		return super.containsKey (createKey (key));
 	}
 
 
-	public Set entrySet ()
+	@Override
+    public Set entrySet ()
 	{
 		return new EntrySet (super.entrySet ());
 	}
 
 
-	public Object get (Object key)
+	@Override
+    public Object get (Object key)
 	{
 		return super.get (createKey (key));
 	}
 
 
-	public Set keySet ()
+	@Override
+    public Set keySet ()
 	{
 		return new KeySet (super.keySet ());
 	}
 
 
-	public Object put (Object key, Object value)
+	@Override
+    public Object put (Object key, Object value)
 	{
 		return super.put (createKey (key), value);
 	}
 
 
-	public void putAll (Map map)
+	@Override
+    public void putAll (Map map)
 	{
 		Map.Entry entry;
 		for (Iterator itr = map.entrySet ().iterator (); itr.hasNext ();)
@@ -97,7 +104,8 @@ public class IdentityMap
 	}
 
 
-	public Object remove (Object key)
+	@Override
+    public Object remove (Object key)
 	{
 		return super.remove (createKey (key));
 	}
@@ -135,13 +143,15 @@ public class IdentityMap
 		}
 
 
-		public int hashCode ()
+		@Override
+        public int hashCode ()
 		{
 			return System.identityHashCode (_key);
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (this == other)
 				return true;
@@ -168,7 +178,8 @@ public class IdentityMap
 		}
 
 	
-		public Object getKey ()
+		@Override
+        public Object getKey ()
 		{
 			IdentityKey key = (IdentityKey) _entry.getKey ();
 			if (key == null)
@@ -178,19 +189,22 @@ public class IdentityMap
 		}
 
 
-		public Object getValue ()
+		@Override
+        public Object getValue ()
 		{
 			return _entry.getValue ();
 		}
 
 
-		public Object setValue (Object value)
+		@Override
+        public Object setValue (Object value)
 		{
 			return _entry.setValue (value);
 		}
 
 
-		public boolean equals (Object other)
+		@Override
+        public boolean equals (Object other)
 		{
 			if (other == this)
 				return true;
@@ -226,39 +240,45 @@ public class IdentityMap
 		}
 
 
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return _entrySet.size ();
 		}
 	
 	
-		public boolean add (Object o)
+		@Override
+        public boolean add (Object o)
 		{
 			Map.Entry entry = (Map.Entry) o;
 			return _entrySet.add (new MapEntry (entry));
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			return new Iterator ()
 			{
 				Iterator _itr = _entrySet.iterator ();
 	
 	
-				public boolean hasNext ()
+				@Override
+                public boolean hasNext ()
 				{
 					return _itr.hasNext ();
 				}
 	
 				
-				public Object next ()
+				@Override
+                public Object next ()
 				{
 					return new MapEntry ((Map.Entry) _itr.next ());
 				}
 	
 	
-				public void remove ()
+				@Override
+                public void remove ()
 				{
 					_itr.remove ();
 				}
@@ -282,13 +302,15 @@ public class IdentityMap
 		}
 
 
-		public int size ()
+		@Override
+        public int size ()
 		{
 			return _keySet.size ();
 		}
 
 
-		public boolean remove (Object rem)
+		@Override
+        public boolean remove (Object rem)
 		{
 			for (Iterator itr = _keySet.iterator (); itr.hasNext ();)
 			{
@@ -302,20 +324,23 @@ public class IdentityMap
 		}
 	
 	
-		public Iterator iterator ()
+		@Override
+        public Iterator iterator ()
 		{
 			return new Iterator ()
 			{
 				private Iterator _itr = _keySet.iterator ();
 	
 	
-				public boolean hasNext ()
+				@Override
+                public boolean hasNext ()
 				{
 					return _itr.hasNext ();
 				}
 	
 	
-				public Object next ()
+				@Override
+                public Object next ()
 				{
 					IdentityKey key = (IdentityKey) _itr.next ();
 					if (key == null)
@@ -325,7 +350,8 @@ public class IdentityMap
 				}
 	
 	
-				public void remove ()
+				@Override
+                public void remove ()
 				{
 					_itr.remove ();
 				}

@@ -115,7 +115,8 @@ class ElementCollectorSource extends RemovableElementSource {
 
 	/** Try to make an element ready if necessary and return the
 	status after */
-	public int status() {
+	@Override
+    public int status() {
 		//System.err.println("ElementCollector::status():1");
 		if (pos.hasMoreElements()) {
 			//System.err.println("ElementCollector::status():2a");
@@ -133,21 +134,25 @@ class ElementCollectorSource extends RemovableElementSource {
 			return NO_MORE_ELEMENTS;
 	}
 
-	public void removeNextElement() {
+	@Override
+    public void removeNextElement() {
 		status();
 		pos.removeNextElement();
 	}
 
-	public Object peekNextElement() {
+	@Override
+    public Object peekNextElement() {
 		return pos.peekNextElement();
 	}
 
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		status(); //force an element to be produced if necesary.
 		return pos.nextElement();
 	}
 	
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("CollectorSource(");
 		p.indent();p.newline();
 			p.print("pos= "); 

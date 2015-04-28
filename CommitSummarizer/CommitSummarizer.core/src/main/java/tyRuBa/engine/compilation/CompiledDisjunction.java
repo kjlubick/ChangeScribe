@@ -14,15 +14,18 @@ public class CompiledDisjunction extends Compiled {
 		this.right = right;
 	}
 
-	public ElementSource runNonDet(Object input, RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, RBContext context) {
 		return left.runNonDet(input, context).append(right.runNonDet(input, context));
 	}
 	
-	public Compiled negate() {
+	@Override
+    public Compiled negate() {
 		return left.negate().conjoin(right.negate());
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "(" + right + " + " + left + ")";
 	}
 

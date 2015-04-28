@@ -23,7 +23,8 @@ public class SimpleRuleBaseBucket extends RuleBaseBucket {
 		setOutdated();
 	}
 
-	public synchronized void update() throws ParseException, TypeModeError {
+	@Override
+    public synchronized void update() throws ParseException, TypeModeError {
 		if (mystuff != null) {
 			parse(mystuff.toString());
 //			mystuff = null;

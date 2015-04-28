@@ -37,7 +37,8 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
 	/**	
 	 * @codegroup metadata
 	 */
-	public void enableMetaData() {
+	@Override
+    public void enableMetaData() {
 		typeInfoBase.enableMetaData(engine);
 	}
 
@@ -48,7 +49,8 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
 	}
 
 	/** return an array of ModedRuleBase corresponding to the predicate name */
-	protected ModedRuleBaseCollection getModedRuleBases(PredicateIdentifier predID)
+	@Override
+    protected ModedRuleBaseCollection getModedRuleBases(PredicateIdentifier predID)
 	throws TypeModeError {
 		ModedRuleBaseCollection result = maybeGetModedRuleBases(predID);
 		if (result == null) {
@@ -71,20 +73,23 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
 		return (ModedRuleBaseCollection) index.get(predID);
 	}
 
-	public void dumpFacts(PrintStream out) {
+	@Override
+    public void dumpFacts(PrintStream out) {
 		for (Iterator iter = index.values().iterator(); iter.hasNext();) {
 			ModedRuleBaseCollection element = (ModedRuleBaseCollection) iter.next();
 			element.dumpFacts(out);
 		}
 	}
 
-	public void insert(PredInfo p) throws TypeModeError {
+	@Override
+    public void insert(PredInfo p) throws TypeModeError {
 		typeInfoBase.insert(p);
 		ModedRuleBaseCollection rulebases = new ModedRuleBaseCollection(engine, p, identifier);
 		index.put(p.getPredId(), rulebases);
 	}
 	
-	public void addTypePredicate(TypeConstructor TypeConstructor, ArrayList subtypes) {
+	@Override
+    public void addTypePredicate(TypeConstructor TypeConstructor, ArrayList subtypes) {
 		RBRule typeRule = null;
 		PredicateIdentifier typePred = new PredicateIdentifier(TypeConstructor.getName(), 1);
 		RBTuple args = new RBTuple(RBVariable.make("?arg"));
@@ -131,23 +136,28 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
 		
 	}
 	
-	protected void basicAddTypeConst(TypeConstructor t) {
+	@Override
+    protected void basicAddTypeConst(TypeConstructor t) {
 		typeInfoBase.addTypeConst(t);
 	}
 	
-	public void addFunctorConst(Type repAs, CompositeType type) {
+	@Override
+    public void addFunctorConst(Type repAs, CompositeType type) {
 		typeInfoBase.addFunctorConst(repAs, type);
 	}
 
-	public void addTypeMapping(TypeMapping mapping, FunctorIdentifier id) throws TypeModeError {
+	@Override
+    public void addTypeMapping(TypeMapping mapping, FunctorIdentifier id) throws TypeModeError {
 		typeInfoBase.addTypeMapping(id, mapping);
 	}
 
+    @Override
     public TypeMapping findTypeMapping(Class forWhat) {
         return typeInfoBase.findTypeMapping( forWhat) ;
     }
 
-	public PredInfo maybeGetPredInfo(PredicateIdentifier predId) {
+	@Override
+    public PredInfo maybeGetPredInfo(PredicateIdentifier predId) {
 		return typeInfoBase.maybeGetPredInfo(predId);
 	}
 
@@ -156,15 +166,18 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
 		return result != null;
 	}
 	
-	public TypeConstructor findType(String typeName) {
+	@Override
+    public TypeConstructor findType(String typeName) {
 		return typeInfoBase.findType(typeName);
 	}
 	
-	public TypeConstructor findTypeConst(String typeName, int arity) {
+	@Override
+    public TypeConstructor findTypeConst(String typeName, int arity) {
 		return typeInfoBase.findTypeConst(typeName, arity);
 	}
 	
-	public ConstructorType findConstructorType(FunctorIdentifier id) {
+	@Override
+    public ConstructorType findConstructorType(FunctorIdentifier id) {
 		return typeInfoBase.findConstructorType(id);
 	}
 
@@ -173,6 +186,7 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
 		index = new HashMap();
 	}
 
+    @Override
     public void backup() {
         for (Iterator iter = index.values().iterator(); iter.hasNext();) {
             ModedRuleBaseCollection coll = (ModedRuleBaseCollection) iter.next();
@@ -180,6 +194,7 @@ public class BasicModedRuleBaseIndex extends ModedRuleBaseIndex {
         }
     }
     
+    @Override
     public String toString() {
     		return getClass().getName()+"("+identifier+")";
     }

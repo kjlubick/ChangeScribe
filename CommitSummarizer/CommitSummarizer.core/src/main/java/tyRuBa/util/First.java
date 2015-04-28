@@ -20,14 +20,16 @@ public class First extends ElementSource {
 		source = from;
 	}
 
-	public void print(PrintingState p) {
+	@Override
+    public void print(PrintingState p) {
 		p.print("First(");
 		source.print(p);
 		p.outdent();
 		p.print(")");
 	}
 
-	public int status() {
+	@Override
+    public int status() {
 		if (source==null)
 			return NO_MORE_ELEMENTS;
 		else {
@@ -39,13 +41,15 @@ public class First extends ElementSource {
 		}
 	}
 
-	public Object nextElement() {
+	@Override
+    public Object nextElement() {
 		ElementSource it = source;
 		source = null;
 		return it.nextElement();
 	}
 
-	public ElementSource first() {
+	@Override
+    public ElementSource first() {
 		return this;
 	}
 

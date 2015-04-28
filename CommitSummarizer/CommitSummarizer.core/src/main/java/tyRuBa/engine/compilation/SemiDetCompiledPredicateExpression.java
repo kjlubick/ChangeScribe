@@ -17,7 +17,8 @@ public class SemiDetCompiledPredicateExpression extends SemiDetCompiled {
 		this.args = args;	
 	}
 
-	final public Frame runSemiDet(final Object input, RBContext context) {
+	@Override
+    final public Frame runSemiDet(final Object input, RBContext context) {
 		RBTuple goal = (RBTuple)args.substitute((Frame)input);
 		Frame result = compiledRules().runSemiDet(goal, context);
 		if (((Frame)input).isEmpty()) {
@@ -34,7 +35,8 @@ public class SemiDetCompiledPredicateExpression extends SemiDetCompiled {
 		return rules.getSemiDetCompiledRules();
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		return "SEMIDET PRED(" + args + ")";
 	}
 

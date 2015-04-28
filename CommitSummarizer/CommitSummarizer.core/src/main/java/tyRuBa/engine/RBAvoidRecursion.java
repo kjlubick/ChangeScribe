@@ -31,11 +31,13 @@ public class RBAvoidRecursion extends RBContext {
 		}
 	}
 
-	int depth() {
+	@Override
+    int depth() {
 		return depth;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer(rule + "\n");
 		if (guarded instanceof RBAvoidRecursion)
 			result.append(guarded.toString());

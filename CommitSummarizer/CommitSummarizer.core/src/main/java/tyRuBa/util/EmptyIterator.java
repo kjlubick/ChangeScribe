@@ -16,15 +16,18 @@ public class EmptyIterator implements Iterator {
 		super();
 	}
 
-	public boolean hasNext() {
+	@Override
+    public boolean hasNext() {
 		return false;
 	}
 
-	public Object next() {
+	@Override
+    public Object next() {
 		throw new NoSuchElementException();
 	}
 
-	public void remove() {
+	@Override
+    public void remove() {
 		throw new IllegalStateException();
 	}
 }

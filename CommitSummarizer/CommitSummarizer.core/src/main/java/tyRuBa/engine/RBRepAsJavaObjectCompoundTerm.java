@@ -30,10 +30,12 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
         javaObject = obj;
     }
 
+    @Override
     public RBTerm getArg() {
         return RBCompoundTerm.makeJava(javaObject);
     }
     
+    @Override
     public RBTerm getArg(int i) {
         if (i==0)
             return this;
@@ -41,41 +43,51 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
             throw new Error("Argument not found "+i);
     }
     
+    @Override
     public int getNumArgs() {
         return 1;
     }
     
+    @Override
     boolean freefor(RBVariable v) {
         return true;
     }
     
+    @Override
     public boolean isGround() {
         return true;
     }
     
+    @Override
     protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
         return equals(other);
     }
     
+    @Override
     protected Type getType(TypeEnv env) throws TypeModeError {
         return typeTag.apply(Factory.makeSubAtomicType(typeTag.getTypeConst()));
     }
     
+    @Override
     public int formHashCode() {
         return 17 * typeTag.hashCode() + javaObject.hashCode();
     }
+    @Override
     public int hashCode() {
         return 17 * typeTag.hashCode() + javaObject.hashCode();
     }
     
+    @Override
     public BindingMode getBindingMode(ModeCheckContext context) {
         return Factory.makeBound();
     }
     
+    @Override
     public void makeAllBound(ModeCheckContext context) {
         //already is all bound by definition
     }
     
+    @Override
     public boolean equals(Object x) {
         if (x.getClass().equals(this.getClass())) {
             RBRepAsJavaObjectCompoundTerm cx = (RBRepAsJavaObjectCompoundTerm) x;
@@ -85,15 +97,18 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
         }
     }
     
+    @Override
     public Object accept(TermVisitor v) {
         //TODO: should this call visit?
         return this;
     }
     
+    @Override
     public boolean isOfType(TypeConstructor t) {
         return t.isSuperTypeOf(getTypeConstructor());
     }
        
+    @Override
     public Frame unify(RBTerm other, Frame f) {
         if (other instanceof RBVariable || other instanceof RBGenericCompoundTerm)
             return other.unify(this, f);
@@ -103,6 +118,7 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
             return null;
     }
 
+    @Override
     public ConstructorType getConstructorType() {
         return typeTag;
     }
@@ -110,6 +126,7 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
     /**
      * @see tyRuBa.util.TwoLevelKey#getFirst()
      */
+    @Override
     public String getFirst() {
         if (javaObject instanceof String) {
             String str = (String) javaObject;
@@ -131,6 +148,7 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
     /**
      * @see tyRuBa.util.TwoLevelKey#getSecond()
      */
+    @Override
     public Object getSecond() {
         if (javaObject instanceof String) {
             String str = (String) javaObject;
@@ -149,6 +167,7 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
         }
     }
     
+    @Override
     public String toString() {
     		if (javaObject instanceof String) {
     			String javaString = (String)javaObject;
@@ -166,6 +185,7 @@ public class RBRepAsJavaObjectCompoundTerm extends RBCompoundTerm {
         }
     }
     
+    @Override
     public int intValue() {
         if (javaObject instanceof Integer) {
             return ((Integer)javaObject).intValue();

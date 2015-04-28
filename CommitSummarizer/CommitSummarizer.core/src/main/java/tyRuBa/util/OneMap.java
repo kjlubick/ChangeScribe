@@ -25,33 +25,40 @@ public class OneMap implements Map, Serializable {
 	private Object key = null;
 	private Object value = null;
 	
-	public void clear() {
+	@Override
+    public void clear() {
 		key = null;
 		value = null;
 	}
 	
-	public int size() {
+	@Override
+    public int size() {
 		return (key == null && value == null) ? 0 : 1;
 	}
 	
-	public boolean isEmpty() {
+	@Override
+    public boolean isEmpty() {
 		return size() == 0;
 	}
 	
-	public boolean containsKey(Object key) {
+	@Override
+    public boolean containsKey(Object key) {
 		return (key == null && this.key == null) || (key != null && key.equals(this.key));
 	}
 	
-	public boolean containsValue(Object value) {
+	@Override
+    public boolean containsValue(Object value) {
 		return (value == null && this.value == null) || (value != null && value.equals(this.value));
 	}
 	
-	public Object get(Object key) {
+	@Override
+    public Object get(Object key) {
 		return ((key == null && this.key == null) || 
 		(key != null && key.equals(this.key))) ? value : null;
 	}
 	
-	public Object put(Object key, Object value) {
+	@Override
+    public Object put(Object key, Object value) {
 		Object previous = get(key);
 			
 		this.key = key;
@@ -60,7 +67,8 @@ public class OneMap implements Map, Serializable {
 		return previous;
 	}
 	
-	public Object remove(Object key) {
+	@Override
+    public Object remove(Object key) {
 		Object previous = get(key);
 		
 		if(containsKey(key)) {
@@ -71,7 +79,8 @@ public class OneMap implements Map, Serializable {
 		return previous;
 	}
 	
-	public void putAll(Map t) {
+	@Override
+    public void putAll(Map t) {
 		Iterator m = t.entrySet().iterator();
 		
 		if(m.hasNext()) {
@@ -80,7 +89,8 @@ public class OneMap implements Map, Serializable {
 		}
 	}
 	
-	public Set keySet() {
+	@Override
+    public Set keySet() {
 		return new KeySet();
 	}
 	
@@ -93,11 +103,14 @@ public class OneMap implements Map, Serializable {
 			this.value = value;
 		}
 		
-		public Object getKey() { return key; }
+		@Override
+        public Object getKey() { return key; }
 		
-		public Object getValue() { return value; }
+		@Override
+        public Object getValue() { return value; }
 		
-		public Object setValue(Object value) {
+		@Override
+        public Object setValue(Object value) {
 			Object previous = this.value;
 			this.value = value;
 			OneMap.this.value = value;
@@ -108,15 +121,18 @@ public class OneMap implements Map, Serializable {
 	
 	private class KeySet implements Set {
 		
-		public boolean add(Object object) {
+		@Override
+        public boolean add(Object object) {
 			throw new UnsupportedOperationException();
 		}
 		
-		public boolean addAll(Collection c) {
+		@Override
+        public boolean addAll(Collection c) {
 			throw new UnsupportedOperationException();
 		}
 		
-		public boolean remove(Object object) {
+		@Override
+        public boolean remove(Object object) {
 			return null != OneMap.this.remove(object);
 		}
 		
@@ -124,7 +140,8 @@ public class OneMap implements Map, Serializable {
 			clear();
 		}
 		
-		public boolean retainAll(Collection collection) {
+		@Override
+        public boolean retainAll(Collection collection) {
 			Iterator iterator = collection.iterator();
 				
 			while(iterator.hasNext())
@@ -135,7 +152,8 @@ public class OneMap implements Map, Serializable {
 			return true;
 		}
 		
-		public boolean removeAll(Collection collection) {
+		@Override
+        public boolean removeAll(Collection collection) {
 			Iterator iterator = collection.iterator();
 			
 			while(iterator.hasNext())
@@ -145,19 +163,23 @@ public class OneMap implements Map, Serializable {
 			return false;
 		}
 		
-		public int size() {
+		@Override
+        public int size() {
 			return OneMap.this.size();
 		}
 		
-		public boolean isEmpty() {
+		@Override
+        public boolean isEmpty() {
 			return OneMap.this.isEmpty();
 		}
 		
-		public void clear() {
+		@Override
+        public void clear() {
 			OneMap.this.clear();
 		}
 		
-		public Iterator iterator() {
+		@Override
+        public Iterator iterator() {
 			return new SetIterator();
 		}
 		
@@ -170,11 +192,13 @@ public class OneMap implements Map, Serializable {
 				cleared = exhausted;
 			}
 			
-			public boolean hasNext() {
+			@Override
+            public boolean hasNext() {
 				return !exhausted;
 			}
 			
-			public Object next() {
+			@Override
+            public Object next() {
 				if(hasNext()) {
 					exhausted = true;
 					return OneMap.this.key;
@@ -182,7 +206,8 @@ public class OneMap implements Map, Serializable {
 					throw new NoSuchElementException();
 			}
 			
-			public void remove() {
+			@Override
+            public void remove() {
 				if(exhausted && !cleared) {
 					cleared = true;
 					OneMap.this.clear();
@@ -191,27 +216,31 @@ public class OneMap implements Map, Serializable {
 			}
 		}
 		
-		public boolean contains(Object object) {
+		@Override
+        public boolean contains(Object object) {
 			if(OneMap.this.key == object)	
 				return true;
 			else
 				return false;
 		}
 		
-		public boolean containsAll(Collection collection) {
+		@Override
+        public boolean containsAll(Collection collection) {
 			return (collection.size() == 0) ||
 			(collection.size() == 1 && OneMap.this.size() == 1 && 
 			contains(collection.iterator().next()));
 		}
 		
-		public Object[] toArray() {
+		@Override
+        public Object[] toArray() {
 			if(OneMap.this.size() == 0)
 				return new Object[0];
 			else
 				return new Object[] { OneMap.this.key };
 		}
 		
-		public Object[] toArray(Object[] a) {
+		@Override
+        public Object[] toArray(Object[] a) {
 			if(OneMap.this.size() == 0) {
 				if(a.length > 0)
 					a[0] = null;
@@ -232,20 +261,24 @@ public class OneMap implements Map, Serializable {
 		}
 	}
 	
-	public Set entrySet() {
+	@Override
+    public Set entrySet() {
 		return new EntrySet();
 	}
 	
 	public class EntrySet implements Set {
-		public boolean add(Object object) {
+		@Override
+        public boolean add(Object object) {
 			throw new UnsupportedOperationException();
 		}
 		
-		public boolean addAll(Collection c) {
+		@Override
+        public boolean addAll(Collection c) {
 			throw new UnsupportedOperationException();
 		}
 		
-		public boolean remove(Object object) {
+		@Override
+        public boolean remove(Object object) {
 			if(contains(object)) {
 				clear();
 				return true;
@@ -257,7 +290,8 @@ public class OneMap implements Map, Serializable {
 			clear();
 		}
 		
-		public boolean retainAll(Collection collection) {
+		@Override
+        public boolean retainAll(Collection collection) {
 			Iterator iterator = collection.iterator();
 				
 			while(iterator.hasNext())
@@ -268,7 +302,8 @@ public class OneMap implements Map, Serializable {
 			return true;
 		}
 		
-		public boolean removeAll(Collection collection) {
+		@Override
+        public boolean removeAll(Collection collection) {
 			Iterator iterator = collection.iterator();
 			
 			while(iterator.hasNext()) {
@@ -279,19 +314,23 @@ public class OneMap implements Map, Serializable {
 			return false;
 		}
 		
-		public int size() {
+		@Override
+        public int size() {
 			return OneMap.this.size();
 		}
 		
-		public boolean isEmpty() {
+		@Override
+        public boolean isEmpty() {
 			return OneMap.this.isEmpty();
 		}
 		
-		public void clear() {
+		@Override
+        public void clear() {
 			OneMap.this.clear();
 		}
 		
-		public Iterator iterator() {
+		@Override
+        public Iterator iterator() {
 			return new SetIterator();
 		}
 		
@@ -304,11 +343,13 @@ public class OneMap implements Map, Serializable {
 				cleared = exhausted;
 			}
 			
-			public boolean hasNext() {
+			@Override
+            public boolean hasNext() {
 				return !exhausted;
 			}
 			
-			public Object next() {
+			@Override
+            public Object next() {
 				if(hasNext()) {
 					exhausted = true;
 					return new Entry(OneMap.this.key, OneMap.this.value);
@@ -316,7 +357,8 @@ public class OneMap implements Map, Serializable {
 					throw new NoSuchElementException();
 			}
 			
-			public void remove() {
+			@Override
+            public void remove() {
 				if(exhausted && !cleared) {
 					cleared = true;
 					OneMap.this.clear();
@@ -325,7 +367,8 @@ public class OneMap implements Map, Serializable {
 			}
 		}
 		
-		public boolean contains(Object object) {
+		@Override
+        public boolean contains(Object object) {
 			if(object instanceof Entry) {
 				Entry entry = (Entry)object;
 				if(OneMap.this.key == entry.getKey() && OneMap.this.value == entry.getValue())
@@ -335,20 +378,23 @@ public class OneMap implements Map, Serializable {
 			return false;
 		}
 		
-		public boolean containsAll(Collection collection) {
+		@Override
+        public boolean containsAll(Collection collection) {
 			return (collection.size() == 0) ||
 			(collection.size() == 1 && OneMap.this.size() == 1 && 
 			contains(collection.iterator().next()));
 		}
 		
-		public Object[] toArray() {
+		@Override
+        public Object[] toArray() {
 			if(isEmpty())
 				return new Object[0];
 			else
 				return new Object[] { new Entry(OneMap.this.key, OneMap.this.value) };
 		}
 		
-		public Object[] toArray(Object[] a) {
+		@Override
+        public Object[] toArray(Object[] a) {
 			if(OneMap.this.size() == 0) {
 				if(a.length > 0)
 					a[0] = null;
@@ -369,24 +415,29 @@ public class OneMap implements Map, Serializable {
 		}
 	}
 	
-	public Collection values() {
+	@Override
+    public Collection values() {
 		return new Values();
 	}
 	
 	private class Values implements Collection {
-		public void clear() {
+		@Override
+        public void clear() {
 			OneMap.this.clear();
 		}
 		
-		public boolean add(Object object) {
+		@Override
+        public boolean add(Object object) {
 			throw new UnsupportedOperationException();
 		}
 		
-		public boolean addAll(Collection collection) {
+		@Override
+        public boolean addAll(Collection collection) {
 			throw new UnsupportedOperationException();
 		}
 		
-		public boolean remove(Object object) {
+		@Override
+        public boolean remove(Object object) {
 			if(contains(object)) {
 				clear();
 				return true;
@@ -394,25 +445,30 @@ public class OneMap implements Map, Serializable {
 				return false;
 		}
 		
-		public boolean containsAll(Collection collection) {
+		@Override
+        public boolean containsAll(Collection collection) {
 			return (collection.size() == 0) ||
 			(collection.size() == 1 && OneMap.this.size() == 1 && 
 			contains(collection.iterator().next()));
 		}
 		
-		public boolean contains(Object object) {
+		@Override
+        public boolean contains(Object object) {
 			return OneMap.this.containsValue(object);
 		}
 		
-		public boolean isEmpty() {
+		@Override
+        public boolean isEmpty() {
 			return OneMap.this.isEmpty();
 		}
 		
-		public int size() {
+		@Override
+        public int size() {
 			return OneMap.this.size();
 		}
 		
-		public boolean retainAll(Collection collection) {
+		@Override
+        public boolean retainAll(Collection collection) {
 			Iterator iterator = collection.iterator();
 				
 			while(iterator.hasNext())
@@ -423,7 +479,8 @@ public class OneMap implements Map, Serializable {
 			return true;
 		}
 		
-		public boolean removeAll(Collection collection) {
+		@Override
+        public boolean removeAll(Collection collection) {
 			Iterator iterator = collection.iterator();
 			
 			while(iterator.hasNext())
@@ -433,7 +490,8 @@ public class OneMap implements Map, Serializable {
 			return false;
 		}
 		
-		public Iterator iterator() {
+		@Override
+        public Iterator iterator() {
 			return new ValueIterator();
 		}
 		
@@ -446,11 +504,13 @@ public class OneMap implements Map, Serializable {
 				cleared = exhausted;
 			}
 			
-			public boolean hasNext() {
+			@Override
+            public boolean hasNext() {
 				return !exhausted;
 			}
 			
-			public Object next() {
+			@Override
+            public Object next() {
 				if(hasNext()) {
 					exhausted = true;
 					return OneMap.this.value;
@@ -458,7 +518,8 @@ public class OneMap implements Map, Serializable {
 					throw new NoSuchElementException();
 			}
 			
-			public void remove() {
+			@Override
+            public void remove() {
 				if(exhausted && !cleared) {
 					cleared = true;
 					OneMap.this.clear();
@@ -467,14 +528,16 @@ public class OneMap implements Map, Serializable {
 			}
 		}
 		
-		public Object[] toArray() {
+		@Override
+        public Object[] toArray() {
 			if(isEmpty())
 				return new Object[0];
 			else
 				return new Object[] { OneMap.this.value };
 		}
 		
-		public Object[] toArray(Object[] a) {
+		@Override
+        public Object[] toArray(Object[] a) {
 			if(OneMap.this.size() == 0) {
 				if(a.length > 0)
 					a[0] = null;

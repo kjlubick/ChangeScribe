@@ -41,7 +41,8 @@ public class ModedRuleBase extends RuleBase {
 		}
 	}
 
-	public void insert(RBComponent r, ModedRuleBaseIndex insertedFrom,
+	@Override
+    public void insert(RBComponent r, ModedRuleBaseIndex insertedFrom,
 	TupleType inferredTypes) throws TypeModeError {
 		try {
 			PredicateMode thisRBMode = getPredMode();
@@ -116,7 +117,8 @@ public class ModedRuleBase extends RuleBase {
 		}
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "/******** BEGIN ModedRuleBase ***********************/\n"
 			+ "Predicate mode: " + getPredMode() + "\n"
 			+ "Inferred mode: " + currMode + "\n"
@@ -124,11 +126,13 @@ public class ModedRuleBase extends RuleBase {
 			+ "/******** END ModedRuleBase *************************/";
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		throw new Error("That's strange... who wants to know my hashcode??");
 	}
 
-	protected Compiled compile(CompilationContext context) {
+	@Override
+    protected Compiled compile(CompilationContext context) {
 		if (rules != null) {
             if (isPersistent()) {
                 return facts.compile(getPredMode(), context).disjoin(libraryManager.compile(getPredMode(), predId, context)).disjoin(rules.compile(context));    

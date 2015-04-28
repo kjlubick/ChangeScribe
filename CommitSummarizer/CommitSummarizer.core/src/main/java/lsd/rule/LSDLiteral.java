@@ -56,7 +56,8 @@ public class LSDLiteral {
 			return null;
 		}
 	}
-	public String toString() {
+	@Override
+    public String toString() {
 
 		StringBuilder bs = new StringBuilder();
 		for (int i = 0; i < bindings.size(); i++) {
@@ -187,7 +188,8 @@ public class LSDLiteral {
 		return anyMatch;
 	}
 		
-	public boolean equals(Object other) {
+	@Override
+    public boolean equals(Object other) {
 		if (!(other instanceof LSDLiteral))
 			return false;
 		LSDLiteral otherLit = (LSDLiteral) other;

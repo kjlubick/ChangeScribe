@@ -16,7 +16,8 @@ public class CompiledDisjunction_SemiDet_NonDet extends Compiled {
 		this.right = right;
 	}
 
-	public ElementSource runNonDet(Object input, RBContext context) {
+	@Override
+    public ElementSource runNonDet(Object input, RBContext context) {
 		final Frame leftResult = left.runSemiDet(input, context);
 		ElementSource rightResult = right.runNonDet(input, context);
 		if (leftResult == null) {
@@ -28,11 +29,13 @@ public class CompiledDisjunction_SemiDet_NonDet extends Compiled {
 	}
 
 
-	public SemiDetCompiled first() {
+	@Override
+    public SemiDetCompiled first() {
 		return new SemiDetCompiledDisjunction(left,right.first());
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		return "(" + left + " + " + right + ")";
 	}
 

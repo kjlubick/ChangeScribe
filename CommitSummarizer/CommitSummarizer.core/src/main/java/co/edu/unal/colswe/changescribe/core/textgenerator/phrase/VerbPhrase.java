@@ -61,7 +61,8 @@ public class VerbPhrase extends Phrase {
 		this.parameters = parameters;
 	}
 
-	public void generate() {
+	@Override
+    public void generate() {
 		if (this.taggedPhrase == null || this.taggedPhrase.isEmpty()) {
 			return;
 		}
@@ -141,7 +142,8 @@ public class VerbPhrase extends Phrase {
 		return false;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		final StringBuilder result = new StringBuilder();
 		if (this.verb != null) {
 			result.append(String.valueOf(this.verb) + " ");

@@ -50,7 +50,8 @@ public class RulesView extends ViewPart {
 	IProject baseproj = null;
 	IProject newproj = null;
 
-	public void createPartControl(Composite parent) {
+	@Override
+    public void createPartControl(Composite parent) {
 		this.parent = parent;
 
 		GridLayout layout = new GridLayout();
@@ -84,7 +85,8 @@ public class RulesView extends ViewPart {
 		col2.setWidth(430);
 		rulesTable.setLayoutData(layoutData1);
 		rulesTable.addListener(SWT.Selection, new Listener() {
-		      public void handleEvent(Event e) {
+		      @Override
+            public void handleEvent(Event e) {
 		          refreshExamples();
 		        }
 			});
@@ -95,14 +97,17 @@ public class RulesView extends ViewPart {
 		tabItemExamples.setText ("Changes");
 		examplesList = new List(tabFolder, SWT.SINGLE);
 		examplesList.addMouseListener(new MouseListener() {
-			public void mouseDoubleClick(MouseEvent arg0) {
+			@Override
+            public void mouseDoubleClick(MouseEvent arg0) {
 				//IMPT!!! double click listener called AFTER the new line is selected
 				//check if there is a
 				MessageDialog.openError(examplesList.getShell(), "File selection error", examplesList.getSelection()[0]);
 			}
-			public void mouseDown(MouseEvent arg0) {
+			@Override
+            public void mouseDown(MouseEvent arg0) {
 			}
-			public void mouseUp(MouseEvent arg0) {
+			@Override
+            public void mouseUp(MouseEvent arg0) {
 			}
 		});
 		tabItemExamples.setControl(examplesList);
@@ -121,7 +126,8 @@ public class RulesView extends ViewPart {
     public void createActions() {
     	//Select Action
 		selectAction = new Action("Select version...") {
-			public void run() {
+			@Override
+            public void run() {
 				
 		    	//collect information from seldiag
 				final SelectProjectDialog seldiag = new SelectProjectDialog(parent.getShell());
@@ -151,7 +157,8 @@ public class RulesView extends ViewPart {
 
 		//Explain Action
 		explainAction = new Action("Explain") {
-			public void run() {
+			@Override
+            public void run() {
 				if (tabFolder.getLayoutData().equals(layoutHidden)) {
 					showRulesList();
 				} else {
@@ -163,7 +170,8 @@ public class RulesView extends ViewPart {
 
 		//English Action
 		englishAction = new Action("Translate to English") {
-			public void run() {
+			@Override
+            public void run() {
 				//Do something smart here
 			}
 		};
@@ -172,14 +180,16 @@ public class RulesView extends ViewPart {
 		//*	TODO: Currently do not have sort and filter functions
 		//Sort Action
 		sortAction = new Action("Sort") {
-			public void run() {
+			@Override
+            public void run() {
 			}
 		};
 		sortAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/sort.gif"));
 
 		//Filter Action
 		filterAction = new Action("Filter") {
-			public void run() {
+			@Override
+            public void run() {
 			}
 		};
 		filterAction.setImageDescriptor(lsclipse.LSclipse.getImageDescriptor("icons/filter.gif"));
@@ -198,7 +208,8 @@ public class RulesView extends ViewPart {
 //        mgr.add(selectAllAction);
 	}
 
-	public void setFocus() {
+	@Override
+    public void setFocus() {
 	}
 
 	private void showRulesList() {

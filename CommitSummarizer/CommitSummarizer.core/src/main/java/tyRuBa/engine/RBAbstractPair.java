@@ -86,7 +86,8 @@ public abstract class RBAbstractPair extends RBTerm {
 		return result;
 	}
 
-	public Frame unify(RBTerm other, Frame f) {
+	@Override
+    public Frame unify(RBTerm other, Frame f) {
 //		System.err.println("before: " + this + " & " + other + ": " + f);
 		if (other.getClass() == getClass()) {
 			RBAbstractPair cother = (RBAbstractPair) other;
@@ -101,7 +102,8 @@ public abstract class RBAbstractPair extends RBTerm {
 			return null;
 	}
 
-	protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
+	@Override
+    protected boolean sameForm(RBTerm other, Frame lr, Frame rl) {
 		if (other.getClass() == this.getClass()) {
 			RBAbstractPair cother = (RBAbstractPair) other;
 			return getCar().sameForm(cother.getCar(), lr, rl)
@@ -110,11 +112,13 @@ public abstract class RBAbstractPair extends RBTerm {
 			return false;
 	}
 
-	boolean freefor(RBVariable v) {
+	@Override
+    boolean freefor(RBVariable v) {
 		return car.freefor(v) && cdr.freefor(v);
 	}
 
-	public boolean equals(Object x) {
+	@Override
+    public boolean equals(Object x) {
 		if (x == null)
 			return false;
 		if (!(x.getClass() == this.getClass()))
@@ -123,20 +127,24 @@ public abstract class RBAbstractPair extends RBTerm {
 		return getCar().equals(cx.getCar()) && getCdr().equals(cx.getCdr());
 	}
 
-	public int hashCode() {
+	@Override
+    public int hashCode() {
 		return car.hashCode() + 11 * cdr.hashCode();
 	}
 
-	public int formHashCode() {
+	@Override
+    public int formHashCode() {
 		return car.formHashCode() + 11 * cdr.formHashCode();
 	}
 
-	public void makeAllBound(ModeCheckContext context) {
+	@Override
+    public void makeAllBound(ModeCheckContext context) {
 		getCar().makeAllBound(context);
 		getCdr().makeAllBound(context);
 	}
 
-	public BindingMode getBindingMode(ModeCheckContext context) {
+	@Override
+    public BindingMode getBindingMode(ModeCheckContext context) {
 		BindingMode carMode = getCar().getBindingMode(context);
 		BindingMode cdrMode = getCdr().getBindingMode(context);
 		if (carMode.isBound() && cdrMode.isBound()) {
@@ -146,7 +154,8 @@ public abstract class RBAbstractPair extends RBTerm {
 		}
 	}
 
-	public boolean isGround() {
+	@Override
+    public boolean isGround() {
 		return getCar().isGround() && getCdr().isGround();
 	}
 	

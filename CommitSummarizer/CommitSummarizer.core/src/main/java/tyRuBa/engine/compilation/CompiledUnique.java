@@ -17,7 +17,8 @@ public class CompiledUnique extends SemiDetCompiled {
 		this.exp = exp;
 	}
 
-	public Frame runSemiDet(Object input, RBContext context) {
+	@Override
+    public Frame runSemiDet(Object input, RBContext context) {
 		Frame f = (Frame) input;
 		Frame newf = (Frame)f.clone();
 		RBTerm[] vals = new RBTerm[vars.length];
@@ -42,7 +43,8 @@ public class CompiledUnique extends SemiDetCompiled {
 		}
 	}
 	
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer result = new StringBuffer("UNIQUE(");
 		for (int i = 0; i < vars.length; i++) {
 			if (i > 0) {
